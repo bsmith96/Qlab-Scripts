@@ -1,0 +1,70 @@
+##### QLAB PROGRAMMING SCRIPTS
+##### Ben Smith 2020-21
+#### Run in separate process: TRUE
+
+### Create CL/QL scene recall
+
+
+tell application id "com.figure53.QLab.4" to tell front workspace
+	-- set scene number to recall
+	display dialog "Please select a scene number to recall" default answer "" buttons {"Set", "Cancel"} cancel button "Cancel" default button "Set" with title "SCENE NUMBER"
+	set sceneNumber to text returned of result as integer
+	
+	-- Calculate variables to use in the midi cue
+	set chanNum to my calculateChan(sceneNumber)
+	set sceneNum to my calculateScene(sceneNumber)
+	
+	set sceneGroupName to "Scene " & sceneNumber
+	
+	-- Make overall group
+	make type "Group"
+	set sceneGroup to last item of (selected as list)
+	set sceneGroupID to uniqueID of sceneGroup
+	set mode of sceneGroup to timeline
+	set q name of sceneGroup to sceneGroupName
+	
+	-- Make the midi program cue
+	make type "Midi"
+	set midiBank to last item of (selected as list)
+	set midiBankID to uniqueID of midiBank
+	set message type of midiBank to voice
+	set command of midiBank to program_change
+	set channel of midiBank to chanNum
+	set byte one of midiBank to sceneNum
+	move cue id midiBankID of parent of midiBank to end of sceneGroup
+	set q name of midiBank to "Scene " & sceneNumber & ": Program Change"
+	
+	set q color of sceneGroup to "green"
+	collapse sceneGroup
+	
+end tell
+
+-- Function to calculate the midi channel (used as a bank)
+on calculateChan(num)
+	set chan to integer
+	if num is less than 129 then
+		set chan to 1
+	else if num is greater than 128 and num is less than 256 then
+		set chan to 2
+	else if num is greater than 255 and num is less than 383 then
+		set chan to 3
+	else if num is greater than 382 and num is less than 508 then
+		set chan to 4
+	end if
+	return chan
+end calculateChan
+
+on calculateScene(num)
+	set scene to integer
+	if num is less than 129 then
+		set scene to num - 1
+	else if num is greater than 128 and num is less than 256 then
+		set scene to num - 129
+	else if num is greater than 255 and num is less than 383 then
+		set scene to num - 256
+	else if num is greater than 382 and num is less than 508 then
+		set scene to num - 383
+	end if
+	
+	return scene
+end calculateScene

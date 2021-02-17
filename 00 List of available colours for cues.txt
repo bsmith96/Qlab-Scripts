@@ -1,0 +1,47 @@
+##### QLAB PROGRAMMING SCRIPTS
+##### Ben Smith 2020-21
+
+### List of available colours for cues
+
+
+grey
+red
+orange
+green
+blue
+purple
+
+edgecombGray
+mauve
+chartreuse
+bastardAmber
+lilac
+maize
+
+glaucous
+fuchsia
+ecru
+coral
+cerulean
+celadon
+
+bizque
+avocado
+ochre
+olive
+puce
+rufous
+
+sage
+scarlet
+seaFoamGreen
+skyBlue
+taupe
+verdigris
+
+vermillion
+viridian
+fulvous
+wenge
+zaffre
+indigo
