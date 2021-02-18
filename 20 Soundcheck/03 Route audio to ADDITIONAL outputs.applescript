@@ -1,6 +1,6 @@
 ##### QLAB PROGRAMMING SCRIPTS
 ##### Ben Smith 2020-21
-####ÊRun in separate process: TRUE
+#### Run in separate process: TRUE
 
 ### Route audio to ADDITIONAL outputs
 # Requires a cue number for other similar cues to reference

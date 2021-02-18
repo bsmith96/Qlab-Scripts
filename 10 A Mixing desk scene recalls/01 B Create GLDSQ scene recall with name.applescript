@@ -1,5 +1,5 @@
 ##### QLAB PROGRAMMING SCRIPTS
-#####ÊBen Smith 2020-21
+##### Ben Smith 2020-21
 #### Run in separate process: FALSE
 
 ### Create GLD/SQ scene recall with name

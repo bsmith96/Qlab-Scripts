@@ -1,6 +1,6 @@
 ##### QLAB PROGRAMMING SCRIPTS
-#####ÊBen Smith 2020-21
-####ÊRun in separate process: TRUE
+##### Ben Smith 2020-21
+#### Run in separate process: TRUE
 
 ### Choose Desk to program
 

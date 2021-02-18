@@ -2,7 +2,7 @@
 ##### Ben Smith 2020-21
 #### Run in separate process: TRUE
 
-###ÊSpeaker Polarity Check
+### Speaker Polarity Check
 
 
 -- If there is no audio, check the routing of the audio files (in "Other Scripts")

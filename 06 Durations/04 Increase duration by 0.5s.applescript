@@ -2,7 +2,7 @@
 ##### Ben Smith 2020-21
 #### Run in separate process: FALSE
 
-###ÊIncrease duration by 0.5s
+### Increase duration by 0.5s
 
 
 set userDelta to 0.5
