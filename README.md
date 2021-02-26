@@ -64,7 +64,7 @@ Arms, disarms or toggles arming of cues whose name contains a string the user de
 
 *INCOMPLETE*
 
-## Durations
+## Durations
 
 *INCOMPLETE*
 
@@ -72,7 +72,7 @@ Arms, disarms or toggles arming of cues whose name contains a string the user de
 
 *INCOMPLETE*
 
-## Cue Lists
+## Cue Lists
 
 *INCOMPLETE*
 
@@ -80,7 +80,7 @@ Arms, disarms or toggles arming of cues whose name contains a string the user de
 
 This one is exciting, but currently *INCOMPLETE*
 
-## Mixing desk scene recalls
+## Mixing desk scene recalls
 
 *INCOMPLETE*
 
