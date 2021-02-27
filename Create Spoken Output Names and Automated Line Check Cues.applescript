@@ -9,11 +9,11 @@ set userLevel to -6
 set userDelay to 0.5 -- delay between each file in seconds
 
 -- Speak output names 
-set outputNumber to count of theChannels
+set outputCount to count of theChannels
 
 set chanNum to 0
 
-repeat with eachOutput from 1 to outputNumber
+repeat with eachOutput from 1 to outputCount
 	set eachOutputToSay to correctOutputName(item eachOutput of theChannels)
 	set chanNum to chanNum + 1
 	say (eachOutputToSay) using "Daniel" saving to (POSIX file saveLocation & checkDigits(chanNum, 2) & " " & (item eachOutput of theChannels) as string) & fileType
