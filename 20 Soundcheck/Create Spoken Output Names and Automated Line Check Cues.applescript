@@ -1,12 +1,55 @@
--- User defined variables
+##### QLAB PROGRAMMING SCRIPTS
+##### Ben Smith 2020-21
+#### Run in separate process: TRUE
 
-set theChannels to {"Pros Left", "Pros Right", "Pros Center", "Sub", "Left Foldback", "Right Foldback", "Upstage Left", "Upstage Right", "Surround Left", "Surround Right"} -- Input channels manually
-set saveLocation to "/Users/Ben/Dropbox/002 GSA - Babe/Data/Qlab/Line Checks/"
+### Create Spoken Output Names and Automated Line Check Cues
+
+
+-- USER DEFINED VARIABLES
+
+-- Input channel names as a single string, separated by ",". Some guidance on channel names for the best result:
+-- 1. for main PA, using the term "pros" will have its pronunciation corrected.
+-- 2. for foldback, the TTS works better if "Foldback" is not the first word. Try putting the side before, rather than after, "Foldback". If there is only 1 foldback channel, try "Stage Foldback"
+-- 3. for subs, include the word "Sub" in each channel's name. This will use the sub soundcheck sound instead of a spoken voice.
+
+set userChannels to "Pros Left, Pros Right, Pros Centre, Sub, Left Foldback, Right Foldback, Upstage Left, Upstage Right, Surround Left, Surround Right"
+
+-- Set file type to save (wav or aiff)
 set fileType to ".wav"
 
-set userLevel to -6
+-- Set the cue which you want to precede your line check group
+set rigCheckTitleCue to "   RIG CHECK"
 
-set userDelay to 0.5 -- delay between each file in seconds
+-- Set the cue list you want to place this group cue in (by default, this is Main Cue List, but you might have a Soundcheck cue list separately)
+set mainCueListName to "Main Cue list"
+
+-- Set the level which the audio files will play back at in Qlab. Sub is separate since it is a separate sound.
+-- The sub sound should be save, relative to the Qlab file, in "~/Soundcheck/Line Checks"
+set userLevel to -6
+set subLevel to 0
+set subFileName to "Sub v2.wav"
+
+-- Set the delay between each file playing in seconds
+set userDelay to 0.5
+
+-- END OF USER DEFINED VARIABLES
+
+
+-- Automatically get the path to the project
+tell application "QLab 4" to tell front workspace
+	set qlabPath to path
+end tell
+
+tell application "Finder"
+	set qlabPathAlias to POSIX file qlabPath as alias
+	set qlabParentPath to (container of qlabPathAlias) as alias
+end tell
+
+set saveLocation to (POSIX path of qlabParentPath & "Soundcheck/Line Checks/")
+
+
+-- Convert userChannels into a list
+set theChannels to splitString(userChannels, ", ")
 
 -- Speak output names 
 set outputCount to count of theChannels
@@ -16,31 +59,41 @@ set chanNum to 0
 repeat with eachOutput from 1 to outputCount
 	set eachOutputToSay to correctOutputName(item eachOutput of theChannels)
 	set chanNum to chanNum + 1
-	say (eachOutputToSay) using "Daniel" saving to (POSIX file saveLocation & checkDigits(chanNum, 2) & " " & (item eachOutput of theChannels) as string) & fileType
+	if eachOutputToSay does not contain "Sub" then
+		say (eachOutputToSay) using "Daniel" saving to (POSIX file saveLocation & checkDigits(chanNum, 2) & " " & (item eachOutput of theChannels) as string) & fileType
+	else
+		set newFileName to (checkDigits(chanNum, 2) & " " & (item eachOutput of theChannels) as string) & fileType
+		tell application "Finder"
+			set newFile to duplicate file (POSIX file (saveLocation & subFileName) as alias)
+			set name of newFile to newFileName
+		end tell
+	end if
 end repeat
 
 
 -- Import into Qlab
 
+-- Make main cue list a variable
 tell application "QLab 4" to tell front workspace
-	-- Make main cue list a variable
-	set mainCueList to (first cue list whose q name is "Main Cue List")
+	set mainCueList to (first cue list whose q name is mainCueListName)
 	
 	-- Get rig check title cue, so it knows where to make these cues
 	set current cue list to mainCueList
-	set titleCue to (first cue whose q name is "   RIG CHECK")
+	set titleCue to (first cue whose q name is rigCheckTitleCue)
 	set playback position of mainCueList to titleCue
 	
 	-- Make the group
 	make type "Group"
 	set groupCue to last item of (selected as list)
 	set q name of groupCue to "Line Check"
+	set mode of groupCue to timeline
 end tell
 
 -- Get all files in the linecheck folder
 tell application "Finder"
 	set saveLocationAlias to POSIX file saveLocation as alias
-	set allFiles to (entire contents of folder saveLocationAlias)
+	set allTheFiles to (entire contents of folder saveLocationAlias)
+	set allFiles to items 1 thru -2 of allTheFiles
 end tell
 
 -- Create list for later
@@ -54,6 +107,7 @@ tell application "QLab 4" to tell front workspace
 		make type "Audio" -- make cue
 		set thisCue to last item of (selected as list) -- give the cue a variable
 		set file target of thisCue to eachOutput as alias -- add the file to the cue
+		set q name of thisCue to item outputNumber of theChannels
 		
 		-- Put the cue into the group cue
 		set thisCueID to uniqueID of thisCue
@@ -63,74 +117,29 @@ tell application "QLab 4" to tell front workspace
 		my insertItemInList(thisCue, lineCheckCues, outputNumber)
 		
 		-- Set level of cues as they are made
-		setLevel thisCue row 0 column outputNumber db userLevel
-		setLevel thisCue row 1 column outputNumber db 0
+		if item outputNumber of theChannels contains "Sub" then
+			setLevel thisCue row 0 column outputNumber db subLevel
+			setLevel thisCue row 1 column outputNumber db 0
+		else
+			setLevel thisCue row 0 column outputNumber db userLevel
+			setLevel thisCue row 1 column outputNumber db 0
+		end if
+		
+		-- Set predelay of cues as they are made
+		set previousCue to cue before thisCue
+		if outputNumber is not 1 then
+			set previousDuration to duration of previousCue
+			set previousPreWait to pre wait of previousCue
+			set pre wait of thisCue to (previousDuration + previousPreWait + userDelay)
+		end if
 		
 		-- 
-	end repeat
-	
-end tell
-
-
--- Set levels of line check audio files sequentially.
-
-
-(*tell application "QLab 4" to tell front workspace
-	
-	--set lineCheckCues to (selected as list)
-	
-	set lineCheckCount to count of lineCheckCues
-	
-	set thisCue to 0
-	
-	repeat with eachCue in lineCheckCues
-		
-		set thisCue to thisCue + 1
-		
-		setLevel eachCue row 0 column thisCue db userLevel
-		
-		repeat with eachOutput from 1 to lineCheckCount
-			
-			setLevel eachCue row 1 column eachOutput db 0
-			
-		end repeat
-		
-	end repeat
-	
-end tell*)
-
--- Sped up by putting it in the cue creation loop?
-
-
-
--- Set predelays of line check files in a fire-all-at-once group cue. Select all except the first one and run.
-
-
-tell application "QLab 4" to tell front workspace
-	
-	set lineCheckCuesToDelay to rest of lineCheckCues
-	--set item 1 of lineCheckCuesToDelay to {}
-	
-	repeat with currentCue in lineCheckCuesToDelay
-		--set currentCue to last item of (selected as list)
-		
-		set previousCue to cue before currentCue
-		
-		--start (previousCue)
-		
-		set previousDuration to duration of previousCue
-		
-		set previousPreWait to pre wait of previousCue
-		
-		--display dialog previousDuration
-		
-		set pre wait of currentCue to (previousDuration + previousPreWait + userDelay)
-		
 	end repeat
 	
 	collapse groupCue
 	
 end tell
+
 
 on insertItemInList(theItem, theList, thePosition)
 	set theListCount to length of theList
@@ -191,3 +200,16 @@ on findAndReplaceInText(theText, theSearchString, theReplacementString)
 	set AppleScript's text item delimiters to ""
 	return theText
 end findAndReplaceInText
+
+on splitString(theString, theDelimiter)
+	-- save delimiters to restore old settings
+	set oldDelimiters to AppleScript's text item delimiters
+	-- set delimiters to delimiter to be used
+	set AppleScript's text item delimiters to theDelimiter
+	-- create the array
+	set theArray to every text item of theString
+	-- restore old setting
+	set AppleScript's text item delimiters to oldDelimiters
+	-- return the array
+	return theArray
+end splitString
