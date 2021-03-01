@@ -90,7 +90,11 @@ This one is exciting, but currently *INCOMPLETE*
 
 ### Create Spoken Output Names and Automated Line Check Cues
 
-Input the names of each output in your current configuration, and this script will quickly generate an audio file of the Text To Speech engine saying that name, and create a sequence of cues in a group to 
+Input the names of each output in your current configuration, and this script will quickly generate an audio file of the Text To Speech engine saying that name, and create a sequence of cues in a group to check your routing, and that speakers are on etc.
+
+For this script, make sure that in your project folder (the folder containing the Qlab file) you have a folder named "Soundcheck", and within that, another labelled "Line Checks". The Line Checks folder should also contain the sound for the script to use to check subs, since spoken IDs won't work for low frequencies. All newly generated files will be placed in this folder.
+
+You can set the variable `rigCheckTitleCue` to "" if you simply want the script to place the folder at your current playhead position on the main cue list.
 
 ## Miscellaneous
 
