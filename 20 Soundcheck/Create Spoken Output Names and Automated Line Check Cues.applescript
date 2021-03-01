@@ -78,9 +78,11 @@ tell application "QLab 4" to tell front workspace
 	set mainCueList to (first cue list whose q name is mainCueListName)
 	
 	-- Get rig check title cue, so it knows where to make these cues
-	set current cue list to mainCueList
-	set titleCue to (first cue whose q name is rigCheckTitleCue)
-	set playback position of mainCueList to titleCue
+	if rigCheckTitleCue is not "" then
+		set current cue list to mainCueList
+		set titleCue to (first cue whose q name is rigCheckTitleCue)
+		set playback position of mainCueList to titleCue
+	end if
 	
 	-- Make the group
 	make type "Group"
@@ -92,6 +94,7 @@ end tell
 -- Get all files in the linecheck folder
 tell application "Finder"
 	set saveLocationAlias to POSIX file saveLocation as alias
+	delay 1
 	set allTheFiles to (entire contents of folder saveLocationAlias)
 	set allFiles to items 1 thru -2 of allTheFiles
 end tell
