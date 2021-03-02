@@ -42,13 +42,13 @@ This script chooses which of the scripts in folder "10 A Mixing desk scene recal
 
 *Cue number: Recall | Hotkey: X*
 
-**OSC Message** (Qlab): Cue Number: yRecall | Command: start
+**OSC Message** (Qlab): `Cue Number: yRecall | Command: start`
 
 ### 03 [OSC] Create scene recall & name
 
 *Cue number: Name | Hotkey: Z*
 
-**OSC Message** (Qlab): Cue Number: yRecallName | Command: start
+**OSC Message** (Qlab): `Cue Number: yRecallName | Command: start`
 
 ### 05 Offset midi triggers of selected cues
 
@@ -128,25 +128,25 @@ Turns off autoload for the selected cue/s.
 
 *Hotkey: ctrl+6*
 
-**OSC Message**: /cue/selected/level/0/0/+ 6
+**OSC Message**: `/cue/selected/level/0/0/+ 6`
 
 ### 02 [OSC] Bump -6dB
 
 *Hotkey: shift+ctrl+6*
 
-**OSC Message**: /cue/selected/level/0/0/- 6
+**OSC Message**: `/cue/selected/level/0/0/- 6`
 
 ### 03 [OSC] Bump +1dB
 
 *Hotkey: ctrl+1*
 
-**OSC Message**: /cue/selected/level/0/0/+ 1
+**OSC Message**: `/cue/selected/level/0/0/+ 1`
 
 ### 04 [OSC] Bump -1dB
 
 *Hotkey: shift+ctrl+1*
 
-**OSC Message**: /cue/selected/level/0/0/- 1
+**OSC Message**: `/cue/selected/level/0/0/- 1`
 
 ### 06 Set crosspoints to current default
 
@@ -268,17 +268,17 @@ Labels all audio files currently used within the project in a colour of your cho
 
 *Hotkey: R*
 
-**OSC Message** (Qlab): Cue Number: selected | Command: colorName | Parameters: red
+**OSC Message** (Qlab): `Cue Number: selected | Command: colorName | Parameters: red`
 
 ### 02 [OSC] Colour YELLOW
 
 *Hotkey: Y*
 
-**OSC Message** (Qlab): Cue Number: selected | Command: colorName | Parameters: yellow
+**OSC Message** (Qlab): `Cue Number: selected | Command: colorName | Parameters: yellow`
 
 ### 03 [OSC] Colour NONE
 
-**OSC Message** (Qlab): Cue Number: selected | Command: colorName | Parameters: none
+**OSC Message** (Qlab): `Cue Number: selected | Command: colorName | Parameters: none`
 
 ------
 
