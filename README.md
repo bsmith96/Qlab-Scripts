@@ -1,6 +1,32 @@
 # QLAB SCRIPTS | README
 
-Do a little intro here.
+This is a selection of scripts, sourced from various free templates, as well as developed by myself, for programming and using Qlab. I've included OSC cues which I use in the same vein, to automate repetitive parts of the workflow, and formatted this whole README and repository to remain consistent with how my template project is set up.
+
+Each subheading or folder is a row in a "Scripts" cue cart, with the first column taken up by titles (memo cues). Each of the following 7 columns has a script in, which are also numbered here according to which column they are in.
+
+Folders numbered 10-19 are in an "other scripts" cue list, which is called by main scripts, but not accessed in general use.
+
+Folders numbered 20-29 are in the "Soundcheck" cue cart, which also contains soundcheck songs.
+
+Folders numbered 30-39 are scripts which I haven't yet incorporated into my template, but intend to very soon!
+
+## Contents
+
+- [01 Mixing Desk Programming](#01-mixing-desk-programming)
+- [02 Group/General Cue Tools](#02-groupgeneral-cue-tools)
+- [03 Audio Cue Tools](#03-audio-cue-tools)
+- [04 Levels](#04-levels)
+- [05 Fades](#05-fades)
+- [06 Durations](#06-durations)
+- [07 A Files](#07-a-files)
+- [07 B Colors](#07-b-colors)
+- [08 A Cue Lists](#08-a-cue-lists)
+- [08 B Alternate SFX Variations](#08-b-alternate-sfx-variations)
+- [10 Mixing Desk Scene Recalls](#10-mixing-desk-scene-recalls)
+- [20 Soundcheck](#20-soundcheck)
+- [30 Stems](#30-stems)
+- [31 Misc](#31-misc)
+- [Miscellaneous](#miscellaneous)
 
 ------
 
