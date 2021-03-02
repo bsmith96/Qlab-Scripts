@@ -278,6 +278,8 @@ Labels all audio files currently used within the project in a colour of your cho
 
 ### 03 [OSC] Colour NONE
 
+*Hotkey: shift+N*
+
 **OSC Message** (Qlab): `Cue Number: selected | Command: colorName | Parameters: none`
 
 ------
