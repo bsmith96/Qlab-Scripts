@@ -48,6 +48,14 @@ end tell
 set saveLocation to (POSIX path of qlabParentPath & "Soundcheck/Line Checks/")
 
 
+-- If the cues already exist, delete them before running the rest of this script:
+checkForCues()
+
+
+-- If the audio files already exist, delete them before running the rest of this script:
+checkForFiles(saveLocation, subFileName)
+
+
 -- Convert userChannels into a list
 set theChannels to splitString(userChannels, ", ")
 
@@ -216,3 +224,31 @@ on splitString(theString, theDelimiter)
 	-- return the array
 	return theArray
 end splitString
+
+on checkForCues()
+	tell application "QLab 4" to tell front workspace
+		set groupCueAlready to ""
+		try
+			set groupCueAlready to (first cue whose q name is "Line Check")
+			set groupCueAlreadyID to uniqueID of groupCueAlready
+		end try
+		
+		if groupCueAlready is not "" then
+			delete cue id groupCueAlreadyID of parent of groupCueAlready -- of cue list mainCueList
+		end if
+	end tell
+end checkForCues
+
+on checkForFiles(saveLocation, subFileName)
+	tell application "Finder"
+		set saveLocationAlias to POSIX file saveLocation as alias
+		set startingFolderContents to (entire contents of folder saveLocationAlias)
+		if (count of startingFolderContents) is not 1 then
+			repeat with eachItem in startingFolderContents
+				if name of eachItem is not (subFileName) then
+					delete eachItem
+				end if
+			end repeat
+		end if
+	end tell
+end checkForFiles
