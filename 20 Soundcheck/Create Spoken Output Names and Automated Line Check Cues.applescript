@@ -128,13 +128,19 @@ tell application "QLab 4" to tell front workspace
 		my insertItemInList(thisCue, lineCheckCues, outputNumber)
 		
 		-- Set level of cues as they are made
-		if item outputNumber of theChannels contains "Sub" then
-			setLevel thisCue row 0 column outputNumber db subLevel
-			setLevel thisCue row 1 column outputNumber db 0
-		else
-			setLevel thisCue row 0 column outputNumber db userLevel
-			setLevel thisCue row 1 column outputNumber db 0
-		end if
+		repeat with eachColumn from 1 to outputCount
+			if eachColumn is outputNumber then
+				if item outputNumber of theChannels contains "Sub" then
+					setLevel thisCue row 0 column eachColumn db subLevel
+					setLevel thisCue row 1 column eachColumn db 0
+				else
+					setLevel thisCue row 0 column eachColumn db userLevel
+					setLevel thisCue row 1 column eachColumn db 0
+				end if
+			else
+				setLevel thisCue row 0 column eachColumn db "-inf"
+			end if
+		end repeat
 		
 		-- Set predelay of cues as they are made
 		set previousCue to cue before thisCue
