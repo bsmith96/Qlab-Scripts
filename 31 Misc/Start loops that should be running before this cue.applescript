@@ -1,3 +1,15 @@
+-- @description Start loops that would be running before this cue
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @about Starts all looping audio that has not been stopped before the currently selected cue
+
+-- @changelog
+--   v1.0  + init
+
+
+-- RUN SCRIPT -----------------------------
+
 tell application id "com.figure53.Qlab.4" to tell front workspace
 	set theCue to last item of (selected as list)
 	set theCueID to uniqueID of theCue

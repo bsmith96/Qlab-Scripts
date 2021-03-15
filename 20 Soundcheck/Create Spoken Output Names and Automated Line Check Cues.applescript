@@ -1,13 +1,18 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: TRUE
+-- @description Create spoken line check cues
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @about Creates spoken output names and automated line check cues
+-- @separateprocess TRUE
 
-### Create Spoken Output Names and Automated Line Check Cues
+-- @changelog
+--   v1.0  + init
 
 
--- USER DEFINED VARIABLES
+-- USER DEFINED VARIABLES -----------------
 
--- Input channel names as a single string, separated by ",". Some guidance on channel names for the best result:
+-- Input channel names as a single string, separated by ",".
+-- Some guidance on channel names for the best result:
 -- 1. for main PA, using the term "pros" will have its pronunciation corrected.
 -- 2. for foldback, the TTS works better if "Foldback" is not the first word. Try putting the side before, rather than after, "Foldback". If there is only 1 foldback channel, try "Stage Foldback"
 -- 3. for subs, include the word "Sub" in each channel's name. This will use the sub soundcheck sound instead of a spoken voice.
@@ -18,24 +23,27 @@ set userChannels to "Pros Left, Pros Right, Pros Centre, Sub, Left Foldback, Rig
 set fileType to ".wav"
 
 -- Set the cue which you want to precede your line check group
-set rigCheckTitleCue to "   RIG CHECK"
+set rigCheckTitleCue to "   RIG CHECK" -- Leave blank to use the current position
 
--- Set the cue list you want to place this group cue in (by default, this is Main Cue List, but you might have a Soundcheck cue list separately)
+-- Set the cue list you want to place this group cue in
 set mainCueListName to "Main Cue list"
 
 -- Set the level which the audio files will play back at in Qlab. Sub is separate since it is a separate sound.
--- The sub sound should be save, relative to the Qlab file, in "~/Soundcheck/Line Checks"
-set userLevel to -6
-set subLevel to 0
+set userLevel to -18
+set subLevel to -12
+
+-- Set the name of the sub sound. This should be saved, relative to the Qlab file, in "~/Soundcheck/Line Checks"
 set subFileName to "Sub v2.wav"
 
 -- Set the delay between each file playing in seconds
 set userDelay to 0.5
 
--- END OF USER DEFINED VARIABLES
+---------- END OF USER DEFINED VARIABLES --
 
 
--- Automatically get the path to the project
+---- RUN SCRIPT ---------------------------
+
+-- Get the path to the project
 tell application "QLab 4" to tell front workspace
 	set qlabPath to path
 end tell
@@ -59,7 +67,7 @@ checkForFiles(saveLocation, subFileName)
 -- Convert userChannels into a list
 set theChannels to splitString(userChannels, ", ")
 
--- Speak output names 
+-- Speak output names
 set outputCount to count of theChannels
 
 set chanNum to 0
@@ -79,7 +87,7 @@ repeat with eachOutput from 1 to outputCount
 end repeat
 
 
--- Import into Qlab
+---- Import into Qlab
 
 -- Make main cue list a variable
 tell application "QLab 4" to tell front workspace
@@ -150,13 +158,14 @@ tell application "QLab 4" to tell front workspace
 			set pre wait of thisCue to (previousDuration + previousPreWait + userDelay)
 		end if
 		
-		-- 
 	end repeat
 	
 	collapse groupCue
 	
 end tell
 
+
+-- FUNCTIONS ------------------------------
 
 on insertItemInList(theItem, theList, thePosition)
 	set theListCount to length of theList
@@ -231,6 +240,8 @@ on splitString(theString, theDelimiter)
 	return theArray
 end splitString
 
+-- Checks for cues and deletes them if they're already present
+
 on checkForCues()
 	tell application "QLab 4" to tell front workspace
 		set groupCueAlready to ""
@@ -244,6 +255,8 @@ on checkForCues()
 		end if
 	end tell
 end checkForCues
+
+-- Checks for audio files and deletes them if they're already present
 
 on checkForFiles(saveLocation, subFileName)
 	tell application "Finder"

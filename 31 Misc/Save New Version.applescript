@@ -1,10 +1,17 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2021
-#### Run in separate process: TRUE
+-- @description Save new version
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @about Saves a new version of your qlab file, incrementing a 2 digit version number, and allowing notes (such as a date, or "start of tech")
+-- @separateprocess TRUE
 
-### Save New Version
+-- @changelog
+--   v1.0  + init
 
--- Naming scheme: Name v00 - note.
+
+-- RUN SCRIPT -----------------------------
+
+-- NAMING SCHEME: Name v00 - note.
 -- Ensure your existing project follows this scheme and it will create the new file correctly.
 
 -- Get original filename & path
@@ -56,11 +63,12 @@ tell application "QLab 4"
 	tell front workspace
 		save in ((originalPath as string) & (newFileName as string))
 	end tell
-	close front workspace
 	open ((originalPath as string) & (newFileName as string) & ".qlab4")
+	close back workspace
 end tell
 
 
+-- FUNCTIONS ------------------------------
 
 on splitString(theString, theDelimiter)
 	-- save delimiters to restore old settings
