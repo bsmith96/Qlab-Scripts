@@ -85,6 +85,11 @@ on checkForCues(theCues, loopCues, fadeCues, groupLoops, theCueID)
 					if eachCueTarget is in eachLoop then
 						set item eachLoopPosition of loopCues to ""
 					end if
+					repeat with eachGroup in groupLoops
+						if eachCueTarget is in groupLoops then
+							set item eachLoopPosition of loopCues to ""
+						end if
+					end repeat
 					set eachLoopPosition to eachLoopPosition + 1
 				end repeat
 				
