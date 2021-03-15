@@ -1,4 +1,4 @@
--- @description Dynamic load to time
+-- @description Preset to before next cue
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @version 2.0

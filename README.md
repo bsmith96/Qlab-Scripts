@@ -156,6 +156,12 @@ NB: Customise this script before running it.
 
 This is designed for when your PA changes after you've started programming your Qlab – you've got a lot of audio cues already programmed, but now you need to change the crosspoints on every single one to allow you to use every channel available. This script creates a temporary cue, takes the crosspoints from that, and set the crosspoints of every selected cue to those defaults. It doesn't touch main levels (the top row).
 
+### 07 Which cues use output x
+
+**This script needs adapting**
+
+Quickly see which of the selected cues are routed to a specific output, to see how often it is used.
+
 ------
 
 ## 05 Fades
@@ -260,27 +266,35 @@ Opens a finder window and reveals the audio file targetted by the current audio 
 
 Labels all audio files currently used within the project in a colour of your choice in finder.
 
+### Save New Version
+
+Updates the version number in the qlab file name, and saves a new copy (complete with a note if you wish, such as "Dress 1" or "Start of tech") in the same folder.
+
 ------
 
-## 07 B Colors
+## 07 B Tech Rehearsals
 
-### 01 [OSC] Colour RED
+### 01 Preset To Before Next Cue
 
-*Hotkey: R*
+*Hotkey: ctrl+space*
 
-**OSC Message** (Qlab): `Cue Number: selected | Command: colorName | Parameters: red`
+Starts any cues that would be looping before the next GO, at the correct level. Very useful in technical rehearsals.
 
-### 02 [OSC] Colour YELLOW
+### Load Parent Group To Start Of Selected Child
 
-*Hotkey: Y*
+**Needs adapting**
 
-**OSC Message** (Qlab): `Cue Number: selected | Command: colorName | Parameters: yellow`
+Loads the group containing the selected cue to the time that the selected cue would start (e.g. the end of its pre-wait).
 
-### 03 [OSC] Colour NONE
+### Move To Cut List
 
-*Hotkey: shift+N*
+**Needs adapting**
 
-**OSC Message** (Qlab): `Cue Number: selected | Command: colorName | Parameters: none`
+Moves the selected cue/s to a new cue list.
+
+### Start The Loop Of Selected Cue
+
+Loads the currently selected cue to the end of its duration and starts it, entering any infinite loop.
 
 ------
 
@@ -379,34 +393,6 @@ Automatically bumps target of selected audio cues to the next version. If the fi
 ### Target version bump by folder
 
 Allows you to create a new folder of v02 stems, and point the selected cues to identically named files in a new folder.
-
-------
-
-## 31 Misc
-
-### Dynamic Load To Time
-
-Starts any cues that would be looping before the next GO, at the correct level. Very useful in technical rehearsals.
-
-### Load Parent Group to start of selected Child
-
-Loads the group containing the selected cue to the time that the selected cue would start (e.g. the end of its pre-wait).
-
-### Move to cut list
-
-Moves the selected cue/s to a new cue list.
-
-### Save New Version
-
-Updates the version number in the qlab file name, and saves a new copy (complete with a note if you wish, such as "Dress 1" or "Start of tech") in the same folder.
-
-### Start The Loop Of Selected Cue
-
-Loads the currently selected cue to the end of its duration and starts it, entering any infinite loop.
-
-### Which cues use output x
-
-Highlights which cues in the current selection use a particular output channel.
 
 ------
 

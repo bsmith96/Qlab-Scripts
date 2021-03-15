@@ -1,7 +1,4 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-
-### List of available colours for cues
+# List of available colors for cues
 
 
 grey
