@@ -384,6 +384,10 @@ Allows you to create a new folder of v02 stems, and point the selected cues to i
 
 ## 31 Misc
 
+### Dynamic Load To Time
+
+Starts any cues that would be looping before the next GO, at the correct level. Very useful in technical rehearsals.
+
 ### Load Parent Group to start of selected Child
 
 Loads the group containing the selected cue to the time that the selected cue would start (e.g. the end of its pre-wait).
@@ -391,6 +395,14 @@ Loads the group containing the selected cue to the time that the selected cue wo
 ### Move to cut list
 
 Moves the selected cue/s to a new cue list.
+
+### Save New Version
+
+Updates the version number in the qlab file name, and saves a new copy (complete with a note if you wish, such as "Dress 1" or "Start of tech") in the same folder.
+
+### Start The Loop Of Selected Cue
+
+Loads the currently selected cue to the end of its duration and starts it, entering any infinite loop.
 
 ### Which cues use output x
 
