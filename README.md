@@ -374,7 +374,7 @@ Instructions are within to set these up – make sure you 'deactivate' all othe
 
 Similar to above, use these scripts to route the soundcheck audio files to additional outputs. This could be your "FOLDBACK" outputs, your "DELAYS" outputs, or a "REVERB" output.
 
-### Create Spoken Output Names and Automated Line Check Cues
+### 04 Create Spoken Line Check Cues
 
 Input the names of each output in your current configuration, and this script will quickly generate an audio file of the Text To Speech engine saying that name, and create a sequence of cues in a group to check your routing, and that speakers are on etc.
 
