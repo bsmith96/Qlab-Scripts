@@ -2,13 +2,14 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @source Rich Walsh (adapted)
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Create a fade down cue for the selected audio/video/fade/group cue
 -- @separateprocess FALSE
 
 -- @changelog
+--   v1.1  + if no cue name, script uses file name
 --   v1.0  + init
 
 
