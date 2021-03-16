@@ -116,6 +116,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- Create the main group
 	make type "Group"
 	set mainSFXGroup to last item of (selected as list)
+	set mode of mainSFXGroup to timeline
 	set mainSFXGroupID to uniqueID of mainSFXGroup
 	set q name of mainSFXGroup to fileName
 	set q color of mainSFXGroup to "Blue"
