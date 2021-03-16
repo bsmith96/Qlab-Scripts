@@ -1,4 +1,4 @@
--- @description Create link to select playback variants in rig check
+-- @description SFX VARIATIONS: Create link to select playback variants in rig check
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @version 1.0
