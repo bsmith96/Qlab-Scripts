@@ -26,7 +26,15 @@ tell front workspace
 		set cue target of newCue to originalCue
 		set pre wait of newCue to originalPreWait
 		newCue setLevel row 0 column 0 db originalCueLevel
-		set q name of newCue to "Fade in: " & q name of originalCue
+		if q name of originalCue is not "" then
+			set q name of newCue to "Fade in: " & q name of originalCue
+		else
+			set originalFile to file target of originalCue
+			tell application "System Events"
+				set originalName to name of originalFile
+			end tell
+			set q name of newCue to "Fade in: " & originalName
+		end if
 
 	-- Create fade in for each audio cue in a selected group
 
@@ -47,7 +55,15 @@ tell front workspace
 				set cue target of newCue to eachCue
 				set pre wait of newCue to eachPreWait
 				newCue setLevel row 0 column 0 db eachCueLevel
-				set q name of newCue to "Fade in: " & q name of eachCue
+				if q name of eachCue is not "" then
+					set q name of newCue to "Fade in: " & q name of eachCue
+				else
+					set eachFile to file target of eachCue
+					tell application "System Events"
+						set eachName to name of eachFile
+					end tell
+					set q name of newCue to "Fade in: " & eachName
+				end if
 				set newCueID to uniqueID of newCue
 				move cue id newCueID of parent of newCue to end of fadeGroup
 			end if
