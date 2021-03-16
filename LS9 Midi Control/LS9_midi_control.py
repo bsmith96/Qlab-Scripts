@@ -33,25 +33,25 @@ def Fader():
 	if typ == "ch":
 		xtyp = format(51, '02X')
 		while ch > 64:
-			ch = eval(input("Re-Enter Channel No. "))
+			ch = int(input("Re-Enter Channel No. "))
 		chN = ch
 		ch = format(ch-1, '02X')
 	elif typ == "st":
 		xtyp = format(51, '02X')
 		while ch > 4:
-			ch = eval(input("Re-Enter Stereo Channel No. "))
+			ch = int(input("Re-Enter Stereo Channel No. "))
 		chN = ch
 		ch = format(ch*2+62, '02X')
 	elif typ == "mix":
 		xtyp = format(78, '02X')
 		while ch > 16:
-			ch = eval(input("Re-Enter Mix No. "))
+			ch = int(input("Re-Enter Mix No. "))
 		chN = ch
 		ch = format(ch-1, '02X')
 	elif typ == "mt" or typ == "mtrx":
 		xtyp = format(95, '02X')
 		while ch > 8:
-			ch = eval(input("Re-Enter Matrix No. "))
+			ch = int(input("Re-Enter Matrix No. "))
 		chN = ch
 		ch = format(ch-1, '02X')
 	d = input("At dB: ")
@@ -79,7 +79,6 @@ def Fader():
 	data[c] = "Fader:   %s %d at %sdB" %(typ,chN,dN)
 	msg[c] = "%s 00 %s 00 00 00 %s 00 00 00 %s" %(pre,xtyp,ch,v)
 	print("%s 00 %s 00 00 00 %s 00 00 00 %s" %(pre,xtyp,ch,v))
-	
 		
 def OnCue():
 	typ, ch = input("Enter Channel Type and No. (e.g. 'ch 5'): ").split()
@@ -156,7 +155,6 @@ def OnCue():
 	op = op.upper()
 	data[c] = "On/Cue:  %s %d: %s" %(typ,chN,op)
 	
-
 def SendToMix():
 	ch = input("Input Channel No: ")
 	while ch.isdigit() == False:
@@ -206,7 +204,6 @@ def SendToMix():
 	msg[c] = "%s 00 43 00 %s 00 %s 00 00 00 %s" %(pre,mix,ch,v)
 	print("%s 00 43 00 %s 00 %s 00 00 00 %s" %(pre,mix,ch,v))
 	
-	
 def Custom():
 	
 	cust = input("Enter Custom Fader Channel No (33-36 St. In): ")
@@ -240,7 +237,7 @@ def Custom():
 			ch = "00 00 00 00 62"
 			chN = ""
 		else:
-			ch = input("Enter Channel/Mix/Matrix No: ")
+			ch = int(input("Enter Channel/Mix/Matrix No: "))
 			if typ == "ch":
 				while ch > 64:
 					print("error")
@@ -283,6 +280,20 @@ def Menu():
 	print("5 - Help")
 	print("6 - Exit & Print")
 
+def functReturnInput(main):
+	print("")
+	time.sleep(0.5)
+	t = input("Press 'enter' to Repeat, or 'q' to return to Menu: ")
+	try:
+		t = str(t)
+		if t == 'q':
+			print("")
+			return 0
+		else:
+			return main
+	except ValueError:
+		return main
+
 while main != 5:
 	Menu()
 	main = input("Type in a number (1-6): ")
@@ -292,58 +303,27 @@ while main != 5:
 		main = int(main)
 	except ValueError:
 		print("ERROR")
-	# while main.isdigit() == False:
-	# 	main = (input("ERROR: Type in a number (1-6): "))
-	# main = int(main)
 
 	while main == 1:
 		print("")
 		Fader()
 		c += 1
-		time.sleep(0.5)
-		print("")
-		t = eval(input("Press 'enter' to Repeat, or 'q' to return to Menu: "))
-		if t == "q":
-			print("")
-			main = 0
-		else:
-			main = 1
+		main = functReturnInput(1)
 	while main == 2:
 		print("")
 		OnCue()
 		c += 1
-		time.sleep(0.5)
-		print("")
-		t = eval(input("Press 'enter' to Repeat, or 'q' to return to Menu: "))
-		if t == "q":
-			print("")
-			main = 0
-		else:
-			main = 2
+		main = functReturnInput(2)
 	while main == 3:
 		print("")
 		SendToMix()
 		c += 1
-		time.sleep(0.5)
-		print("")
-		t = eval(input("Press 'enter' to Repeat, or 'q' to return to Menu: "))
-		if t == "q":
-			print("")
-			main = 0
-		else:
-			main = 3
+		main = functReturnInput(3)
 	while main == 4:
 		print("")
 		Custom()
 		c += 1
-		time.sleep(0.5)
-		print("")
-		t = eval(input("Press 'enter' to Repeat, or 'q' to return to Menu: "))
-		if t == "q":
-			print("")
-			main = 0 
-		else:
-			main = 4
+		main = functReturnInput(4)
 	if main == 5:
 		print("")
 		print("F0 43 10 3E 12 01 00 'typ' 00 'xx' cc cc dd dd dd dd dd F7")
