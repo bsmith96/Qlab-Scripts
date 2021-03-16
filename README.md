@@ -264,11 +264,11 @@ Sets the postwait of the cue to the same as the duration, and sets the continue 
 
 #### Files
 
-### Label files in use
+##### Label files in use
 
 Labels all audio files currently used within the project in a colour of your choice in finder.
 
-### Reveal target audio file in finder
+##### Reveal target audio file in finder
 
 Opens a finder window and reveals the audio file targetted by the current audio cue.
 
