@@ -14,7 +14,7 @@
 
 -- RUN SCRIPT -----------------------------
 
-tell application id "Qlab 4" to tell front workspace
+tell application "Qlab 4" to tell front workspace
 	set deskOptions to {"Allen & Heath GLD/SQ", "Yamaha CL/QL"}
 	
 	set deskToProgram to choose from list deskOptions with title "Choose mixing desk to program"

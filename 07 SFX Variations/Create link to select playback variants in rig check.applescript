@@ -20,7 +20,7 @@ set whereIsRigCheck to "   RIG CHECK" -- the cue name of your rig check title cu
 
 -- RUN SCRIPT -----------------------------
 
-tell application id "com.figure53.QLab.4" to tell front workspace
+tell application "Qlab 4" to tell front workspace
 
 	-- Define variables
 	set allVariants to ""

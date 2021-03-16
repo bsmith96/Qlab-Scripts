@@ -21,7 +21,7 @@ set userPreRoll to 0.0
 
 -- RUN SCRIPT -----------------------------
 
-tell application id "com.figure53.QLab.4" to tell front workspace
+tell application "Qlab 4" to tell front workspace
 	set theCue to last item of (selected as list)
 	set thePre to pre wait of theCue
 	set theParent to parent of theCue

@@ -19,7 +19,7 @@ set outputChannelCount to 6
 ---------- END OF USER DEFINED VARIABLES --
 
 
-tell application id "Qlab 4" to tell front workspace
+tell application "Qlab 4" to tell front workspace
 
 	-- Define variables
 

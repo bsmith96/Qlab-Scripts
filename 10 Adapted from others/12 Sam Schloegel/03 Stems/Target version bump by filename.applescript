@@ -21,7 +21,7 @@ set versionLength to 2 -- How many digits for versioning? v1 / v01, 2 digits rec
 
 -- RUN SCRIPT -----------------------------
 
-tell application id "com.figure53.QLab.4" to tell front workspace
+tell application "Qlab 4" to tell front workspace
 	set theSelection to (selected as list)
 	repeat with eachCue in theSelection
 		if q type of eachCue is "Audio" then
