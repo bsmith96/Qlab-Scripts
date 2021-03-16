@@ -256,7 +256,7 @@ end tell
 
 on testForIt(cuePrefix, cueName, cueList, groupCue)
 	
-	tell application \"QLab 4\" to tell front workspace
+	tell application id \"com.figure53.Qlab.4\" to tell front workspace
 		try
 			set eachCue to cues in groupCue
 			set isThisCue to \"\"
