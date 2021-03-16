@@ -1,8 +1,15 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: FALSE
+-- @description Turn on infinite loop
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @source Rich Walsh (adapted)
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Turns on infinite loop for the selected cue
+-- @separateprocess FALSE
 
-### Turn on infinite loop
+-- @changelog
+--   v1.0  + init
 
 
 tell front workspace

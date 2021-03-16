@@ -1,24 +1,22 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: TRUE
+-- @description Offset midi triggers of selected cues
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Offsets the value of a program change used to trigger the selected cues, based on using scene recalls from a Yamaha QL5 mixing desk to trigger Qlab. If you insert a scene on the desk, run this script with offset "+1" on all cues after that point.
+-- @separateprocess TRUE
 
-### Offset midi triggers of selected cues
+-- @changelog
+--   v1.0  + init
 
 
 tell application "QLab 4"
 	tell front workspace
 		set selectedCues to (selected as list)
 		
-		
 		display dialog "By how much would you like to offset the midi trigger value of the selected cues?" default answer "" buttons {"Offset", "Cancel"} cancel button "Cancel" default button "Offset"
 		set offsetAmount to text returned of result as integer
-		
-		--if select (cue in cue list "Main Cue List" whose cue number is userOffset) then
-		--set firstOffsetCue to q number in cue list "MCL" is userOffset
-		--set cuesToOffset to (cues in cue list "Main Cue List" does not come before firstOffsetCue)
-		--else
-		--	error number 512
-		--end if
 		
 		repeat with eachCue in selectedCues
 			set oldMidiTrigger to midi trigger of eachCue
@@ -40,13 +38,6 @@ tell application "QLab 4"
 			end if
 			
 		end repeat
-		
-		(*if ((count items in itemList) is not equal to Â
-		(count integers in itemList)) then
-		-- If all items arenÕt integers, signal an error.
-		error number 750
-	end if*)
-		
 		
 	end tell
 end tell

@@ -2,7 +2,10 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @version 2.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
 -- @about Starts all looping audio that has not been stopped before the currently selected cue
+-- @separateprocess TRUE
 
 -- @changelog
 --   v2.0  + changed approach to avoid starting every single cue
@@ -11,7 +14,6 @@
 
 
 -- RUN SCRIPT -----------------------------
-
 
 -- Define lists to add cues to
 set loopCues to {} -- adds cues that infinite loop, and removes them as they stop

@@ -2,6 +2,8 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
 -- @about Saves a new version of your qlab file, incrementing a 2 digit version number, and allowing notes (such as a date, or "start of tech")
 -- @separateprocess TRUE
 

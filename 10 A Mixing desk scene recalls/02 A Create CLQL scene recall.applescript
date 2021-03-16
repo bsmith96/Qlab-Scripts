@@ -1,9 +1,24 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: TRUE
+-- @description Create CL/QL scene recall
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Creates a midi cue to recall a scene on Yamaha CL/QL mixing desks
+-- @separateprocess TRUE
 
-### Create CL/QL scene recall
+-- @changelog
+--   v1.0  + init
 
+
+-- USER DEFINED VARIABLES -----------------
+
+set userColor to "green"
+
+---------- END OF USER DEFINED VARIABLES --
+
+
+-- RUN SCRIPT -----------------------------
 
 tell application id "com.figure53.QLab.4" to tell front workspace
 	-- set scene number to recall
@@ -34,10 +49,13 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 	move cue id midiBankID of parent of midiBank to end of sceneGroup
 	set q name of midiBank to "Scene " & sceneNumber & ": Program Change"
 	
-	set q color of sceneGroup to "green"
+	set q color of sceneGroup to userColor
 	collapse sceneGroup
 	
 end tell
+
+
+-- FUNCTIONS ------------------------------
 
 -- Function to calculate the midi channel (used as a bank)
 on calculateChan(num)

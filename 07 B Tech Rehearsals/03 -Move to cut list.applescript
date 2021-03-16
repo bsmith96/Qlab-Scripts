@@ -1,4 +1,25 @@
+-- @description Move to cut list
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @source Sam Schloegel
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Moves the selected cues to a cut cue list, and removes their cue number
+-- @separateprocess TRUE
+
+-- @changelog
+--   v1.0  + init
+
+
+-- USER DEFINED VARIABLES -----------------
+
 set cutListName to "Cut Cues"
+
+---------- END OF USER DEFINED VARIABLES --
+
+
+-- RUN SCRIPT -----------------------------
 
 tell application id "com.figure53.QLab.4" to tell front workspace
 	set theSelection to (selected as list)

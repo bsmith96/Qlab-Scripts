@@ -1,4 +1,25 @@
+-- @description Target version bump by filename
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @source Sam Schloegel
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Retargets selected cues (intended for use with click track stems) from version xx to version xx+1 in the same folder
+-- @separateprocess TRUE
+
+-- @changelog
+--   v1.0  + init
+
+
+-- USER DEFINED VARIABLES -----------------
+
 set versionLength to 2 -- How many digits for versioning? v1 / v01, 2 digits recommended
+
+---------- END OF USER DEFINED VARIABLES --
+
+
+-- RUN SCRIPT -----------------------------
 
 tell application id "com.figure53.QLab.4" to tell front workspace
 	set theSelection to (selected as list)
@@ -26,6 +47,4 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 			set file target of eachCue to (POSIX file newTarget)
 		end if
 	end repeat
-	
 end tell
-

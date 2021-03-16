@@ -1,9 +1,24 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: FALSE
+-- @description Create GLD/SQ scene recall with name
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Creates a midi cue to recall a scene on Allen & Heath GLD/SQ mixing desks. Allows you to name the scene
+-- @separateprocess FALSE
 
-### Create GLD/SQ scene recall with name
+-- @changelog
+--   v1.0  + init
 
+
+-- USER DEFINED VARIABLES -----------------
+
+set userColor to "green" -- the colour of the resulting recall cue
+
+---------- END OF USER DEFINED VARIABLES --
+
+
+-- RUN SCRIPT -----------------------------
 
 tell front workspace
 	-- Set scene number to recall
@@ -40,20 +55,13 @@ tell front workspace
 	set pre wait of midiBank to 0
 	set q name of midiBank to "Scene " & sceneNumber & ": bank + program change"
 	
-	-- Make the Scene Select midi cue
-	(*make type "Midi"
-	set midiScene to first item of (selected as list)
-	set midiSceneID to uniqueID of midiScene
-	set message type of midiScene to sysex
-	set sysex message of midiScene to sceneMessage
-	move cue id midiSceneID of parent of midiScene to end of sceneGroup
-	set pre wait of midiScene to 0.02
-	set q name of midiScene to "Scene " & sceneNumber & ": scene select"*)
-	
-	set q color of sceneGroup to "green"
+	set q color of sceneGroup to userColor
 	collapse sceneGroup
 	
 end tell
+
+
+-- FUNCTIONS ------------------------------
 
 on calculateBank(num)
 	set bank to integer

@@ -1,13 +1,27 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: FALSE
+-- @description Arm/Disarm through dialog
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @source Rich Walsh
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Set the arm state of cues based on a string in their name
+-- @separateprocess FALSE
 
-### Arm/Disarm through dialog
+-- @changelog
+--   v1.0  + init
 
 
-set userDefaultSearchString to "" -- Use this to specify the default search string
+-- USER DEFINED VARIABLES -----------------
 
--- Declarations
+set userDefaultSearchString to ""
+
+---------- END OF USER DEFINED VARIABLES --
+
+
+-- RUN SCRIPT -----------------------------
+
+-- Define variables
 
 global dialogTitle
 set dialogTitle to "Batch Arm/Disarm"
@@ -31,7 +45,7 @@ set the clipboard to theText
 tell front workspace
 	set foundCues to every cue whose q name contains theText
 	set foundCuesRef to a reference to foundCues
-	repeat with eachCue in reverse of foundCuesRef -- Reversed so as to do a Group Cue's children before it
+	repeat with eachCue in reverse of foundCuesRef
 		if theButton is "Arm" then
 			set armed of eachCue to true
 		else if theButton is "Disarm" then

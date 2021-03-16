@@ -1,44 +1,39 @@
 # List of available colors for cues
 
 
-grey
-red
-orange
-green
-blue
-purple
-
-edgecombGray
-mauve
-chartreuse
-bastardAmber
-lilac
-maize
-
-glaucous
-fuchsia
-ecru
-coral
-cerulean
-celadon
-
-bizque
-avocado
-ochre
-olive
-puce
-rufous
-
-sage
-scarlet
-seaFoamGreen
-skyBlue
-taupe
-verdigris
-
-vermillion
-viridian
-fulvous
-wenge
-zaffre
-indigo
+- grey
+- red
+- orange
+- green
+- blue
+- purple
+- edgecombGray
+- mauve
+- chartreuse
+- bastardAmber
+- lilac
+- maize
+- glaucous
+- fuchsia
+- ecru
+- coral
+- cerulean
+- celadon
+- bizque
+- avocado
+- ochre
+- olive
+- puce
+- rufous
+- sage
+- scarlet
+- seaFoamGreen
+- skyBlue
+- taupe
+- verdigris
+- vermillion
+- viridian
+- fulvous
+- wenge
+- zaffre
+- indigo

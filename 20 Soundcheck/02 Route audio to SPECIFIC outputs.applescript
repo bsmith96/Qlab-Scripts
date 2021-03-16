@@ -1,10 +1,33 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: TRUE
+-- @description Route audio to SPECIFIC outputs
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Routes the cue output faders to a specific set of outputs, e.g. only Main PA, only Foldback
+-- @separateprocess TRUE
 
-### Route audio to SPECIFIC outputs
-# Requires a cue number for other similar cues to reference
+-- @changelog
+--   v1.0  + init
 
+
+-- USER DEFINED VARIABLES -----------------
+
+set numberOfOutputs to 10 -- total number of cue outputs in use
+
+set outputsToUse to {1, 2} -- list all output numbers that this script should route to
+
+set userLevel to -12
+
+set thisCueNumber to "LR" -- the cue number of this script
+set otherCueNumbers to {"PA", "FB", "US", "Sur"} -- list of the cue numbers of others instances of these scripts
+
+set cueListToRoute to "Soundcheck" -- the name of the soundcheck cue list. If this is blank, it will use selected cues
+
+---------- END OF USER DEFINED VARIABLES --
+
+
+-- RUN SCRIPT -----------------------------
 
 tell application "QLab 4"
 	tell front workspace
@@ -14,29 +37,34 @@ tell application "QLab 4"
 		-- use row 0 (fader) and columns 1 onwards
 		-- Set names for the cues, and q colors at the end of this script: change this button to red and any others to none.
 		
-		set selectedCues to (cues in (first cue list whose q name is "Soundcheck") as list)
+		if cueListToRoute is not "" then
+			set selectedCues to (cues in (first cue list whose q name is cueListToRoute) as list)
+		else
+			set selectedCues to (selected as list)
+		end if
 		
 		repeat with eachCue in selectedCues
-			
 			set cueType to q type of eachCue
 			if cueType is "Audio" then
 				
-				setLevel eachCue row 0 column 1 db "-inf"
-				setLevel eachCue row 0 column 2 db "-inf"
-				setLevel eachCue row 0 column 3 db "-inf"
-				setLevel eachCue row 0 column 4 db "-inf"
-				setLevel eachCue row 0 column 5 db "-inf"
-				
-				setLevel eachCue row 0 column 6 db 0
+				set currentOutput to 1
+				repeat numberOfOutputs times
+					if currentOutput is in outputsToUse then
+						setLevel eachCue row 0 column currentOutput db userLevel
+					else
+						setLevel eachCue row 0 column currentOutput db "-inf"
+					end if
+					set currentOutput to currentOutput + 1
+				end repeat
 				
 			end if
-			
 		end repeat
 		
-		set q color of cue "SC" to "red" -- this cue // specific outputs
-		set q color of cue "PA" to "none" -- // specific outputs
-		set q color of cue "FB" to "none" -- // additional outputs
-		set q color of cue "Rv" to "none" -- // additional outputs
+		set q color of cue thisCueNumber to "Red"
+		
+		repeat with eachCue in otherCueNumbers
+			set q color of cue eachCue to "none"
+		end repeat
 		
 	end tell
 end tell

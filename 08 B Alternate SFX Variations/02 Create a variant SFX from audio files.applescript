@@ -1,14 +1,24 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: TRUE
+-- @description SFX VARIATIONS: Create a variant SFX from audio files
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Creates a group of multiple variations of the same SFX, to be armed and disarmed by a selection cue. Uses the audio file name to name the cue
+-- @separateprocess TRUE
 
-### Create a variant SFX from audio files
+-- @changelog
+--   v1.0  + init
 
+
+-- RUN SCRIPT -----------------------------
 
 tell application id "com.figure53.QLab.4" to tell front workspace
 	
+	-- Define variables
 	set itemNumber to ""
 	set otherFilesPrefix to {}
+
 	-- Files should be named with the cue number and the title of the cue, then the actor's full name / full announcement title after a comma. e.g. "ann.eve.1 Opening Announcement, Evening" for an opening announcement
 	
 	-- Please note the script does not perform any checks to ensure all global information is correct on on the files (variable, number, name)
@@ -134,6 +144,9 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 	
 	
 end tell
+
+
+-- FUNCTIONS ------------------------------
 
 on getFileName(theFile)
 	tell application "Finder"

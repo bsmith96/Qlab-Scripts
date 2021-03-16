@@ -1,9 +1,17 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: TRUE
+-- @description Speaker Polarity Check
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Designed to work with the android app "Polarity Checker", with audio files stored in a hidden cue list. This script launches audio files.
+-- @separateprocess TRUE
 
-### Speaker Polarity Check
+-- @changelog
+--   v1.0  + init
 
+
+-- RUN SCRIPT -----------------------------
 
 -- If there is no audio, check the routing of the audio files (in "Other Scripts")
 
@@ -52,8 +60,3 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 	
 	
 end tell
-
-on chooseRecording()
-	
-	
-end chooseRecording

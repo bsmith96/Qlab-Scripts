@@ -2,6 +2,8 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
 -- @about Creates spoken output names and automated line check cues
 -- @separateprocess TRUE
 
@@ -115,9 +117,6 @@ tell application "Finder"
 	set allFiles to items 1 thru -2 of allTheFiles
 end tell
 
--- Create list for later
-set lineCheckCues to {}
-
 -- Make audio cues
 set outputNumber to 0
 tell application "QLab 4" to tell front workspace
@@ -133,7 +132,6 @@ tell application "QLab 4" to tell front workspace
 		try
 			move cue id thisCueID of parent of thisCue to end of groupCue
 		end try
-		my insertItemInList(thisCue, lineCheckCues, outputNumber)
 		
 		-- Set level of cues as they are made
 		repeat with eachColumn from 1 to outputCount

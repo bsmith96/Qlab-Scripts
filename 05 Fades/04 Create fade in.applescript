@@ -1,13 +1,22 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: FALSE
+-- @description Create fade in
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @source Rich Walsh (adapted)
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Create a fade in for the selected audio/group cue
+-- @separateprocess FALSE
 
-### Create fade in
+-- @changelog
+--   v1.0  + init
 
 
-set userDuration to 5
 tell front workspace
 	set originalCue to last item of (selected as list)
+
+	-- Create fade in for an audio cue
+
 	if q type of originalCue is "Audio" then
 		set originalCueLevel to originalCue getLevel row 0 column 0
 		originalCue setLevel row 0 column 0 db -120
@@ -16,9 +25,11 @@ tell front workspace
 		set newCue to last item of (selected as list)
 		set cue target of newCue to originalCue
 		set pre wait of newCue to originalPreWait
-		--set duration of newCue to userDuration
 		newCue setLevel row 0 column 0 db originalCueLevel
 		set q name of newCue to "Fade in: " & q name of originalCue
+
+	-- Create fade in for each audio cue in a selected group
+
 	else if q type of originalCue is "Group" then
 		set originalCueName to q name of originalCue
 		set cuesToFade to (cues in originalCue)
@@ -27,7 +38,6 @@ tell front workspace
 		set fadeGroupID to uniqueID of fadeGroup
 		set q name of fadeGroup to "Fade in: " & originalCueName
 		repeat with eachCue in cuesToFade
-			--set eachCueType to q type of eachCue
 			if q type of eachCue is "Audio" then
 				set eachCueLevel to eachCue getLevel row 0 column 0
 				eachCue setLevel row 0 column 0 db -120
@@ -36,7 +46,6 @@ tell front workspace
 				set newCue to last item of (selected as list)
 				set cue target of newCue to eachCue
 				set pre wait of newCue to eachPreWait
-				--set duration of newCue to userDuration
 				newCue setLevel row 0 column 0 db eachCueLevel
 				set q name of newCue to "Fade in: " & q name of eachCue
 				set newCueID to uniqueID of newCue

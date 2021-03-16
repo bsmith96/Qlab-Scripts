@@ -1,11 +1,25 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: FALSE
+-- @description Label files in use
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @source Rich Walsh
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Labels files referenced by the current qlab file in finder, in a colour of the user's choice
+-- @separateprocess FALSE
 
-### Label files in use
+-- @changelog
+--   v1.0  + init
 
+
+-- USER DEFINED VARIABLES -----------------
 
 property defaultColor : "Red"
+
+---------- END OF USER DEFINED VARIABLES --
+
+
+-- RUN SCRIPT -----------------------------
 
 set theColors to {"No color", "Orange", "Red", "Yellow", "Blue", "Purple", "Green", "Gray"}
 

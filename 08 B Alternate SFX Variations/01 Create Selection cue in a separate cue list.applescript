@@ -1,11 +1,21 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: TRUE
+-- @description SFX VARIATIONS: Create selection cue in a separate cue list
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Creates a group and OSC cues in a separate cue list to select which variations to arm and disarm
+-- @separateprocess TRUE
 
-### Create Selection cue in a separate cue list
+-- @changelog
+--   v1.0  + init
 
+
+-- RUN SCRIPT -----------------------------
 
 tell application id "com.figure53.QLab.4" to tell front workspace
+
+-- Define variables
 	set triggerName to ""
 	set triggerAbb to ""
 	set triggerOptions to {}
@@ -13,7 +23,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 	set allVariations to "No"
 	set currentPosition to 0
 	
-	-- Get the name & abbreviation of the variable
+	-- Get the name & abbreviation of the variation
 	set firstResults to (display dialog "What is the name of this Character, or Announcement?" default answer "" buttons {"OK", "Announcement", "Cancel"} default button "OK" cancel button "Cancel")
 	if button returned of firstResults is "Announcement" then
 		set triggerName to "Announcement"
@@ -91,7 +101,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 		set current cue list to first cue list whose q name is "Select Playback Variants"
 	end if
 	
-	-- Make the main variable group (not to be fired, just to house those within)
+	-- Make the main variations group (not to be fired, just to house those within)
 	make type "group"
 	set triggerGroup to last item of (selected as list)
 	set q name of triggerGroup to "Select: " & triggerName
@@ -101,7 +111,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 	-- Make variation groups
 	repeat with eachItem in triggerOptions
 		
-		--Set the current variable for triggerOptionsAbb
+		--Set the current variation for triggerOptionsAbb
 		set currentPosition to currentPosition + 1
 		set eachAbb to item currentPosition in triggerOptionsAbb
 		
@@ -160,6 +170,9 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 	end repeat
 	
 end tell
+
+
+-- FUNCTIONS ------------------------------
 
 on insertItemInList(theItem, theList, thePosition)
 	set theListCount to length of theList

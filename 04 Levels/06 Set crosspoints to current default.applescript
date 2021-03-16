@@ -1,24 +1,41 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: TRUE
+-- @description Set crosspoints to current default
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about If you need to change the default crosspoints after programming a lot of audio cues, select all audio cues and run this script to set the crosspoints to the new default.
+-- @separateprocess TRUE
 
-### Set crosspoints to current default
+-- @changelog
+--   v1.0  + init
 
 
-tell application id "com.figure53.QLab.4" to tell front workspace
-	
-	set inputChannelCount to 2
-	set outputChannelCount to 6
-	
-	
+-- USER DEFINED VARIABLES -----------------
+
+set inputChannelCount to 2
+set outputChannelCount to 6
+
+---------- END OF USER DEFINED VARIABLES --
+
+
+tell application id "Qlab 4" to tell front workspace
+
+	-- Define variables
+
 	set useCueList to (selected as list)
 	set defaultLevels to {}
 	
-	my findDefault(inputChannelCount, outputChannelCount, defaultLevels)
-	my setDefault(inputChannelCount, outputChannelCount, useCueList, defaultLevels)
-	
-	
+
 end tell
+
+-- Run script
+
+findDefault(inputChannelCount, outputChannelCount, defaultLevels)
+setDefault(inputChannelCount, outputChannelCount, useCueList, defaultLevels)
+	
+
+-- FUNCTIONS ------------------------------
 
 on findDefault(inputCount, outputCount, Levels)
 	tell application "QLab 4" to tell front workspace
@@ -45,9 +62,9 @@ on findDefault(inputCount, outputCount, Levels)
 	end tell
 end findDefault
 
+
 on setDefault(inputCount, outputCount, cueList, defaultLevels)
 	tell application "QLab 4" to tell front workspace
-		
 		
 		repeat with eachCue in cueList
 			if q type of eachCue is "Audio" then
@@ -61,15 +78,6 @@ on setDefault(inputCount, outputCount, cueList, defaultLevels)
 						end if
 						set newValue to (item listPosition of defaultLevels) as integer
 						setLevel eachCue row eachRow column eachCol db newValue
-						
-						(*set thisLevel to getLevel defaultAudio row eachRow column eachCol
-				set rowAdjust to (eachRow - 1) * (outputCount + 1)
-				if eachRow is 1 then
-					set listPosition to eachCol + 1
-				else if eachRow is greater than or equal to 2 then
-					set listPosition to eachCol + rowAdjust + 1
-				end if
-				my insertItemInList(thisLevel, defaultLevels, listPosition)*)
 					end repeat
 				end repeat
 			end if
@@ -77,7 +85,6 @@ on setDefault(inputCount, outputCount, cueList, defaultLevels)
 		
 	end tell
 end setDefault
-
 
 
 on insertItemInList(theItem, theList, thePosition)

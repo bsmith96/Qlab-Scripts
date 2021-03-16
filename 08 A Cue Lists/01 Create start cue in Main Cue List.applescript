@@ -1,15 +1,31 @@
-##### QLAB PROGRAMMING SCRIPTS
-##### Ben Smith 2020-21
-#### Run in separate process: FALSE
+-- @description Create start cue in Main Cue List
+-- @author Ben Smith
+-- @link bensmithsound.uk
+-- @source Rich Walsh (adapted)
+-- @version 1.0
+-- @testedmacos 10.13.6
+-- @testedqlab 4.6.9
+-- @about Creates a cue at the end of Main Cue List targeting the currently selected cue in another cue list.
+-- @separateprocess FALSE
 
-### Create start cue in Main Cue List
+-- @changelog
+--   v1.0  + init
 
+
+-- USER DEFINED VARIABLES -----------------
+
+set userCueList to "Main Cue List"
+
+---------- END OF USER DEFINED VARIABLES --
+
+
+-- RUN SCRIPT -----------------------------
 
 tell front workspace
 	set originalCueList to q name of current cue list
-	if originalCueList is not "Main Cue List" then
+	if originalCueList is not userCueList then
 		set selectedCues to selected as list
-		set current cue list to first cue list whose q name is "Main Cue List"
+		set current cue list to first cue list whose q name is userCueList
 		repeat with eachCue in selectedCues
 			make type "Start"
 			set newCue to last item of (selected as list)
