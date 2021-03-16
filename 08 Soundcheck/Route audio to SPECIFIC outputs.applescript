@@ -29,7 +29,7 @@ set cueListToRoute to "Soundcheck" -- the name of the soundcheck cue list. If th
 
 -- RUN SCRIPT -----------------------------
 
-tell application "QLab 4"
+tell application id "com.figure53.Qlab.4"
 	tell front workspace
 		
 		-- A button to set routing of soundcheck tracks to a specific setup

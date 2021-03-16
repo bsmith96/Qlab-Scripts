@@ -19,7 +19,7 @@ set outputChannelCount to 6
 ---------- END OF USER DEFINED VARIABLES --
 
 
-tell application "Qlab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 
 	-- Define variables
 
@@ -38,7 +38,7 @@ setDefault(inputChannelCount, outputChannelCount, useCueList, defaultLevels)
 -- FUNCTIONS ------------------------------
 
 on findDefault(inputCount, outputCount, Levels)
-	tell application "QLab 4" to tell front workspace
+	tell application id "com.figure53.Qlab.4" to tell front workspace
 		
 		make type "Audio"
 		set defaultAudio to last item of (selected as list)
@@ -64,7 +64,7 @@ end findDefault
 
 
 on setDefault(inputCount, outputCount, cueList, defaultLevels)
-	tell application "QLab 4" to tell front workspace
+	tell application id "com.figure53.Qlab.4" to tell front workspace
 		
 		repeat with eachCue in cueList
 			if q type of eachCue is "Audio" then

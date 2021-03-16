@@ -14,7 +14,7 @@
 
 -- RUN SCRIPT -----------------------------
 
-tell application "Qlab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	set deskOptions to {"Allen & Heath GLD/SQ", "Yamaha CL/QL"}
 	
 	set deskToProgram to choose from list deskOptions with title "Choose mixing desk to program"
@@ -27,7 +27,7 @@ setDesk(deskToProgram)
 -- FUNCTIONS ------------------------------
 
 on setDesk(desk)
-	tell application "QLab 4" to tell front workspace
+	tell application id "com.figure53.Qlab.4" to tell front workspace
 		if desk is {"Allen & Heath GLD/SQ"} then
 			set q_num of cue "Recall" to "ahRecall"
 			set q_num of cue "Name" to "ahRecallName"

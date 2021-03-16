@@ -17,7 +17,7 @@
 -- Ensure your existing project follows this scheme and it will create the new file correctly.
 
 -- Get original filename & path
-tell application "QLab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	set originalFileName to q number
 	set originalPath to path
 end tell
@@ -61,7 +61,7 @@ end if
 
 -- Save a new version
 
-tell application "QLab 4"
+tell application id "com.figure53.Qlab.4"
 	tell front workspace
 		save in ((originalPath as string) & (newFileName as string))
 	end tell

@@ -13,7 +13,7 @@
 
 -- RUN SCRIPT -----------------------------
 
-tell application "Qlab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 
 -- Define variables
 	set triggerName to ""
@@ -212,7 +212,7 @@ end insertItemInList
 
 -- Script with the text to be copied into the script created, for renaming groups containing these SFX
 on makeRenameScript(theCuePrefix, theCueName, theCueList, itemGroup)
-	tell application "QLab 4" to tell front workspace
+	tell application id "com.figure53.Qlab.4" to tell front workspace
 		
 		make type "Script"
 		set renameScript to last item of (selected as list)

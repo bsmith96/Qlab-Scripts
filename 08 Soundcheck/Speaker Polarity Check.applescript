@@ -15,7 +15,7 @@
 
 -- If there is no audio, check the routing of the audio files (in "Other Scripts")
 
-tell application "Qlab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	set playbackOptions to {"STOP", "Full Range", "80 Hz", "160 Hz", "500 Hz", "1k2 Hz", "4 kHz"}
 	

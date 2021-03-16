@@ -20,7 +20,7 @@ set loopCues to {} -- adds cues that infinite loop, and removes them as they sto
 set fadeCues to {} -- adds cues that fade levels of loopCues, but do not stop them
 set groupLoops to {} -- adds group cues that contain loopCues (used within handler)
 
-tell application "QLab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	set theCue to playback position of (first cue list whose q name is "Main Cue List")
 	set theCueID to uniqueID of theCue
 	set allCues to every cue of (first cue list whose q name is "Main Cue List")
@@ -57,7 +57,7 @@ end tell
 -- FUNCTIONS ------------------------------
 
 on checkForCues(theCues, loopCues, fadeCues, groupLoops, theCueID)
-	tell application "QLab 4" to tell front workspace
+	tell application id "com.figure53.Qlab.4" to tell front workspace
 		repeat with eachCue in theCues
 			set eachCueID to uniqueID of eachCue
 			

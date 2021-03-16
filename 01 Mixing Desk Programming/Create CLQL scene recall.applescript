@@ -20,7 +20,7 @@ set userColor to "green"
 
 -- RUN SCRIPT -----------------------------
 
-tell application "Qlab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- set scene number to recall
 	display dialog "Please select a scene number to recall" default answer "" buttons {"Set", "Cancel"} cancel button "Cancel" default button "Set" with title "SCENE NUMBER"
 	set sceneNumber to text returned of result as integer

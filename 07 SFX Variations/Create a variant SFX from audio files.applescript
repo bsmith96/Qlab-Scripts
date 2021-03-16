@@ -13,7 +13,7 @@
 
 -- RUN SCRIPT -----------------------------
 
-tell application "Qlab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Define variables
 	set itemNumber to ""

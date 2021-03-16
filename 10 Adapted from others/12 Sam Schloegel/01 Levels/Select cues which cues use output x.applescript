@@ -21,7 +21,7 @@ set userThresh to -60
 
 -- RUN SCRIPT -----------------------------
 
-tell application "Qlab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	set theSelection to (selected as list)
 	set theList to {}
 	set theOut to (display dialog "Which cue output?" default answer "1" buttons {"Cancel", "Go"} default button "Go")
