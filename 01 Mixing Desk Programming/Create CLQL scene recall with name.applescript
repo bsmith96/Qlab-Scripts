@@ -51,7 +51,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 	move cue id midiBankID of parent of midiBank to end of sceneGroup
 	set q name of midiBank to "Scene " & sceneNumber & ": Program Change"
 	
-	set q color of sceneGroup to "green"
+	set q color of sceneGroup to userColor
 	collapse sceneGroup
 	
 end tell
