@@ -2,18 +2,18 @@
 
 ## Tags
 
-- @description Name of the script
-- @author Most recent author of the script
-- @link Link to the author's website
-- @source Where scripts are taken from another source, or adapted from one, that author is listed here
-- @version Version of the script
-- @testedmacos The most recent version of MacOS that the script has been tested on
-- @testedqlab The most recent version of Qlab that the script has been tested on
-- @about A description of the script
-- @separateprocess TRUE or FALSE, whether the script needs to run in a separate process within Qlab
-- @changelog Changes for this version of the script
+- `@description` Name of the script
+- `@author` Most recent author of the script
+- `@link` Link to the author's website
+- `@source` Where scripts are taken from another source, or adapted from one, that author is listed here
+- `@version` Version of the script
+- `@testedmacos` The most recent version of MacOS that the script has been tested on
+- `@testedqlab` The most recent version of Qlab that the script has been tested on
+- `@about` A description of the script
+- `@separateprocess` TRUE or FALSE, whether the script needs to run in a separate process within Qlab
+- `@changelog` Changes for this version of the script
 
-## Readme
+## Readme
 
 This is a selection of scripts, sourced from various free templates, as well as developed by myself, for programming and using Qlab. I've included OSC cues which I use in the same vein, to automate repetitive parts of the workflow, and formatted this whole README and repository to remain consistent with how my template project is set up.
 
