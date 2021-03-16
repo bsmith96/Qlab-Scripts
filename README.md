@@ -264,11 +264,11 @@ Sets the postwait of the cue to the same as the duration, and sets the continue 
 
 #### Files
 
-### Label files in use
+##### Label files in use
 
 Labels all audio files currently used within the project in a colour of your choice in finder.
 
-### Reveal target audio file in finder
+##### Reveal target audio file in finder
 
 Opens a finder window and reveals the audio file targetted by the current audio cue.
 
@@ -288,8 +288,6 @@ For cues in another cue list, this creates a 'start' cue in the Main Cue List to
 
 ##### Which cues use output x
 
-**This script needs adapting**
-
 Quickly see which of the selected cues are routed to a specific output, to see how often it is used.
 
 ------
@@ -298,13 +296,9 @@ Quickly see which of the selected cues are routed to a specific output, to see h
 
 ##### Load Parent Group To Start Of Selected Child
 
-**Needs adapting**
-
 Loads the group containing the selected cue to the time that the selected cue would start (e.g. the end of its pre-wait).
 
 ##### Move To Cut List
-
-**Needs adapting**
 
 Moves the selected cue/s to a new cue list.
 
