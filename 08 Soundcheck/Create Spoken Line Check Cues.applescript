@@ -1,13 +1,14 @@
 -- @description Create spoken line check cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates spoken output names and automated line check cues
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.1  + cleaned up functions
 --   v1.0  + init
 
 
