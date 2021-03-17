@@ -1,4 +1,4 @@
--- @description Make cue from script
+-- @description Import scripts to cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @version 1.0
