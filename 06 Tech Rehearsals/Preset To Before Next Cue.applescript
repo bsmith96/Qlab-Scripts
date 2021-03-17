@@ -1,16 +1,23 @@
 -- @description Preset to before next cue
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 2.0
+-- @version 2.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Starts all looping audio that has not been stopped before the currently selected cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.1  + cue list name is a variable
 --   v2.0  + changed approach to avoid starting every single cue
---         + works with stopped and fade-and-stopped audio cues and groups
 --   v1.0  + init
+
+
+-- USER DEFINED VARIABLES -----------------
+
+set cueListName to "Main Cue List"
+
+---------- END OF USER DEFINED VARIABLES --
 
 
 -- RUN SCRIPT -----------------------------
@@ -21,12 +28,12 @@ set fadeCues to {} -- adds cues that fade levels of loopCues, but do not stop th
 set groupLoops to {} -- adds group cues that contain loopCues (used within handler)
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
-	set theCue to playback position of (first cue list whose q name is "Main Cue List")
+	set theCue to playback position of (first cue list whose q name is cueListName)
 	set theCueID to uniqueID of theCue
-	set allCues to every cue of (first cue list whose q name is "Main Cue List")
+	set allCues to every cue of (first cue list whose q name is cueListName)
 	
 	-- Get a list of all infinite looped audio files that haven't stopped by the current position
-	set {loopCues, fadeCues} to my checkForCues(allCues, loopCues, fadeCues, groupLoops, theCueID)
+	set {loopCues, fadeCues} to my checkForCues(allCues, loopCues, fadeCues, groupLoops, theCueID, cueListName)
 	
 	-- Start all infinite loop cues at their loop
 	repeat with eachCue in loopCues
@@ -56,7 +63,7 @@ end tell
 
 -- FUNCTIONS ------------------------------
 
-on checkForCues(theCues, loopCues, fadeCues, groupLoops, theCueID)
+on checkForCues(theCues, loopCues, fadeCues, groupLoops, theCueID, cueListName)
 	tell application id "com.figure53.Qlab.4" to tell front workspace
 		repeat with eachCue in theCues
 			set eachCueID to uniqueID of eachCue
@@ -72,7 +79,7 @@ on checkForCues(theCues, loopCues, fadeCues, groupLoops, theCueID)
 				if my checkForLoop(eachCue) is true then
 					my insertItemInList(uniqueID of eachCue, loopCues, 1)
 					set parentCue to parent of eachCue
-					repeat while parent of parentCue is not (first cue list whose q name is "Main Cue List")
+					repeat while parent of parentCue is not (first cue list whose q name is cueListName)
 						my insertItemInList((uniqueID of parent of eachCue), groupLoops, 1)
 						set parentCue to parent of parentCue
 					end repeat
@@ -130,7 +137,7 @@ on checkForCues(theCues, loopCues, fadeCues, groupLoops, theCueID)
 				-- If the current cue is a group cue, do this handler again (recursive) to look for looping audio cues.
 				
 			else if eachCueType is "Group" then
-				my checkForCues((every cue of eachCue), loopCues, fadeCues, groupLoops, theCueID)
+				my checkForCues((every cue of eachCue), loopCues, fadeCues, groupLoops, theCueID, cueListName)
 			end if
 		end repeat
 	end tell
