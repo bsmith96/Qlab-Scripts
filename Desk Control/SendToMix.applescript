@@ -1,4 +1,4 @@
--- Creates a midi sysex cue to set the value of any fader to a given value
+-- Creates a midi sysex cue to set the value of a fader's send to a mix
 -- Yamaha LS9-32
 -- change to preamble will change desk type, should work for modern desks
 --  but to be vereified

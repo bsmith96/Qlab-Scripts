@@ -1,4 +1,4 @@
--- Creates a midi sysex cue to set the value of any fader to a given value
+-- Creates a midi sysex cue to set the cue / on value of any channel
 -- Yamaha LS9-32
 -- change to preamble will change desk type, should work for modern desks
 --  but to be vereified
@@ -79,28 +79,6 @@ on faderString(inputMsg)
 	
 	return msg
 end faderString
-
--- fader value as hex string
-on midiDbVal(d)
-	if d > -138.0 and d ² -96.0 then
-		set q to 47 + (d / 3)
-	else if d > -96.0 and d ² -78.0 then
-		set q to 111 + d
-	else if d > -77.8 and d ² -40 then
-		set q to 423 + d * 5
-	else if d > -40 and d ² -20 then
-		set q to 623 + d * 10
-	else if d > -20 then
-		set q to 823 + d * 20
-	end if
-	set q to round (q)
-	
-	set y to q div 128 as text
-	set z to hex(q mod 128)
-	
-	set midiVal to "0" & y & " " & z
-	return midiVal
-end midiDbVal
 
 -- splits text into list
 to split(someText, delimiter)
