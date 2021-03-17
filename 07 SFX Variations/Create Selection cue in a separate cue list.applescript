@@ -1,13 +1,14 @@
 -- @description SFX VARIATIONS: Create selection cue in a separate cue list
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates a group and OSC cues in a separate cue list to select which variations to arm and disarm. Requires default group to be "timeline", and default network cue to be "Qlab message".
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.1  + fixed error catching
 --   v1.0  + init
 
 
