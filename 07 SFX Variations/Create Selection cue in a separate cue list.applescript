@@ -88,18 +88,15 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	
 	-- Create cue list if necessary, or switch to it
-	set didItWork to "No"
 	try
 		set current cue list to first cue list whose q name is "Select Playback Variants"
-		set didItWork to "Yes"
-	end try
-	if didItWork is "No" then
+	on error
 		make type "cue list"
 		set variantSelectCueList to first cue list whose q name is "Cue list"
 		set q name of variantSelectCueList to "Select Playback Variants"
 		collapse variantSelectCueList
 		set current cue list to first cue list whose q name is "Select Playback Variants"
-	end if
+	end try
 	
 	-- Make the main variations group (not to be fired, just to house those within)
 	make type "group"
