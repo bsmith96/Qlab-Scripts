@@ -1,30 +1,10 @@
 # Qlab Scripts
 
-## Tags
-
-- `@description` Name of the script
-- `@author` Most recent author of the script
-- `@link` Link to the author's website
-- `@source` Where scripts are taken from another source, or adapted from one, that author is listed here
-- `@version` Version of the script
-- `@testedmacos` The most recent version of MacOS that the script has been tested on
-- `@testedqlab` The most recent version of Qlab that the script has been tested on
-- `@about` A description of the script
-- `@separateprocess` TRUE or FALSE, whether the script needs to run in a separate process within Qlab
-- `@changelog` Changes for this version of the script
-
-## Introduction
-
-This is a collection of scripts for Figure 53's **Qlab** show control software. I started out working with scripts which have been shared freely online, and evolved into editing these scripts, and more recently creating brand new scripts to automate parts of my workflow.
-
-Since my current set of scripts includes a collection of scripts from others which have not been meaningfully adapted, I have put these in a separate folder, "Adapted from others". This is primarily so that this repository is an up-to-date list of the scripts that I use, and I can work from any of them when adapting new ones. However, if these are your scripts and you'd prefer I didn't have versions avaiable publically, please don't hesitate to let me know!
-
-In all scripts that I have adapted from publically available versions, I have credited the original author in the `@source` tag, in the header of the file.
-
-Some scripts are meant for regular use while programming (such as level bumps, creating fades for cues, and creating mixing desk recall midi cues). Some scripts are intended for one-off use (such as creating line-check cues, or updating the crosspoints of all programmed cues). A few scripts are very specifically designed for my workflow ("choose desk to program" and "speaker polarity check" specifically), so unless you recreate my qlab template directly, these may not be as useful. However, they could still be useful if you would like to adapt them!
-
 ## Contents
 
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Tags](#tags)
 - [01 Mixing Desk Programming](#mixing-desk-programming)
 - [02 Audio Cue Tools](#audio-cue-tools)
 - [03 Levels](#levels)
@@ -37,6 +17,41 @@ Some scripts are meant for regular use while programming (such as level bumps, c
   - [11 Rich Walsh](#rich-walsh)
   - [12 Sam Schloegel](#sam-schloegel)
 - [Miscellaneous](#Miscellaneous)
+
+------
+
+## Introduction
+
+This is a collection of scripts for Figure 53's **Qlab** show control software. I started out working with scripts which have been shared freely online, and evolved into editing these scripts, and more recently creating brand new scripts to automate parts of my workflow.
+
+Since my current set of scripts includes a collection of scripts from others which have not been meaningfully adapted, I have put these in a separate folder, "Adapted from others". This is primarily so that this repository is an up-to-date list of the scripts that I use, and I can work from any of them when adapting new ones. However, if these are your scripts and you'd prefer I didn't have versions avaiable publically, please don't hesitate to let me know!
+
+In all scripts that I have adapted from publically available versions, I have credited the original author in the `@source` tag, in the header of the file.
+
+Some scripts are meant for regular use while programming (such as level bumps, creating fades for cues, and creating mixing desk recall midi cues). Some scripts are intended for one-off use (such as creating line-check cues, or updating the crosspoints of all programmed cues). A few scripts are very specifically designed for my workflow ("choose desk to program" and "speaker polarity check" specifically), so unless you recreate my qlab template directly, these may not be as useful. However, they could still be useful if you would like to adapt them!
+
+## Installation
+
+Most of these scripts are intended to run within Qlab, as script cues. The intention is that you define hotkeys to them, and then you can run the scripts easily when you need them. You can either put them in a separate cue list, or in a cue cart, and have labelled buttons for each scripts.
+
+Qlab script cues allow you to choose whether to "Run [the script] in separate process". This, largely, means you have to `tell application "Qlab"` if the box is ticked, and simply `tell front workspace` if it is not; it is always telling Qlab. The `@separateprocess` tag gives a true or false value to whether the checkbox should be ticked.
+
+You can also use the script "~/00 Import scripts to cues.applescript". Run the script from Script Editor with your qlab file open, and it will allow you to select the script or scripts you wish to import. If you import multiple scripts, it will create script cues and write the scripts (with less header information) into the cue. If you import a single script and currently have a script cue selected, it will write the script into that cue.
+
+The importer script will also populate - from the tags - the Cue Name (`@description`) and Notes (`@about`). Set your cue default setting for "Run in separate process", and it will alert you when you need to change this - sadly it is not currently possible to script this setting. You can also choose whether you want notifications of discrepancies between the most recent versions of MacOS and Qlab the scripts have been tested on, and your current system versions.
+
+## Tags
+
+- `@description` Name of the script
+- `@author` Most recent author of the script
+- `@link` Link to the author's website
+- `@source` Where scripts are taken from another source, or adapted from one, that author is listed here
+- `@version` Version of the script
+- `@testedmacos` The most recent version of MacOS that the script has been tested on
+- `@testedqlab` The most recent version of Qlab that the script has been tested on
+- `@about` A description of the script
+- `@separateprocess` TRUE or FALSE, whether the script needs to run in a separate process within Qlab
+- `@changelog` Changes for this version of the script
 
 ------
 
@@ -317,6 +332,10 @@ Allows you to create a new folder of v02 stems, and point the selected cues to i
 ------
 
 ## Miscellaneous
+
+### 00 Import scripts to cues
+
+A quick way to generate Qlab "script" cues from this repository, this imports chosen scripts into cues. You can then set hotkeys and work with them easily!
 
 ### 00 List of available colors
 

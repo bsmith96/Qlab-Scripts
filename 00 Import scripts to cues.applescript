@@ -71,6 +71,7 @@ repeat with eachScript in scriptFiles
 		
 	end repeat
 	
+	log "-----------"
 	log "Description: " & eachScriptDescription
 	log "Version: " & eachScriptVersion
 	log "MacOS: " & eachScriptMacOS
