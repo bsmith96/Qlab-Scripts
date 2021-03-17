@@ -9,6 +9,7 @@
 
 -- @changelog
 --   v2.1  + cue list name is a variable
+--         + removed unnecessary function
 --   v2.0  + changed approach to avoid starting every single cue
 --   v1.0  + init
 
@@ -48,7 +49,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	end repeat
 	
 	-- Start all fades of of infinite loop cues at the end of their duration, setting the final level of fade ins or builds/dips
-	repeat with eachCue in reverse of fadeCues
+	repeat with eachCue in fadeCues
 		try
 			set eachCue to cue id eachCue
 			set cuePreWait to pre wait of eachCue
@@ -77,10 +78,12 @@ on checkForCues(theCues, loopCues, fadeCues, groupLoops, theCueID, cueListName)
 			
 			if eachCueType is "Audio" then
 				if my checkForLoop(eachCue) is true then
-					my insertItemInList(uniqueID of eachCue, loopCues, 1)
+					--my insertItemInList(uniqueID of eachCue, loopCues, 1)
+					set end of loopCues to (uniqueID of eachCue)
 					set parentCue to parent of eachCue
 					repeat while parent of parentCue is not (first cue list whose q name is cueListName)
-						my insertItemInList((uniqueID of parent of eachCue), groupLoops, 1)
+						--my insertItemInList((uniqueID of parent of eachCue), groupLoops, 1)
+						set end of groupLoops to (uniqueID of parent of eachCue)
 						set parentCue to parent of parentCue
 					end repeat
 				end if
@@ -129,7 +132,8 @@ on checkForCues(theCues, loopCues, fadeCues, groupLoops, theCueID, cueListName)
 					set eachCueTarget to (uniqueID of cue target of eachCue)
 					repeat with eachLoop in loopCues
 						if eachCueTarget is in eachLoop then
-							my insertItemInList(uniqueID of eachCue, fadeCues, 1)
+							--my insertItemInList(uniqueID of eachCue, fadeCues, 1)
+							set end of fadeCues to (uniqueID of eachCue)
 						end if
 					end repeat
 				end if
@@ -155,40 +159,3 @@ on checkForLoop(theCue) -- returns true or false
 		end if
 	end tell
 end checkForLoop
-
-
-on insertItemInList(theItem, theList, thePosition)
-	set theListCount to length of theList
-	if thePosition is 0 then
-		return false
-	else if thePosition is less than 0 then
-		if (thePosition * -1) is greater than theListCount + 1 then return false
-	else
-		if thePosition is greater than theListCount + 1 then return false
-	end if
-	if thePosition is less than 0 then
-		if (thePosition * -1) is theListCount + 1 then
-			set beginning of theList to theItem
-		else
-			set theList to reverse of theList
-			set thePosition to (thePosition * -1)
-			if thePosition is 1 then
-				set beginning of theList to theItem
-			else if thePosition is (theListCount + 1) then
-				set end of theList to theItem
-			else
-				set theList to (items 1 thru (thePosition - 1) of theList) & theItem & (items thePosition thru -1 of theList)
-			end if
-			set theList to reverse of theList
-		end if
-	else
-		if thePosition is 1 then
-			set beginning of theList to theItem
-		else if thePosition is (theListCount + 1) then
-			set end of theList to theItem
-		else
-			set theList to (items 1 thru (thePosition - 1) of theList) & theItem & (items thePosition thru -1 of theList)
-		end if
-	end if
-	return theList
-end insertItemInList
