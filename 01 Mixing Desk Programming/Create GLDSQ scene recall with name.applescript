@@ -1,19 +1,24 @@
 -- @description Create GLD/SQ scene recall with name
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates a midi cue to recall a scene on Allen & Heath GLD/SQ mixing desks. Allows you to name the scene
 -- @separateprocess FALSE
 
 -- @changelog
+--   v1.1  + can now colour parent groups
 --   v1.0  + init
 
 
 -- USER DEFINED VARIABLES -----------------
 
 set userColor to "green" -- the colour of the resulting recall cue
+
+set colorParentGroups to TRUE -- set colour of any groups containing the recall group as well?
+
+set cueListName to "Main Cue List" -- Name of main cue list
 
 ---------- END OF USER DEFINED VARIABLES --
 
@@ -55,7 +60,21 @@ tell front workspace
 	set pre wait of midiBank to 0
 	set q name of midiBank to "Scene " & sceneNumber & ": bank + program change"
 	
+	-- Color the group and any groups containing the group
 	set q color of sceneGroup to userColor
+
+	if colorParentGroups is TRUE
+		set groupParent to parent of sceneGroup
+		repeat
+			if q name of groupParent is cueListName then
+				exit repeat
+			else
+				set q color of groupParent to userColor
+				set groupParent to parent of groupParent
+			end if
+		end repeat
+	end if
+
 	collapse sceneGroup
 	
 end tell

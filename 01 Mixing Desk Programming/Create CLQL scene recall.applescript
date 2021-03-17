@@ -1,19 +1,24 @@
 -- @description Create CL/QL scene recall
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates a midi cue to recall a scene on Yamaha CL/QL mixing desks
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.1  + can now colour parent groups
 --   v1.0  + init
 
 
 -- USER DEFINED VARIABLES -----------------
 
 set userColor to "green"
+
+set colorParentGroups to TRUE -- set colour of any groups containing the recall group as well?
+
+set cueListName to "Main Cue List" -- Name of main cue list
 
 ---------- END OF USER DEFINED VARIABLES --
 
@@ -49,7 +54,21 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	move cue id midiBankID of parent of midiBank to end of sceneGroup
 	set q name of midiBank to "Scene " & sceneNumber & ": Program Change"
 	
+	-- Color the group and any groups containing the group
 	set q color of sceneGroup to userColor
+
+	if colorParentGroups is TRUE
+		set groupParent to parent of sceneGroup
+		repeat
+			if q name of groupParent is cueListName then
+				exit repeat
+			else
+				set q color of groupParent to userColor
+				set groupParent to parent of groupParent
+			end if
+		end repeat
+	end if
+
 	collapse sceneGroup
 	
 end tell
