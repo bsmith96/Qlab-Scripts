@@ -15,7 +15,7 @@
 
 set defaultSeparateProcess to "TRUE" -- your Qlab default for script cues as a string, either "TRUE" or "FALSE"
 
-set versionWarnings to TRUE -- set to false if you do not with to be notified about version differences between your system and the system the scripts have been tested on
+set versionWarnings to true -- set to false if you do not with to be notified about version differences between your system and the system the scripts have been tested on
 
 ---------- END OF USER DEFINED VARIABLES --
 
@@ -42,20 +42,15 @@ repeat with eachScript in scriptFiles
 		
 		if eachLine contains "@description" then
 			set eachScriptDescription to trimLine(eachLine, "-- @description ", 0)
-		end if
-		if eachLine contains "@version" then
+		else if eachLine contains "@version" then
 			set eachScriptVersion to trimLine(eachLine, "-- @version ", 0)
-		end if
-		if eachLine contains "@testedmacos" then
+		else if eachLine contains "@testedmacos" then
 			set eachScriptMacOS to trimLine(eachLine, "-- @testedmacos ", 0)
-		end if
-		if eachLine contains "@testedqlab" then
+		else if eachLine contains "@testedqlab" then
 			set eachScriptQlab to trimLine(eachLine, "-- @testedqlab ", 0)
-		end if
-		if eachLine contains "@about" then
+		else if eachLine contains "@about" then
 			set eachScriptAbout to trimLine(eachLine, "-- @about ", 0)
-		end if
-		if eachLine contains "@separateprocess" then
+		else if eachLine contains "@separateprocess" then
 			set eachScriptSeparateProcess to trimLine(eachLine, "-- @separateprocess ", 0)
 		end if
 		
@@ -71,13 +66,15 @@ repeat with eachScript in scriptFiles
 		
 	end repeat
 	
-	log "-----------"
-	log "Description: " & eachScriptDescription
-	log "Version: " & eachScriptVersion
-	log "MacOS: " & eachScriptMacOS
-	log "Qlab: " & eachScriptQlab
-	log "About: " & eachScriptAbout
-	log "Separate Process: " & eachScriptSeparateProcess
+	try
+		log "-----------"
+		log "Description: " & eachScriptDescription
+		log "Version: " & eachScriptVersion
+		log "MacOS: " & eachScriptMacOS
+		log "Qlab: " & eachScriptQlab
+		log "About: " & eachScriptAbout
+		log "Separate Process: " & eachScriptSeparateProcess
+	end try
 	
 	tell application id "com.figure53.Qlab.4" to tell front workspace
 		
@@ -104,23 +101,38 @@ repeat with eachScript in scriptFiles
 		
 		-- Set cue name
 		
-		set q name of scriptCue to eachScriptDescription
+		try
+			set q name of scriptCue to eachScriptDescription
+		on error
+			tell application "System Events"
+				set cueName to name of eachScript
+			end tell
+			set q name of scriptCue to cueName
+		end try
 		
 		-- Set cue note
 		
-		set notes of scriptCue to eachScriptAbout
+		try
+			set notes of scriptCue to eachScriptAbout
+		end try
 		
 		-- Set script source
 		
-		set script source of scriptCue to "-- @version " & eachScriptVersion & "
+		try
+			set script source of scriptCue to "-- @version " & eachScriptVersion & "
     
-    " & scriptContents
+    	" & scriptContents
+		on error
+			set script source of scriptCue to scriptContents
+		end try
 		
 		-- Alert user if "run in separate process" should be off
 		
-		if eachScriptSeparateProcess is not defaultSeparateProcess then
-			display dialog "The script \"" & eachScriptDescription & "\" requires you to change the state of \"Run in separate process\" in the script tab of the inspector"
-		end if
+		try
+			if eachScriptSeparateProcess is not defaultSeparateProcess then
+				display dialog "The script \"" & eachScriptDescription & "\" requires you to change the state of \"Run in separate process\" in the script tab of the inspector"
+			end if
+		end try
 		
 		-- Get current version of Qlab
 		
@@ -134,35 +146,39 @@ repeat with eachScript in scriptFiles
 		
 		-- Warn user of version differences
 		
-    if versionWarnings is TRUE then
+		if versionWarnings is true then
+			
+			try
 
-		  if currentMacOSVersion is not eachScriptMacOS then
-			  set versionIssueMacOS to true
-		  else
-			  set versionIssueMacOS to false
-		  end if
-		
-		  if currentQlabVersion is not eachScriptQlab then
-			  set versionIssueQlab to true
-		  else
-			  set versionIssueQlab to false
-		  end if
-		
-		  if versionIssueMacOS is true and versionIssueQlab is false then
-        -- Issue with MacOS version
-			  display notification "Be aware that this script has not been tested with your version of MacOS" with title eachScriptDescription
-			  log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of MacOS. TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion
-		  else if versionIssueMacOS is false and versionIssueQlab is true then
-        -- Issue with Qlab version
-			  display notification "Be aware that this script has not been tested with your version of Qlab" with title eachScriptDescription
-			  log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of Qlab. TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
-		  else if versionIssueMacOS is true and versionIssueQlab is true then
-        -- Issue with MacOS and Qlab versions
-			  display notification "Be aware this this script has not been tested with your version of MacOS or your version of Qlab" with title eachScriptDescription
-			  log "The script \"" & eachScriptDescription & "\" has not been tested with your current version or MacOS or your current version of Qlab. MACOS TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion & ". QLAB TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
-		  end if
-
-    end if
+				if currentMacOSVersion is not eachScriptMacOS then
+					set versionIssueMacOS to true
+				else
+					set versionIssueMacOS to false
+				end if
+				
+				if currentQlabVersion is not eachScriptQlab then
+					set versionIssueQlab to true
+				else
+					set versionIssueQlab to false
+				end if
+				
+				
+					if versionIssueMacOS is true and versionIssueQlab is false then
+						-- Issue with MacOS version
+						display notification "Be aware that this script has not been tested with your version of MacOS" with title eachScriptDescription
+						log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of MacOS. TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion
+					else if versionIssueMacOS is false and versionIssueQlab is true then
+						-- Issue with Qlab version
+						display notification "Be aware that this script has not been tested with your version of Qlab" with title eachScriptDescription
+						log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of Qlab. TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
+					else if versionIssueMacOS is true and versionIssueQlab is true then
+						-- Issue with MacOS and Qlab versions
+						display notification "Be aware this this script has not been tested with your version of MacOS or your version of Qlab" with title eachScriptDescription
+						log "The script \"" & eachScriptDescription & "\" has not been tested with your current version or MacOS or your current version of Qlab. MACOS TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion & ". QLAB TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
+					end if
+			end try
+			
+		end if
 		
 	end tell
 	
