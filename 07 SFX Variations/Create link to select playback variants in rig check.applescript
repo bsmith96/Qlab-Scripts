@@ -20,7 +20,7 @@ set whereIsRigCheck to "   RIG CHECK" -- the cue name of your rig check title cu
 
 -- RUN SCRIPT -----------------------------
 
-tell application id "com.figure53.QLab.4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 
 	-- Define variables
 	set allVariants to ""
@@ -43,7 +43,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 	set scriptCheckCue to last item of (selected as list)
 	set scriptCheckCueID to uniqueID of scriptCheckCue
 	set q name of scriptCheckCue to "         Set playback variants here: " & allVariants
-	set script source of scriptCheckCue to "tell application \"Qlab 4\" to tell front workspace
+	set script source of scriptCheckCue to "tell application id \"com.figure53.Qlab.4\" to tell front workspace
 
 	set current cue list to first cue list whose q name is \"Select Playback Variants\"
 	

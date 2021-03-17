@@ -23,7 +23,7 @@ set versionLength to 2 -- How many digits for versioning? v1 / v01
 
 -- RUN SCRIPT -----------------------------
 
-tell application id "com.figure53.QLab.4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	set theSelection to (selected as list)
 	
 	set theFolder to the POSIX path of (choose folder with prompt "lead me to your files")

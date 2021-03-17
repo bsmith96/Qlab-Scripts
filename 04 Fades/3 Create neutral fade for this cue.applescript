@@ -2,21 +2,15 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @source Rich Walsh (adapted)
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Create a neutral fade cue for the selected audio/video/fade/group cue
 -- @separateprocess FALSE
 
 -- @changelog
+--   v1.1  + if no cue name, script uses file name
 --   v1.0  + init
-
-
--- USER DEFINED VARIABLES -----------------
-
-set userDuration to 5
-
----------- END OF USER DEFINED VARIABLES --
 
 
 -- RUN SCRIPT -----------------------------
@@ -31,12 +25,15 @@ tell front workspace
 		make type "Fade"
 		set newCue to last item of (selected as list)
 		set cue target of newCue to originalCue
-		--set duration of newCue to userDuration
-		--newCue setLevel row 0 column 0 db -120
-		--if originalCueType is not "Video" then
-		--	set stop target when done of newCue to true
-		--end if
-		set q name of newCue to "Fade: " & q name of originalCue
+		if q name of originalCue is not "" then
+			set q name of newCue to "Fade: " & q name of originalCue
+		else
+			set originalFile to file target of originalCue as alias
+			tell application "System Events"
+				set originalName to name of originalFile
+			end tell
+			set q name of newCue to "Fade: " & originalName
+		end if
 
 	-- Create a fade from an audio or video cue, from a fade cue which targets the original cue
 
@@ -45,12 +42,15 @@ tell front workspace
 		make type "Fade"
 		set newCue to last item of (selected as list)
 		set cue target of newCue to originalCueTarget
-		--set duration of newCue to userDuration
-		--	newCue setLevel row 0 column 0 db -120
-		--	if q type of originalCueTarget is not "Video" then
-		--		set stop target when done of newCue to true
-		--	end if
-		set q name of newCue to "Fade: " & q name of originalCueTarget
+		if q name of originalCueTarget is not "" then
+			set q name of newCue to "Fade: " & q name of originalCueTarget
+		else
+			set originalFile to file target of originalCueTarget
+			tell application "System Events"
+				set originalName to name of originalFile
+			end tell
+			set q name of newCue to "Fade: " & originalName
+		end if
 		
 	-- Create a fade cue for every audio or video cue inside a group cue
 
@@ -62,13 +62,20 @@ tell front workspace
 		set fadeGroupID to uniqueID of fadeGroup
 		set q name of fadeGroup to "Fade: " & originalCueName
 		repeat with eachCue in cuesToFade
-			--set eachCueType to q type of eachCue
 			if q type of eachCue is in {"Audio", "Video"} then
 				try
 					make type "Fade"
 					set newCue to last item of (selected as list)
 					set cue target of newCue to eachCue
-					set q name of newCue to "Fade: " & (q name of eachCue)
+					if q name of eachCue is not "" then
+						set q name of newCue to "Fade: " & (q name of eachCue)
+					else
+						set eachFile to file target of eachCue
+						tell application "System Events"
+							set eachName to name of eachFile
+						end tell
+						set q name of newCue to "Fade: " & eachName
+					end if
 					set newCueID to uniqueID of newCue
 					move cue id newCueID of parent of newCue to end of fadeGroup
 				end try

@@ -11,7 +11,7 @@
 --   v1.0  + init
 
 
-tell application "QLab 4"
+tell application id "com.figure53.Qlab.4"
 	tell front workspace
 		set selectedCues to (selected as list)
 		

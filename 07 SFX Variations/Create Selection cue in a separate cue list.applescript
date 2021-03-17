@@ -4,7 +4,7 @@
 -- @version 1.0
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
--- @about Creates a group and OSC cues in a separate cue list to select which variations to arm and disarm
+-- @about Creates a group and OSC cues in a separate cue list to select which variations to arm and disarm. Requires default group to be "timeline", and default network cue to be "Qlab message".
 -- @separateprocess TRUE
 
 -- @changelog
@@ -13,9 +13,9 @@
 
 -- RUN SCRIPT -----------------------------
 
-tell application id "com.figure53.QLab.4" to tell front workspace
-
--- Define variables
+tell application id "com.figure53.Qlab.4" to tell front workspace
+	
+	-- Define variables
 	set triggerName to ""
 	set triggerAbb to ""
 	set triggerOptions to {}
@@ -104,6 +104,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 	-- Make the main variations group (not to be fired, just to house those within)
 	make type "group"
 	set triggerGroup to last item of (selected as list)
+	set mode of triggerGroup to timeline
 	set q name of triggerGroup to "Select: " & triggerName
 	set q color of triggerGroup to "cerulean"
 	set triggerGroupID to uniqueID of triggerGroup
@@ -118,6 +119,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 		-- Make the group for each trigger option
 		make type "group"
 		set itemGroup to last item of (selected as list)
+		set mode of itemGroup to timeline
 		set q name of itemGroup to "Select " & triggerName & ": " & eachItem
 		set q number of itemGroup to "sel." & triggerAbb & "." & eachAbb
 		set itemGroupID to uniqueID of itemGroup
@@ -127,6 +129,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 		make type "network"
 		set disarmAll to last item of (selected as list)
 		set disarmAllID to uniqueID of disarmAll
+		set osc message type of disarmAll to qlab
 		set q_num of disarmAll to triggerAbb & ".*"
 		set q_command of disarmAll to 20
 		set q_params of disarmAll to "0"
@@ -136,6 +139,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 		make type "network"
 		set armCorrect to last item of (selected as list)
 		set armCorrectID to uniqueID of armCorrect
+		set osc message type of armCorrect to qlab
 		set q_num of armCorrect to triggerAbb & "." & eachAbb & ".*"
 		set q_command of armCorrect to 20
 		set q_params of armCorrect to "1"
@@ -145,6 +149,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 		make type "network"
 		set uncolorAll to last item of (selected as list)
 		set uncolorAllID to uniqueID of uncolorAll
+		set osc message type of uncolorAll to qlab
 		set q_num of uncolorAll to triggerAbb & ".*"
 		set q_command of uncolorAll to 21
 		set q_params of uncolorAll to "none"
@@ -154,6 +159,7 @@ tell application id "com.figure53.QLab.4" to tell front workspace
 		make type "network"
 		set colorCorrect to last item of (selected as list)
 		set colorCorrectID to uniqueID of colorCorrect
+		set osc message type of colorCorrect to qlab
 		set q_num of colorCorrect to triggerAbb & "." & eachAbb & ".*"
 		set q_command of colorCorrect to 21
 		set q_params of colorCorrect to "celadon"
@@ -212,7 +218,7 @@ end insertItemInList
 
 -- Script with the text to be copied into the script created, for renaming groups containing these SFX
 on makeRenameScript(theCuePrefix, theCueName, theCueList, itemGroup)
-	tell application "QLab 4" to tell front workspace
+	tell application id "com.figure53.Qlab.4" to tell front workspace
 		
 		make type "Script"
 		set renameScript to last item of (selected as list)
@@ -250,7 +256,7 @@ end tell
 
 on testForIt(cuePrefix, cueName, cueList, groupCue)
 	
-	tell application \"QLab 4\" to tell front workspace
+	tell application id \"com.figure53.Qlab.4\" to tell front workspace
 		try
 			set eachCue to cues in groupCue
 			set isThisCue to \"\"

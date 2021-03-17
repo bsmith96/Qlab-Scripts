@@ -46,7 +46,7 @@ set userDelay to 0.5
 ---- RUN SCRIPT ---------------------------
 
 -- Get the path to the project
-tell application "QLab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	set qlabPath to path
 end tell
 
@@ -92,7 +92,7 @@ end repeat
 ---- Import into Qlab
 
 -- Make main cue list a variable
-tell application "QLab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	set mainCueList to (first cue list whose q name is mainCueListName)
 	
 	-- Get rig check title cue, so it knows where to make these cues
@@ -119,7 +119,7 @@ end tell
 
 -- Make audio cues
 set outputNumber to 0
-tell application "QLab 4" to tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	repeat with eachOutput in allFiles
 		set outputNumber to outputNumber + 1
 		make type "Audio" -- make cue
@@ -241,7 +241,7 @@ end splitString
 -- Checks for cues and deletes them if they're already present
 
 on checkForCues()
-	tell application "QLab 4" to tell front workspace
+	tell application id "com.figure53.Qlab.4" to tell front workspace
 		set groupCueAlready to ""
 		try
 			set groupCueAlready to (first cue whose q name is "Line Check")

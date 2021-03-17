@@ -2,19 +2,19 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @source Rich Walsh (adapted)
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Create a fade up cue for the selected audio/video/fade/group cue
 -- @separateprocess FALSE
 
 -- @changelog
+--   v1.1  + if no cue name, script uses file name
 --   v1.0  + init
 
 
 -- USER DEFINED VARIABLES -----------------
 
-set userDuration to 5
 set userLevel to 3
 set kindString to "Fade up: "
 
@@ -42,7 +42,15 @@ tell front workspace
 					make type "Fade"
 					set newCue to last item of (selected as list)
 					set cue target of newCue to eachCue
-					set q name of newCue to kindString & (q name of eachCue)
+					if q name of eachCue is not "" then 
+						set q name of newCue to kindString & (q name of eachCue)
+					else
+						set eachFile to file target of eachCue as alias
+						tell application "System Events"
+							set eachName to name of eachFile
+						end tell
+						set q name of newCue to kindString & eachName
+					end if
 					set currentLevel to eachCue getLevel row 0 column 0
 					newCue setLevel row 0 column 0 db (currentLevel + userLevel)
 					set newCueID to uniqueID of newCue
@@ -57,10 +65,17 @@ tell front workspace
 		make type "Fade"
 		set newCue to last item of (selected as list)
 		set cue target of newCue to originalCue
-		--set duration of newCue to userDuration
 		set currentLevel to originalCue getLevel row 0 column 0
 		newCue setLevel row 0 column 0 db (currentLevel + userLevel)
-		set q name of newCue to kindString & q name of originalCue
+		if q name of originalCue is not "" then
+			set q name of newCue to kindString & q name of originalCue
+		else
+			set originalFile to file target of originalCue as alias
+			tell application "System Events"
+				set originalName to name of originalFile
+			end tell
+			set q name of newCue to kindString & originalName
+		end if
 
 	-- Make a fade for an audio or video cue, from a fade cue which targets the original cue
 
@@ -70,10 +85,17 @@ tell front workspace
 			make type "Fade"
 			set newCue to last item of (selected as list)
 			set cue target of newCue to originalCueTarget
-			--set duration of newCue to userDuration
 			set currentLevel to originalCue getLevel row 0 column 0
 			newCue setLevel row 0 column 0 db (currentLevel + userLevel)
-			set q name of newCue to kindString & q name of originalCueTarget
+			if q name of originalCueTarget is not "" then
+				set q name of newCue to kindString & q name of originalCueTarget
+			else
+				set originalFile to file target of originalCueTarget as alias
+				tell application "System Events"
+					set originalName to name of originalFile
+				end tell
+				set q name of newCue to kindString & originalName
+			end if
 		end if
 	end if
 end tell
