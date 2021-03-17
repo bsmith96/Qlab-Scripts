@@ -161,6 +161,10 @@ Updates the version number in the qlab file name, and saves a new copy (complete
 
 ## Tech Rehearsals
 
+### Move To Cut List
+
+Moves the selected cue/s to a new cue list, changes the number and disarms it (and all triggers) to avoid accidental firing.
+
 ### Preset To Before Next Cue
 
 Starts any cues that would be looping before the next GO, at the correct level. Very useful in technical rehearsals.
@@ -312,10 +316,6 @@ Quickly see which of the selected cues are routed to a specific output, to see h
 ##### Load Parent Group To Start Of Selected Child
 
 Loads the group containing the selected cue to the time that the selected cue would start (e.g. the end of its pre-wait).
-
-##### Move To Cut List
-
-Moves the selected cue/s to a new cue list.
 
 ------
 
