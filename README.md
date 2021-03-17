@@ -16,6 +16,7 @@
 - [10 Adapted from others](#adapted-from-others)
   - [11 Rich Walsh](#rich-walsh)
   - [12 Sam Schloegel](#sam-schloegel)
+- [11 Desk Control](#desk-control)
 - [Miscellaneous](#Miscellaneous)
 
 ------
@@ -330,6 +331,12 @@ Automatically bumps target of selected audio cues to the next version. If the fi
 Allows you to create a new folder of v02 stems, and point the selected cues to identically named files in a new folder.
 
 ------
+
+## Desk Control
+
+*Author: t.streuli*
+
+Scripts for working with Yamaha mixing desks, designed for LS9. Simple scripts to create midi cues in Qlab to control fader levels, sends, on/cues and the layout of the custom layer. These were originally intended to mimic a more advanced scene-recall system on the LS9, and to mimic DCA assigns for mixing musical theatre.
 
 ## Miscellaneous
 
