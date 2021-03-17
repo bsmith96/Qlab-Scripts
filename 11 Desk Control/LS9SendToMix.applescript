@@ -59,13 +59,13 @@ end faderString
 
 -- fader value as hex string
 on midiDbVal(d)
-	if d > -138.0 and d ≤ -96.0 then
+	if d > -138.0 and d <= -96.0 then
 		set q to 47 + (d / 3)
-	else if d > -96.0 and d ≤ -78.0 then
+	else if d > -96.0 and d <= -78.0 then
 		set q to 111 + d
-	else if d > -77.8 and d ≤ -40 then
+	else if d > -77.8 and d <= -40 then
 		set q to 423 + d * 5
-	else if d > -40 and d ≤ -20 then
+	else if d > -40 and d <= -20 then
 		set q to 623 + d * 10
 	else if d > -20 then
 		set q to 823 + d * 20
