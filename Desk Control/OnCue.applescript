@@ -42,7 +42,7 @@ on faderString(inputMsg)
 	-- channel number
 	set chan to item 1 of splitText
 	set chanN to item 2 of splitText as integer
-	if chan is equal to "st" then
+	if chan = "st" then
 		set chanNumVal to hex(chanN * 2 + 62)
 	else
 		set chanNumVal to hex(chanN - 1)
@@ -50,28 +50,28 @@ on faderString(inputMsg)
 	
 	-- value and channel type
 	set operation to item 3 of splitText
-	if operation is equal to "on" or operation is equal to "cue" then
+	if operation = "on" or operation = "cue" then
 		set value to hex(1)
 	else
 		set value to hex(0)
 	end if
-	if operation is equal to "on" or operation is equal to "off" then
-		if chan is equal to "ch" or chan is equal to "st" then
+	if operation = "on" or operation = "off" then
+		if chan = "ch" or chan = "st" then
 			set chanType to hex(49)
-		else if chan is equal to "mix" then
+		else if chan = "mix" then
 			set chanType to hex(76)
-		else if chan is equal to "mt" or chan is equal to "mtrx" then
+		else if chan = "mt" or chan = "mtrx" then
 			set chanType to hex(93)
 		end if
 		set msg to pre & " 00 " & chanType & " 00 00 00 " & chanNumVal & " 00 00 00 00 " & value
 		
 	end if
-	if operation is equal to "cue" or operation is equal to "nocue" then
-		if chan is equal to "ch" or chan is equal to "st" then
+	if operation = "cue" or operation = "nocue" then
+		if chan = "ch" or chan = "st" then
 			set chanType to hex(94)
-		else if chan is equal to "mix" then
+		else if chan = "mix" then
 			set chanType to hex(95)
-		else if chan is equal to "mt" or chan is equal to "mtrx" then
+		else if chan = "mt" or chan = "mtrx" then
 			set chanType to hex(96)
 		end if
 		set msg to pre & " 01 " & chanType & " 00 00 00 " & chanNumVal & " 00 00 00 00 " & value

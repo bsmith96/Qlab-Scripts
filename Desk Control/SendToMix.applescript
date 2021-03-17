@@ -4,12 +4,11 @@
 --  but to be vereified
 --
 -- Example string inputs:
--- ch 7 to -20    -- channel 7 to -20db
--- mix 16 to 1    -- mix 16 to +1db
--- mtrx 4 out     -- mtrx 4 to -inf db  (if setting out/-inf NO NOT include 'to')
+-- ch 7 to mix 5 at -20    -- send channel 7 to mix 5 at -20db
 -- 
--- accepted chan values:   ch 1-64 ; st 1-4 ; mix 1-16 ; mt/mtrx 1-8
--- accepoted db values:    out/-Inf ; -137 -> +10
+-- accepted chan values:   ch 1-64 
+-- accepted mix values:    mix 1-16 
+-- accepoted db values:    -inf ; -137 -> +10
 --
 -- author: t.streuli
 
@@ -17,7 +16,7 @@
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
 	
-	display dialog "Enter Fader Level Control String" default answer "" buttons {"Set", "Cancel"} cancel button "Cancel" default button "Set" with title "SCENE NUMBER"
+	display dialog "Enter Fader Sent to Mix Control String" default answer "" buttons {"Set", "Cancel"} cancel button "Cancel" default button "Set" with title "SCENE NUMBER"
 	set inputMsg to text returned of result
 	
 	set message to my faderString(inputMsg)
@@ -39,37 +38,22 @@ on faderString(inputMsg)
 	set pre to "43 10 3E 12 01"
 	set splitText to split(inputMsg, space)
 	
-	-- channel number
-	set chan to item 1 of splitText
+    -- channel & mix number
 	set chanN to item 2 of splitText as integer
-	if chan = "st" then
-		set chanNumVal to hex(chanN * 2 + 62)
-	else
-		set chanNumVal to hex(chanN - 1)
-	end if
-	
-	-- Hex value for channel type
-	if chan = "ch" or chan = "st" then
-		set chanType to hex(51)
-	else if chan = "mix" then
-		set chanType to hex(78)
-	else if chan = "mt" or chan = "mtrx" then
-		set chanType to hex(95)
-	end if
-	-- stereo master = 109, not checked or implimented
-	
-	-- fader value
-	if length of splitText = 3 then
-		set dbVal to item 3 of splitText
-		if dbVal = "out" or dbVal = "-inf" then
+	set chanNumVal to hex(chanN - 1)
+
+	set mixN to item 5 of splitText as integer
+	set mixNumVal to hex(mixN*3+2)
+
+    -- send value value
+	set dbVal to item 7 of splitText as number
+    if dbVal = "-inf" then
 			set value to "00 00"
-		end if
-	else if length of splitText is equal to 4 then
-		set dbVal to item 4 of splitText as number
-		set value to midiDbVal(dbVal)
+    else
+        set value to midiDbVal(dbVal)
 	end if
 	
-	set msg to pre & " 00 " & chanType & " 00 00 00 " & chanNumVal & " 00 00 00 " & value
+	set msg to pre & " 00 43 00 " & mixNumVal & " 00 " & chanNumVal & " 00 00 00 " & value
 	return msg
 end faderString
 
