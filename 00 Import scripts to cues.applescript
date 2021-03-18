@@ -1,13 +1,14 @@
 -- @description Import scripts to cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Run this script in MacOS's "Script Editor" to quickly create script cues using the scripts in this repository. As of Qlab 4.6.9 you cannot set "run in separate process" through applescript. Input your default, and the script will alert you if you need to change it.
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.1  + added error catching for differently formatted *.applescript files
 --   v1.0  + init
 
 
@@ -82,18 +83,8 @@ repeat with eachScript in scriptFiles
 		
 		set selectedCues to (selected as list)
 		
-		if length of scriptFiles is 1 then
-			if length of selectedCues is 1 then
-				if q type of item 1 of selectedCues is "Script" then
-					set scriptCue to last item of (selected as list)
-				else
-					make type "Script"
-					set scriptCue to last item of (selected as list)
-				end if
-			else
-				make type "Script"
-				set scriptCue to last item of (selected as list)
-			end if
+		if (length of scriptFiles is 1) and (length of selectedCues is 1) and (q type of item 1 of selectedCues is "Script") then
+			set scriptCue to last item of (selected as list)
 		else
 			make type "Script"
 			set scriptCue to last item of (selected as list)
