@@ -43,6 +43,10 @@ repeat with eachScript in scriptFiles
 		
 		if eachLine contains "@description" then
 			set eachScriptDescription to trimLine(eachLine, "-- @description ", 0)
+		else if eachLine contains "@author" then
+			set eachScriptAuthor to trimLine(eachLine, "-- @author ", 0)
+		else if eachLine contains "@source" then
+			set eachScriptSource to trimLine(eachLine, "-- @source ", 0)
 		else if eachLine contains "@version" then
 			set eachScriptVersion to trimLine(eachLine, "-- @version ", 0)
 		else if eachLine contains "@testedmacos" then
@@ -70,6 +74,10 @@ repeat with eachScript in scriptFiles
 	try
 		log "-----------"
 		log "Description: " & eachScriptDescription
+		log "Author: " & eachScriptAuthor
+		try
+			log "Source: " & eachScriptSource
+		end try
 		log "Version: " & eachScriptVersion
 		log "MacOS: " & eachScriptMacOS
 		log "Qlab: " & eachScriptQlab
@@ -104,7 +112,16 @@ repeat with eachScript in scriptFiles
 		-- Set cue note
 		
 		try
-			set notes of scriptCue to eachScriptAbout
+			set cueNote to eachScriptAbout
+			try
+				set cueNote to cueNote & " (" & eachScriptAuthor
+				try
+					set cueNote to cueNote & " // " & eachScriptSource & ")"
+				on error
+					set cueNote to cueNote & ")"
+				end try
+			end try
+			set notes of scriptCue to cueNote
 		end try
 		
 		-- Set script source
