@@ -1,13 +1,14 @@
 -- @description Save new version
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Saves a new version of your qlab file, incrementing a 2 digit version number, and allowing notes (such as a date, or "start of tech")
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.1  + closes old version without asking to save first
 --   v1.0  + init
 
 
@@ -66,7 +67,7 @@ tell application id "com.figure53.Qlab.4"
 		save in ((originalPath as string) & (newFileName as string))
 	end tell
 	open ((originalPath as string) & (newFileName as string) & ".qlab4")
-	close back workspace
+	close back workspace without saving
 end tell
 
 
