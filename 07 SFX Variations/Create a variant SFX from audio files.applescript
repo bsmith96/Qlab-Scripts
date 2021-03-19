@@ -1,13 +1,14 @@
 -- @description SFX VARIATIONS: Create a variant SFX from audio files
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates a group of multiple variations of the same SFX, to be armed and disarmed by a selection cue. Uses the audio file name to name the cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.1  + cleaned up unnecessary functions
 --   v1.0  + init
 
 
@@ -53,7 +54,6 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- Get variant information from all subsequent files
 	repeat with eachFile in audioFiles
 		set eachFileName to (my getFileName(eachFile))
-		set itemNumber to itemNumber + 1
 		set eachFileArray to (my splitString(eachFileName, "."))
 		set eachFilePrefixOne to item 1 of eachFileArray
 		set eachFilePrefixTwo to item 2 of eachFileArray
@@ -69,7 +69,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 		
 		set eachFileArrayThree to (my splitString(eachFileName, ", "))
 		set eachFileName to item 1 of eachFileArrayThree
-		my insertItemInList(eachFilePrefixTwo, otherFilesPrefix, itemNumber)
+		set end of otherFilesPrefix to eachFilePrefixTwo
 		
 		-- Check information against the first file
 		if eachFilePrefixOne is not equal to filePrefixOne then display dialog "The variable ABBREVIATION for \"" & eachFilePrefixOne & "." & eachFilePrefixTwo & "." & eachFilePrefixThree & " " & eachFileName & "\" is not the same as that in the first file. Would you like to continue? If you do, the abbreviation from the first file will be used" default button "OK" cancel button "Cancel" with title "Abbreviation Inconsistency"
@@ -102,15 +102,13 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	set actorNameArray to {}
 	set actorNameOne to item 2 of (my splitString(firstFileName, ", "))
 	set actorNameOneFinal to item 1 of (my splitString(actorNameOne, "."))
-	my insertItemInList(actorNameOneFinal, actorNameArray, 1)
-	set itemNumber to 1
+	set end of actorNameArray to actorNameOneFinal
 	repeat with eachFile in audioFiles
-		set itemNumber to itemNumber + 1
 		set eachFileName to (my getFileName(eachFile))
 		set eachFileNameArray to (my splitString(eachFileName, ", "))
 		set nextActorName to item 2 of eachFileNameArray
 		set nextActorNameFinal to item 1 of (my splitString(nextActorName, "."))
-		my insertItemInList(nextActorNameFinal, actorNameArray, itemNumber)
+		set end of actorNameArray to nextActorNameFinal
 	end repeat
 	
 	-- Create the main group
@@ -168,39 +166,3 @@ on splitString(theString, theDelimiter)
 	-- return the array
 	return theArray
 end splitString
-
-on insertItemInList(theItem, theList, thePosition)
-	set theListCount to length of theList
-	if thePosition is 0 then
-		return false
-	else if thePosition is less than 0 then
-		if (thePosition * -1) is greater than theListCount + 1 then return false
-	else
-		if thePosition is greater than theListCount + 1 then return false
-	end if
-	if thePosition is less than 0 then
-		if (thePosition * -1) is theListCount + 1 then
-			set beginning of theList to theItem
-		else
-			set theList to reverse of theList
-			set thePosition to (thePosition * -1)
-			if thePosition is 1 then
-				set beginning of theList to theItem
-			else if thePosition is (theListCount + 1) then
-				set end of theList to theItem
-			else
-				set theList to (items 1 thru (thePosition - 1) of theList) & theItem & (items thePosition thru -1 of theList)
-			end if
-			set theList to reverse of theList
-		end if
-	else
-		if thePosition is 1 then
-			set beginning of theList to theItem
-		else if thePosition is (theListCount + 1) then
-			set end of theList to theItem
-		else
-			set theList to (items 1 thru (thePosition - 1) of theList) & theItem & (items thePosition thru -1 of theList)
-		end if
-	end if
-	return theList
-end insertItemInList
