@@ -157,7 +157,7 @@ repeat with eachScript in scriptFiles
 		if versionWarnings is true then
 			
 			try
-
+				
 				if currentMacOSVersion is not eachScriptMacOS then
 					set versionIssueMacOS to true
 				else
@@ -171,19 +171,19 @@ repeat with eachScript in scriptFiles
 				end if
 				
 				
-					if versionIssueMacOS is true and versionIssueQlab is false then
-						-- Issue with MacOS version
-						display notification "Be aware that this script has not been tested with your version of MacOS" with title eachScriptDescription
-						log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of MacOS. TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion
-					else if versionIssueMacOS is false and versionIssueQlab is true then
-						-- Issue with Qlab version
-						display notification "Be aware that this script has not been tested with your version of Qlab" with title eachScriptDescription
-						log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of Qlab. TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
-					else if versionIssueMacOS is true and versionIssueQlab is true then
-						-- Issue with MacOS and Qlab versions
-						display notification "Be aware this this script has not been tested with your version of MacOS or your version of Qlab" with title eachScriptDescription
-						log "The script \"" & eachScriptDescription & "\" has not been tested with your current version or MacOS or your current version of Qlab. MACOS TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion & ". QLAB TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
-					end if
+				if versionIssueMacOS is true and versionIssueQlab is false then
+					-- Issue with MacOS version
+					display notification "Be aware that this script has not been tested with your version of MacOS" with title eachScriptDescription
+					log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of MacOS. TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion
+				else if versionIssueMacOS is false and versionIssueQlab is true then
+					-- Issue with Qlab version
+					display notification "Be aware that this script has not been tested with your version of Qlab" with title eachScriptDescription
+					log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of Qlab. TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
+				else if versionIssueMacOS is true and versionIssueQlab is true then
+					-- Issue with MacOS and Qlab versions
+					display notification "Be aware this this script has not been tested with your version of MacOS or your version of Qlab" with title eachScriptDescription
+					log "The script \"" & eachScriptDescription & "\" has not been tested with your current version or MacOS or your current version of Qlab. MACOS TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion & ". QLAB TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
+				end if
 			end try
 			
 		end if
