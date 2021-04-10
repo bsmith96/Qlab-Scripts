@@ -1,20 +1,20 @@
 -- @description Save new version
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 2.0
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Saves a new version of your qlab file, incrementing a 2 digit version number, and allowing notes (such as a date, or "start of tech")
 -- @separateprocess TRUE
 
 -- @changelog
---   v1.1  + closes old version without asking to save first
---   v1.0  + init
+--   v2.0  + introduced a version of semantic versioning, allowing sub-version numbers for updates
+--         + now works if ".qlab4" is visible in the file name in finder
 
 
 -- RUN SCRIPT -----------------------------
 
--- NAMING SCHEME: Name v00 - note.
+-- NAMING SCHEME: Name v0.0 - note.
 -- Ensure your existing project follows this scheme and it will create the new file correctly.
 
 -- Get original filename & path
@@ -43,10 +43,28 @@ end if
 set theResult to splitString(originalNameAndVersion, " v")
 set projectName to item 1 of theResult
 set originalVersion to item -1 of theResult
+set theResult to splitString(originalVersion, ".")
+set originalMajor to item 1 of theResult
+set originalMinor to item 2 of theResult
 
 -- Update version number
 
-set versionNumber to checkDigits(originalVersion + 1, 2)
+set nextMajor to "v" & (originalMajor + 1) & ".0"
+set nextMinor to "v" & originalMajor & "." & (originalMinor + 1)
+set nextTest to "v" & originalMajor & ".t" & (originalMinor + 1)
+
+-- Ask for new version type
+
+set nextVersionChoices to {"Minor (" & nextMinor & ")", "Major (" & nextMajor & ")"}
+set nextVersion to choose from list nextVersionChoices with prompt "How do you want to increment the version number?" default items {"Minor (" & nextMinor & ")"} with title (projectName & " v" & originalVersion)
+
+if nextVersion is {"Minor (" & nextMinor & ")"} then
+	set versionNumber to nextMinor
+else if nextVersion is {"Major (" & nextMajor & ")"} then
+	set versionNumber to nextMajor
+else if nextVersion is {"Test (" & nextTest & ")"} then
+	set versionNumber to nextTest
+end if
 
 -- Ask for note
 
@@ -54,7 +72,7 @@ set newNote to text returned of (display dialog "Would you like to set a note fo
 
 -- Generate filename
 
-set newFileName to projectName & " v" & versionNumber
+set newFileName to projectName & " " & versionNumber
 
 if newNote is not "" then
 	set newFileName to newFileName & " - " & newNote
@@ -85,8 +103,3 @@ on splitString(theString, theDelimiter)
 	-- return the array
 	return theArray
 end splitString
-
-on checkDigits(num, howLong)
-	set num to text -howLong thru -1 of ("00" & num)
-	return num
-end checkDigits
