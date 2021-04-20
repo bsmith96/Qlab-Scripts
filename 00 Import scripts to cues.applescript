@@ -1,15 +1,16 @@
 -- @description Import scripts to cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 1.2
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Run this script in MacOS's "Script Editor" to quickly create script cues using the scripts in this repository. As of Qlab 4.6.9 you cannot set "run in separate process" through applescript. Input your default, and the script will alert you if you need to change it.
 -- @separateprocess TRUE
 
 -- @changelog
---   v1.1  + added error catching for differently formatted *.applescript files
---   v1.0  + init
+--   v1.2  + updated console logging to log all available information when not all metadata tags are provided
+--         + non-tagged scripts now import into cues named without ".applescript" extension
+--         + updated trimLine function formatting (replaced snake_case with camelCase)
 
 
 -- USER DEFINED VARIABLES -----------------
@@ -36,6 +37,8 @@ repeat with eachScript in scriptFiles
 	set eachScriptContents to paragraphs of (read eachScript)
 	
 	set scriptContents to ""
+
+	log "-----------"
 	
 	repeat with eachLine in eachScriptContents
 		
@@ -43,20 +46,28 @@ repeat with eachScript in scriptFiles
 		
 		if eachLine contains "@description" then
 			set eachScriptDescription to trimLine(eachLine, "-- @description ", 0)
+			log "Description: " & eachScriptDescription
 		else if eachLine contains "@author" then
 			set eachScriptAuthor to trimLine(eachLine, "-- @author ", 0)
+			log "Author: " & eachScriptAuthor
 		else if eachLine contains "@source" then
 			set eachScriptSource to trimLine(eachLine, "-- @source ", 0)
+			log "Source: " & eachScriptSource
 		else if eachLine contains "@version" then
 			set eachScriptVersion to trimLine(eachLine, "-- @version ", 0)
+			log "Version: " & eachScriptVersion
 		else if eachLine contains "@testedmacos" then
 			set eachScriptMacOS to trimLine(eachLine, "-- @testedmacos ", 0)
+			log "MacOS: " & eachScriptMacOS
 		else if eachLine contains "@testedqlab" then
 			set eachScriptQlab to trimLine(eachLine, "-- @testedqlab ", 0)
+			log "Qlab: " & eachScriptQlab
 		else if eachLine contains "@about" then
 			set eachScriptAbout to trimLine(eachLine, "-- @about ", 0)
+			log "About: " & eachScriptAbout
 		else if eachLine contains "@separateprocess" then
 			set eachScriptSeparateProcess to trimLine(eachLine, "-- @separateprocess ", 0)
+			log "Separate Process: " & eachScriptSeparateProcess
 		end if
 		
 		-- Get script source
@@ -70,20 +81,6 @@ repeat with eachScript in scriptFiles
 ", 0)
 		
 	end repeat
-	
-	try
-		log "-----------"
-		log "Description: " & eachScriptDescription
-		log "Author: " & eachScriptAuthor
-		try
-			log "Source: " & eachScriptSource
-		end try
-		log "Version: " & eachScriptVersion
-		log "MacOS: " & eachScriptMacOS
-		log "Qlab: " & eachScriptQlab
-		log "About: " & eachScriptAbout
-		log "Separate Process: " & eachScriptSeparateProcess
-	end try
 	
 	tell application id "com.figure53.Qlab.4" to tell front workspace
 		
@@ -105,6 +102,7 @@ repeat with eachScript in scriptFiles
 		on error
 			tell application "System Events"
 				set cueName to name of eachScript
+				set cueName to my trimLine(cueName, ".applescript", 1)
 			end tell
 			set q name of scriptCue to cueName
 		end try
@@ -195,30 +193,41 @@ end repeat
 
 -- FUNCTIONS ------------------------------
 
-on trimLine(this_text, trim_chars, trim_indicator)
-	-- 0 = beginning, 1 = end, 2 = both
-	set x to the length of the trim_chars
-	-- TRIM BEGINNING
-	if the trim_indicator is in {0, 2} then
-		repeat while this_text begins with the trim_chars
+on trimLine(theText, trimChars, trimIndicator)
+	-- trimIndicator options:
+	-- 0 = beginning
+	-- 1 = end
+	-- 2 = both
+
+	set x to the length of the trimChars
+
+
+	---- Trim beginning
+
+	if the trimIndicator is in {0, 2} then
+		repeat while theText begins with the trimChars
 			try
-				set this_text to characters (x + 1) thru -1 of this_text as string
+				set theText to characters (x + 1) thru -1 of theText as string
 			on error
-				-- the text contains nothing but the trim characters
+				-- if the text contains nothing but the trim characters
 				return ""
 			end try
 		end repeat
 	end if
-	-- TRIM ENDING
-	if the trim_indicator is in {1, 2} then
-		repeat while this_text ends with the trim_chars
+
+
+	---- Trim ending
+
+	if the trimIndicator is in {1, 2} then
+		repeat while theText ends with the trimChars
 			try
-				set this_text to characters 1 thru -(x + 1) of this_text as string
+				set theText to characters 1 thru -(x + 1) of theText as string
 			on error
-				-- the text contains nothing but the trim characters
+				-- if the text contains nothing but the trim characters
 				return ""
 			end try
 		end repeat
 	end if
-	return this_text
+
+	return theText
 end trimLine
