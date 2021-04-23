@@ -1,20 +1,19 @@
 -- @description Create spoken line check cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 1.2
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates spoken output names and automated line check cues
 -- @separateprocess TRUE
 
 -- @changelog
---   v1.1  + cleaned up functions
---   v1.0  + init
+--   v1.2  + fixed a bug where the wrong recording could be assigned to cues (could still be in the wrong order if the list of files is generated strangely, but will be assigned to the correct output)
 
 
 -- USER DEFINED VARIABLES -----------------
 
--- Input channel names as a single string, separated by ",".
+-- Input channel names as a single string, separated by ", ".
 -- Some guidance on channel names for the best result:
 -- 1. for main PA, using the term "pros" will have its pronunciation corrected.
 -- 2. for foldback, the TTS works better if "Foldback" is not the first word. Try putting the side before, rather than after, "Foldback". If there is only 1 foldback channel, try "Stage Foldback"
@@ -57,6 +56,11 @@ tell application "Finder"
 end tell
 
 set saveLocation to (POSIX path of qlabParentPath & "Soundcheck/Line Checks/")
+
+-- Set current cue list to the Main Cue List.
+tell application id "com.figure53.Qlab.4" to tell front workspace
+	set current cue list to first cue list whose q name is mainCueListName
+end tell
 
 
 -- If the cues already exist, delete them before running the rest of this script:
@@ -115,50 +119,52 @@ tell application "Finder"
 	set saveLocationAlias to POSIX file saveLocation as alias
 	delay 1
 	set allTheFiles to (entire contents of folder saveLocationAlias)
-	set allFiles to items 1 thru -2 of allTheFiles
 end tell
 
 -- Make audio cues
-set outputNumber to 0
 tell application id "com.figure53.Qlab.4" to tell front workspace
-	repeat with eachOutput in allFiles
-		set outputNumber to outputNumber + 1
-		make type "Audio" -- make cue
-		set thisCue to last item of (selected as list) -- give the cue a variable
-		set file target of thisCue to eachOutput as alias -- add the file to the cue
-		set q name of thisCue to item outputNumber of theChannels
-		
-		-- Put the cue into the group cue
-		set thisCueID to uniqueID of thisCue
-		try
-			move cue id thisCueID of parent of thisCue to end of groupCue
-		end try
-		
-		-- Set level of cues as they are made
-		repeat with eachColumn from 1 to outputCount
-			if eachColumn is outputNumber then
-				if item outputNumber of theChannels contains "Sub" then
-					setLevel thisCue row 0 column eachColumn db subLevel
-					setLevel thisCue row 1 column eachColumn db 0
+	repeat with eachOutput in allTheFiles
+		if name of eachOutput is not subFileName then
+			set eachOutputName to my getOutputName(eachOutput)
+			set eachOutputNumber to my getOutputNumber(eachOutput)
+			make type "Audio" -- make cue
+			set thisCue to last item of (selected as list) -- give the cue a variable
+			set file target of thisCue to eachOutput as alias -- add the file to the cue
+			set q name of thisCue to eachOutputName
+			
+			-- Put the cue into the group cue
+			set thisCueID to uniqueID of thisCue
+			try
+				move cue id thisCueID of parent of thisCue to end of groupCue
+			end try
+			
+			-- Set level of cues as they are made
+			repeat with eachColumn from 1 to outputCount
+				if eachColumn is eachOutputNumber then
+					if item eachOutputNumber of theChannels contains "Sub" then
+						setLevel thisCue row 0 column eachColumn db subLevel
+						setLevel thisCue row 1 column eachColumn db 0
+					else
+						setLevel thisCue row 0 column eachColumn db userLevel
+						setLevel thisCue row 1 column eachColumn db 0
+					end if
 				else
-					setLevel thisCue row 0 column eachColumn db userLevel
-					setLevel thisCue row 1 column eachColumn db 0
+					setLevel thisCue row 0 column eachColumn db "-inf"
 				end if
-			else
-				setLevel thisCue row 0 column eachColumn db "-inf"
+			end repeat
+			
+			-- Set predelay of cues as they are made
+			set previousCue to cue before thisCue
+			if eachOutputNumber is not 1 then
+				set previousDuration to duration of previousCue
+				set previousPreWait to pre wait of previousCue
+				set pre wait of thisCue to (previousDuration + previousPreWait + userDelay)
 			end if
-		end repeat
-		
-		-- Set predelay of cues as they are made
-		set previousCue to cue before thisCue
-		if outputNumber is not 1 then
-			set previousDuration to duration of previousCue
-			set previousPreWait to pre wait of previousCue
-			set pre wait of thisCue to (previousDuration + previousPreWait + userDelay)
 		end if
-		
 	end repeat
 	
+	-- brief delay to let the user see the completed cue stack
+	delay 0.5
 	collapse groupCue
 	
 end tell
@@ -234,3 +240,22 @@ on checkForFiles(saveLocation, subFileName)
 		end if
 	end tell
 end checkForFiles
+
+-- Gets the output name from the file name. Hopefully useful if the list is not in the correct order.
+
+on getOutputName(theFile)
+	set fileName to name of theFile
+	set nameWithoutExtension to splitString(fileName, ".")
+	set nameAsList to splitString(item 1 of nameWithoutExtension, "")
+	set outputList to items 4 thru -1 of nameAsList as string
+	return outputList
+end getOutputName
+
+-- Gets the output number from the file name. Similarly (hopefully) useful if the list is not in the correct order. 
+
+on getOutputNumber(theFile)
+	set fileName to name of theFile
+	set nameAsList to splitString(items 1 thru 2 of fileName, "")
+	set outputNumber to item 1 of nameAsList & item 2 of nameAsList as number
+	return outputNumber
+end getOutputNumber
