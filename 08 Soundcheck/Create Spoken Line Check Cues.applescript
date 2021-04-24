@@ -1,14 +1,17 @@
 -- @description Create spoken line check cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.2
+-- @version 1.3
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates spoken output names and automated line check cues
 -- @separateprocess TRUE
 
 -- @changelog
---   v1.2  + fixed a bug where the wrong recording could be assigned to cues (could still be in the wrong order if the list of files is generated strangely, but will be assigned to the correct output)
+--   v1.3  + creates cues in the correct order
+--         + cleaned up "speak output names" loop
+--         + recompiling or running the script within qlab no longer throws an error
+--   v1.2  + fixed a bug where the wrong recording could be assigned to cues
 
 
 -- USER DEFINED VARIABLES -----------------
@@ -77,15 +80,12 @@ set theChannels to splitString(userChannels, ", ")
 -- Speak output names
 set outputCount to count of theChannels
 
-set chanNum to 0
-
 repeat with eachOutput from 1 to outputCount
 	set eachOutputToSay to correctOutputName(item eachOutput of theChannels)
-	set chanNum to chanNum + 1
 	if eachOutputToSay does not contain "Sub" then
-		say (eachOutputToSay) using "Daniel" saving to (POSIX file saveLocation & checkDigits(chanNum, 2) & " " & (item eachOutput of theChannels) as string) & fileType
+		say (eachOutputToSay) using "Daniel" saving to (POSIX file saveLocation & checkDigits(eachOutput, 2) & " " & (item eachOutput of theChannels) as string) & fileType
 	else
-		set newFileName to (checkDigits(chanNum, 2) & " " & (item eachOutput of theChannels) as string) & fileType
+		set newFileName to (checkDigits(eachOutput, 2) & " " & (item eachOutput of theChannels) as string) & fileType
 		tell application "Finder"
 			set newFile to duplicate file (POSIX file (saveLocation & subFileName) as alias)
 			set name of newFile to newFileName
@@ -123,8 +123,8 @@ end tell
 
 -- Make audio cues
 tell application id "com.figure53.Qlab.4" to tell front workspace
-	repeat with eachOutput in allTheFiles
-		if name of eachOutput is not subFileName then
+	repeat with eachOutput in my sortList(allTheFiles)
+		if q number of eachOutput is not subFileName then
 			set eachOutputName to my getOutputName(eachOutput)
 			set eachOutputNumber to my getOutputNumber(eachOutput)
 			make type "Audio" -- make cue
@@ -163,7 +163,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 		end if
 	end repeat
 	
-	-- brief delay to let the user see the completed cue stack
+	-- Brief delay to let the user see the completed cue stack
 	delay 0.5
 	collapse groupCue
 	
@@ -241,10 +241,55 @@ on checkForFiles(saveLocation, subFileName)
 	end tell
 end checkForFiles
 
+-- Sort the list of files before creating cues
+
+on sortList(theList)
+	set the indexList to {}
+	set the sortedList to {}
+	set theListNames to {}
+	set sortedListNames to {}
+	
+	-- Create a list with the names of the files
+	repeat with i from 1 to (count of theList)
+		set eachItem to item i of theList
+		tell application "Finder"
+			set end of theListNames to (name of eachItem as string)
+		end tell
+	end repeat
+	
+	-- Sort the list of filenames alphabetically (by output number)
+	repeat (the number of items in theListNames) times
+		set the lowItem to ""
+		repeat with i from 1 to (number of items in theListNames)
+			if i is not in the indexList then
+				set thisItem to item i of theListNames
+				if the lowItem is "" then
+					set the lowItem to thisItem
+					set the lowItemIndex to i
+				else if thisItem comes before the lowItem then
+					set the lowItem to thisItem
+					set the lowItemIndex to i
+				end if
+			end if
+		end repeat
+		set the end of sortedListNames to the lowItem
+		set the end of the indexList to the lowItemIndex
+	end repeat
+	
+	-- Use the index list to create a sorted list of the files themselves
+	repeat with eachItem in indexList
+		set end of sortedList to item eachItem of theList
+	end repeat
+	
+	return the sortedList
+end sortList
+
 -- Gets the output name from the file name. Hopefully useful if the list is not in the correct order.
 
 on getOutputName(theFile)
-	set fileName to name of theFile
+	tell application "Finder"
+		set fileName to name of theFile
+	end tell
 	set nameWithoutExtension to splitString(fileName, ".")
 	set nameAsList to splitString(item 1 of nameWithoutExtension, "")
 	set outputList to items 4 thru -1 of nameAsList as string
@@ -254,7 +299,9 @@ end getOutputName
 -- Gets the output number from the file name. Similarly (hopefully) useful if the list is not in the correct order. 
 
 on getOutputNumber(theFile)
-	set fileName to name of theFile
+	tell application "Finder"
+		set fileName to name of theFile
+	end tell
 	set nameAsList to splitString(items 1 thru 2 of fileName, "")
 	set outputNumber to item 1 of nameAsList & item 2 of nameAsList as number
 	return outputNumber
