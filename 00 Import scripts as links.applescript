@@ -8,30 +8,37 @@
 -- @separateprocess TRUE
 
 
--- USER DEFINED VARIABLES -----------------
-
-set versionWarnings to true -- set to false if you do not with to be notified about version differences between your system and the system the scripts have been tested on
-
----------- END OF USER DEFINED VARIABLES --
-
-
 -- RUN SCRIPT -----------------------------
+
+-- Declarations
+
+use framework "Foundation"
+use framework "OSAKit"
+use scripting additions
 
 -- Get user input: scripts to generate cues for
 
-set scriptFiles to choose file with prompt "Please select the scripts to import" of type {"public.text"} with multiple selections allowed
+set scriptFiles to choose file with prompt "Please select the scripts to import" of type {"applescript"} with multiple selections allowed
 
 -- Repeat with each selected script
 
 repeat with eachScript in scriptFiles
+	
+	-- Compile script
+	
+	set aURL to (current application's |NSURL|'s fileURLWithPath:(POSIX path of eachScript))
+	set destinationURL to (aURL's URLByDeletingPathExtension()'s URLByAppendingPathExtension:"scpt")
 	
 	-- Create a list of each line of the script
 	
 	set eachScriptContents to paragraphs of (read eachScript)
 	
 	set scriptContents to ""
-
+	
 	log "-----------"
+	
+	set userDefinedVariables to false
+	
 	
 	repeat with eachLine in eachScriptContents
 		
@@ -63,7 +70,46 @@ repeat with eachScript in scriptFiles
 			log "Separate Process: " & eachScriptSeparateProcess
 		end if
 		
+		if eachLine contains "USER DEFINED VARIABLES ---" then
+			set userDefinedVariables to true
+			set userDefinedVariablesContent to ""
+		else if eachLine contains "--- END OF USER DEFINED VARIABLES" then
+			set userDefinedVariablesContent to userDefinedVariablesContent & "
+			" & eachLine
+			set userDefinedVariables to false
+		end if
+		
+		if userDefinedVariables is true then
+			set userDefinedVariablesContent to userDefinedVariablesContent & "
+" & eachLine
+			set eachLine to ""
+		end if
+		
+		-- Get script source
+		
+		if eachLine does not contain "-- @" and eachLine does not contain "--  " then
+			set scriptContents to scriptContents & "
+			" & eachLine
+		end if
+		
+		set scriptContents to my trimLine(scriptContents, "
+			", 0)
+		
+		
 	end repeat
+	
+	if eachScriptSeparateProcess is "FALSE" then return -- scripts need to work as a separate process for this method
+	
+	set {theScript, theError} to (current application's OSAScript's alloc()'s initWithContentsOfURL:aURL |error|:(reference))
+	if theScript is missing value then error theError's |description|() as text
+	set {theResult, theError} to (theScript's compileAndReturnError:(reference))
+	if theResult as boolean is false then return theError's |description|() as text
+	set {theResult, theError} to (theScript's writeToURL:destinationURL ofType:"scpt" usingStorageOptions:0 |error|:(reference))
+	if theResult as boolean is false then return theError's |description|() as text
+	
+	set newPathAlias to destinationURL as alias
+	set newPath to POSIX path of newPathAlias
+	log newPath
 	
 	tell application id "com.figure53.Qlab.4" to tell front workspace
 		
@@ -107,85 +153,25 @@ repeat with eachScript in scriptFiles
 		
 		-- Set script source
 		
-		(*try
-			set script source of scriptCue to "-- @version " & eachScriptVersion & "
-    
-    	" & scriptContents
-		on error
-			set script source of scriptCue to scriptContents
-		end try*)
-
-    set newScriptSource to "tell application id \"com.figure53.Qlab.4\" to tell front workspace
-
-    run script 
-
-    try
-      set script source of scriptCue to "-- @version " & eachScriptVersion & "
-
-      "
-    on error
-      set script source of scriptCue to ""
-    end try
-
-    set script scrout of scriptCue to 
-
-
+		set newScriptSource to "set theScript to load script \"" & (newPath) & "\"
 		
-		-- Alert user if "run in separate process" should be off
+		run theScript"
 		
 		try
-			if eachScriptSeparateProcess is not defaultSeparateProcess then
-				display dialog "The script \"" & eachScriptDescription & "\" requires you to change the state of \"Run in separate process\" in the script tab of the inspector"
-			end if
+			set script source of scriptCue to "-- @version " & eachScriptVersion & "
+
+      "
+		on error
+			set script source of scriptCue to ""
 		end try
 		
-		-- Get current version of Qlab
-		
-		set currentQlabVersion to version of application id "com.figure53.Qlab.4"
-		log "Current Qlab Version: " & currentQlabVersion
-		
-		-- Get current version of MacOS
-		
-		set currentMacOSVersion to system version of (system info)
-		log "Current MacOS Version: " & currentMacOSVersion
-		
-		-- Warn user of version differences
-		
-		if versionWarnings is true then
-			
-			try
-				
-				if currentMacOSVersion is not eachScriptMacOS then
-					set versionIssueMacOS to true
-				else
-					set versionIssueMacOS to false
-				end if
-				
-				if currentQlabVersion is not eachScriptQlab then
-					set versionIssueQlab to true
-				else
-					set versionIssueQlab to false
-				end if
-				
-				
-				if versionIssueMacOS is true and versionIssueQlab is false then
-					-- Issue with MacOS version
-					display notification "Be aware that this script has not been tested with your version of MacOS" with title eachScriptDescription
-					log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of MacOS. TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion
-				else if versionIssueMacOS is false and versionIssueQlab is true then
-					-- Issue with Qlab version
-					display notification "Be aware that this script has not been tested with your version of Qlab" with title eachScriptDescription
-					log "The script \"" & eachScriptDescription & "\" has not been tested with your current version of Qlab. TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
-				else if versionIssueMacOS is true and versionIssueQlab is true then
-					-- Issue with MacOS and Qlab versions
-					display notification "Be aware this this script has not been tested with your version of MacOS or your version of Qlab" with title eachScriptDescription
-					log "The script \"" & eachScriptDescription & "\" has not been tested with your current version or MacOS or your current version of Qlab. MACOS TESTED: " & eachScriptMacOS & ", CURRENT: " & currentMacOSVersion & ". QLAB TESTED: " & eachScriptQlab & ", CURRENT: " & currentQlabVersion
-				end if
-			end try
-			
-		end if
+		set script source of scriptCue to script source of scriptCue & userDefinedVariablesContent & "
+
+
+" & newScriptSource
 		
 	end tell
+	
 	
 end repeat
 
@@ -197,12 +183,12 @@ on trimLine(theText, trimChars, trimIndicator)
 	-- 0 = beginning
 	-- 1 = end
 	-- 2 = both
-
+	
 	set x to the length of the trimChars
-
-
+	
+	
 	---- Trim beginning
-
+	
 	if the trimIndicator is in {0, 2} then
 		repeat while theText begins with the trimChars
 			try
@@ -213,10 +199,10 @@ on trimLine(theText, trimChars, trimIndicator)
 			end try
 		end repeat
 	end if
-
-
+	
+	
 	---- Trim ending
-
+	
 	if the trimIndicator is in {1, 2} then
 		repeat while theText ends with the trimChars
 			try
@@ -227,6 +213,6 @@ on trimLine(theText, trimChars, trimIndicator)
 			end try
 		end repeat
 	end if
-
+	
 	return theText
 end trimLine
