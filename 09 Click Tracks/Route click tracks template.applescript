@@ -14,6 +14,8 @@ set templateCueListName to "Other Scripts"
 
 set templateGroupCueName to "Click track routing templates"
 
+set audioChannelCount to 32 -- number of Qlab outputs
+
 ---------- END OF USER DEFINED VARIABLES --
 
 
@@ -42,7 +44,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
   
     set cueType to q type of eachCue
     if cueType is "Audio" then
-      repeat with eachChannel from 1 to 32
+      repeat with eachChannel from 1 to audioChannelCount
         set theLevel to getLevel whatTemplateCue row 0 column eachChannel
         setLevel eachCue row 0 column eachChannel db theLevel
       end repeat
