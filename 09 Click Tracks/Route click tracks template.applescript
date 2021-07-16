@@ -56,6 +56,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 
 end tell
 
+
+-- FUNCTIONS ------------------------------
+
 on renameCue(theCue, theTemplate)
   tell application  id "com.figure53.Qlab.4" to tell front workspace
     set oldName to q name of theCue
