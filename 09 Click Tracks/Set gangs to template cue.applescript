@@ -1,20 +1,20 @@
--- @description Route click tracks to channels
+-- @description Set gangs to template cue
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @version 1.0
 -- @testedmacos 10.13.6
--- @testedqlab 4.6.9
+-- @testedqlab 4.6.10
 -- @about Create a version of this script for each track you are using, and run each using a different hotkey.
 -- @separateprocess TRUE
 
 
 -- USER DEFINED VARIABLES -----------------
 
-set templateCueListName to "Other Scripts"
+set templateCueListName to "Other Scripts" -- cue list containing template cues
 
-set templateGroupCueName to "Click track routing templates"
+set templateGroupCueName to "Gangs routing templates" -- group cue containing all template cues
 
-set audioChannelCount to 32 -- number of Qlab outputs
+set audioChannelCount to 32 -- total number of Qlab outputs
 
 ---------- END OF USER DEFINED VARIABLES --
 
@@ -40,16 +40,30 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 
   set selectedCues to (selected as list)
 
+  -- Get the number of inputs for the selected routing. To only affect the master level of each cue output channel, you can omit this from the template cue name
+
+  set whatTemplateList to my splitString((whatTemplate as string), " - ") -- append the cue name with " - 2" where "2" is the number of cue input channels to affect. To only affect levels and not crosspoints, you can omit this or enter "0".
+  try
+    set inputCount to item -1 of whatTemplateList as integer
+  on error
+    set inputCount to 0
+  end try
+
   repeat with eachCue in selectedCues
   
     set cueType to q type of eachCue
     if cueType is "Audio" then
       repeat with eachChannel from 1 to audioChannelCount
-        set theLevel to getLevel whatTemplateCue row 0 column eachChannel
-        setLevel eachCue row 0 column eachChannel db theLevel
+        repeat with eachInput from 0 to inputCount
+          set theGang to getGang whatTemplateCue row eachInput column eachChannel
+          try
+            setGang eachCue row eachInput column eachChannel gang theGang
+          on error
+            setGang eachCue row eachInput column eachChannel gang ""
+          end try
+        end repeat
       end repeat
 
-      my renameCue(eachCue, whatTemplate)
     end if
 
   end repeat
@@ -61,7 +75,7 @@ end tell
 
 on renameCue(theCue, theTemplate)
   tell application  id "com.figure53.Qlab.4" to tell front workspace
-    set oldName to q name of theCue
+    set oldName to q display name of theCue
     set oldNameList to my splitString(oldName, " | ")
     set oldName to item 1 of oldNameList
     set newName to oldName & " | " & theTemplate
