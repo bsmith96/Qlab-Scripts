@@ -98,8 +98,10 @@ repeat with eachScript in scriptFiles
 		
 	end repeat
 	
-	if eachScriptSeparateProcess is "FALSE" then return -- scripts need to work as a separate process for this method
-	
+	try
+		if eachScriptSeparateProcess is "FALSE" then return -- scripts need to work as a separate process for this method
+	end try
+
 	set {theScript, theError} to (current application's OSAScript's alloc()'s initWithContentsOfURL:aURL |error|:(reference))
 	if theScript is missing value then error theError's |description|() as text
 	set {theResult, theError} to (theScript's compileAndReturnError:(reference))
