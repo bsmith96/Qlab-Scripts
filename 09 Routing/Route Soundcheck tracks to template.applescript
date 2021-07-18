@@ -1,13 +1,14 @@
 -- @description Route Soundcheck tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 1.2
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Routes soundcheck songs to specific or additional channels based on templates
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.2  + Renames script cue with the current routing
 --   v1.1  + Toggles template name for additional routing ("+Sub" while off, "-Sub" while on)
 --         + Toggles template name for absolute routing (adds  " <-", and sets all additional to "+")
 
@@ -21,6 +22,9 @@ set templateGroupCueName to "Soundcheck routing templates" -- group cue containi
 set audioChannelCount to 32 -- total number of Qlab outputs
 
 set cueListToRoute to "Soundcheck" -- the name of the soundcheck cue list. If this is blank, it will use selected cues
+
+global thisScriptCueNumber
+set thisScriptCueNumber to "Route S-Check" -- the number of the cue which runs or triggers this script
 
 ---------- END OF USER DEFINED VARIABLES --
 
@@ -60,15 +64,29 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
             if (getLevel eachCue row 0 column eachChannel) is not theLevel then -- toggles
               setLevel eachCue row 0 column eachChannel db theLevel
               my renameAdditionalTemplate(whatTemplateCue, "-")
+              set additional to "add"
             else
               setLevel eachCue row 0 column eachChannel db -120
               my renameAdditionalTemplate(whatTemplateCue, "+")
+              set additional to "remove"
             end if
           end if
         end repeat
       end if
     end repeat
     log whatTemplate & " absolute"
+  
+    try
+      set scriptCue to cue thisScriptCueNumber
+      set scriptCueOldName to q name of scriptCue
+
+      if additional is "add" then
+        set q name of scriptCue to scriptCueOldName & " " & whatTemplate
+      else if additional is "remove" then
+        set newTemplateName to q name of whatTemplateCue
+        set q name of scriptCue to my findAndReplaceInText(scriptCueOldName, " " & newTemplateName, "")
+      end if
+    end try
 
   else -- for absolute routing, e.g. pros, a Soundcheck channel
     repeat with eachCue in selectedCues
@@ -127,6 +145,10 @@ on renameAbsoluteTemplate(theTemplate, allTemplates)
     set newTemplateName to newTemplateName & " <-"
     set q name of theTemplate to newTemplateName
 
+    try
+      set scriptCue to cue thisScriptCueNumber
+      set q name of scriptCue to oldTemplateName
+    end try
 
   end tell
 end renameAbsoluteTemplate
@@ -143,3 +165,12 @@ on splitString(theString, theDelimiter)
 	-- return the array
 	return theArray
 end splitString
+
+on findAndReplaceInText(theText, theSearchString, theReplacementString)
+	set AppleScript's text item delimiters to theSearchString
+	set theTextItems to every text item of theText
+	set AppleScript's text item delimiters to theReplacementString
+	set theText to theTextItems as string
+	set AppleScript's text item delimiters to ""
+	return theText
+end findAndReplaceInText
