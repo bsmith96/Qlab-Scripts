@@ -1,11 +1,14 @@
 -- @description Set crosspoints to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Set the crosspoints of the selected cue to match a selected template cue
 -- @separateprocess TRUE
+
+-- @changelog
+--   v1.1  + If only 1 template exists for the number of cue inputs, sets crosspoints automatically.
 
 
 -- USER DEFINED VARIABLES -----------------
@@ -29,20 +32,59 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 
   set routingTemplates to (cues in containerCue)
   set routingNames to {}
+  set routingNumbers to {}
 
   repeat with eachCue in routingTemplates
     set end of routingNames to (q name of eachCue)
   end repeat
 
+  set selectedCues to (selected as list)
+
+  -- try to do it automatically
+  try
+    repeat with eachTemplate in routingNames
+      set eachTemplateList to my splitString((eachTemplate as string), " - ")
+      set inputCountTemplate to item -1 of eachTemplateList as integer
+      set end of routingNumbers to inputCountTemplate
+    end repeat
+
+    repeat with eachCue in selectedCues
+      set inputCountCue to audio input channels of eachCue
+
+      set inputCountMatches to {}
+      repeat with eachTemplate from 1 to length of routingTemplates
+        if inputCountCue as integer is equal to (item eachTemplate of routingNumbers as integer) then 
+          set end of inputCountMatches to eachTemplate
+        end if
+      end repeat
+
+      if length of inputCountMatches is 1 then
+        set whatTemplate to item (item 1 of inputCountMatches) of routingNames
+        set whatTemplateCue to first cue in containerCue whose q name is whatTemplate
+        set whatTemplateList to my splitString((whatTemplate as string), " - ")
+        set inputCount to item -1 of whatTemplateList as integer
+        repeat with eachChannel from 1 to audioChannelCount
+          repeat with eachInput from 1 to inputCount
+            set theLevel to getLevel whatTemplateCue row eachInput column eachChannel
+            setLevel eachCue row eachInput column eachChannel db theLevel
+          end repeat
+        end repeat
+      else
+        error
+      end if
+    end repeat
+    return
+  end try
+
+  -- end of automatic section
+
   set whatTemplate to choose from list routingNames
 
   set whatTemplateCue to first cue in containerCue whose q name is whatTemplate
 
-  set selectedCues to (selected as list)
-
   -- Get the number of inputs for the selected routing
 
-  set whatTemplateList to my splitString((whatTemplate as string), " - ") -- append the cue name with " - 2" where "2" is the number of cue input channels to affect.
+  set whatTemplateList to my splitString((whatTemplate as string), " - ") -- append the cue name with " - 2" where "2" is the number of cue input channels to affect. ## Only works up to 9Ê##
   try
     set inputCount to item -1 of whatTemplateList as integer
   on error
