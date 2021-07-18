@@ -1,4 +1,4 @@
--- @description Set gangs to template cue
+-- @description Set gangs to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @version 1.0

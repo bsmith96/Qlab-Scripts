@@ -1,4 +1,4 @@
--- @description Set crosspoints to template cue
+-- @description Set crosspoints to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @version 1.0
