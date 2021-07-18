@@ -1,11 +1,15 @@
 -- @description Route Soundcheck tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Routes soundcheck songs to specific or additional channels based on templates
 -- @separateprocess TRUE
+
+-- @changelog
+--   v1.1  + Toggles template name for additional routing ("+Sub" while off, "-Sub" while on)
+--         + Toggles template name for absolute routing (adds  " <-", and sets all additional to "+")
 
 
 -- USER DEFINED VARIABLES -----------------
@@ -46,7 +50,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
     set selectedCues to (selected as list)
   end if
 
-  if (whatTemplate as string) starts with "+" then -- for additional routing e.g. add +Subs, +Front Fills.
+  if (whatTemplate as string) starts with "+" or (whatTemplate as string) starts with "-" then -- for additional routing e.g. add +Subs, +Front Fills.
     repeat with eachCue in selectedCues
       set cueType to q type of eachCue
       if cueType is "Audio" then
@@ -55,8 +59,10 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
           if theLevel is greater than -60 then -- checks this is a channel to be affected
             if (getLevel eachCue row 0 column eachChannel) is not theLevel then -- toggles
               setLevel eachCue row 0 column eachChannel db theLevel
+              my renameAdditionalTemplate(whatTemplateCue, "-")
             else
               setLevel eachCue row 0 column eachChannel db -120
+              my renameAdditionalTemplate(whatTemplateCue, "+")
             end if
           end if
         end repeat
@@ -76,6 +82,8 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
       end if
 
     end repeat
+    my renameAbsoluteTemplate(whatTemplateCue, routingTemplates)
+
     log whatTemplate & " not absolute"
   end if
 
@@ -85,15 +93,43 @@ end tell
 
 -- FUNCTIONS ------------------------------
 
-on renameCue(theCue, theTemplate)
-  tell application  id "com.figure53.Qlab.4" to tell front workspace
-    set oldName to q display name of theCue
-    set oldNameList to my splitString(oldName, " | ")
-    set oldName to item 1 of oldNameList
-    set newName to oldName & " | " & theTemplate
-    set q name of theCue to newName
+-- Rename additional routing template cues based on the current state.
+--     If current state is on, prefix becomes "-".
+--     If current state is off, prefix becomes "+"
+
+on renameAdditionalTemplate(theTemplate, prefix)
+  tell application id "com.figure53.Qlab.4" to tell front workspace
+    set oldTemplateName to q name of theTemplate
+    set newTemplateName to items 2 thru -1 of (oldTemplateName as string)
+    set newTemplateName to prefix & newTemplateName
+    set q name of theTemplate to newTemplateName
   end tell
-end renameCue
+end renameAdditionalTemplate
+
+-- Rename absolute routing template cues based on the current state.
+--     Most recently recalled is appended with " <-".
+--     All other cues have " <-" cleared, if present.
+--     All absolute routing is set to prefix "+", since it will be turned off by the template.
+
+on renameAbsoluteTemplate(theTemplate, allTemplates)
+  tell application id "com.figure53.Qlab.4" to tell front workspace
+    repeat with eachTemplate in allTemplates
+      if q name of eachTemplate ends with " <-" then
+        set eachOldName to q name of eachTemplate
+        set q name of eachTemplate to (items 1 thru -4 of eachOldName) as string
+      else if q name of eachTemplate starts with "+" or q name of eachTemplate starts with "-" then
+        my renameAdditionalTemplate(eachTemplate, "+")
+      end if
+    end repeat
+
+    set oldTemplateName to q name of theTemplate
+    set newTemplateName to oldTemplateName as string
+    set newTemplateName to newTemplateName & " <-"
+    set q name of theTemplate to newTemplateName
+
+
+  end tell
+end renameAbsoluteTemplate
 
 on splitString(theString, theDelimiter)
 	-- save delimiters to restore old settings
