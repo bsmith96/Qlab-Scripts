@@ -1,28 +1,23 @@
 -- @description Create spoken line check cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.3
+-- @version 1.4
 -- @testedmacos 10.13.6
--- @testedqlab 4.6.9
+-- @testedqlab 4.6.10
 -- @about Creates spoken output names and automated line check cues
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.4  + takes channel list and level information from the notes of cues, to streamline editing for new projects
 --   v1.3  + creates cues in the correct order
 --         + cleaned up "speak output names" loop
 --         + recompiling or running the script within qlab no longer throws an error
---   v1.2  + fixed a bug where the wrong recording could be assigned to cues
 
 
 -- USER DEFINED VARIABLES -----------------
 
--- Input channel names as a single string, separated by ", ".
--- Some guidance on channel names for the best result:
--- 1. for main PA, using the term "pros" will have its pronunciation corrected.
--- 2. for foldback, the TTS works better if "Foldback" is not the first word. Try putting the side before, rather than after, "Foldback". If there is only 1 foldback channel, try "Stage Foldback"
--- 3. for subs, include the word "Sub" in each channel's name. This will use the sub soundcheck sound instead of a spoken voice.
-
-set userChannels to "Pros Left, Pros Right, Pros Centre, Sub, Left Foldback, Right Foldback, Upstage Left, Upstage Right, Surround Left, Surround Right"
+-- Locate the cue list containing Script Variables
+set variableCueListName to "Other scripts & utilities"
 
 -- Set file type to save (wav or aiff)
 set fileType to ".wav"
@@ -33,10 +28,6 @@ set rigCheckTitleCue to "   RIG CHECK" -- Leave blank to use the current positio
 -- Set the cue list you want to place this group cue in
 set mainCueListName to "Main Cue list"
 
--- Set the level which the audio files will play back at in Qlab. Sub is separate since it is a separate sound.
-set userLevel to -18
-set subLevel to -12
-
 -- Set the name of the sub sound. This should be saved, relative to the Qlab file, in "~/Soundcheck/Line Checks"
 set subFileName to "Sub v2.wav"
 
@@ -44,6 +35,27 @@ set subFileName to "Sub v2.wav"
 set userDelay to 0.5
 
 ---------- END OF USER DEFINED VARIABLES --
+
+
+-- VARIABLES FROM QLAB NOTES --------------
+
+-- Input channel names as a single string, separated by ", ".
+-- Some guidance on channel names for the best result:
+-- 1. for main PA, using the term "pros" will have its pronunciation corrected.
+-- 2. for foldback, the TTS works better if "Foldback" is not the first word. Try putting the side before, rather than after, "Foldback". If there is only 1 foldback channel, try "Stage Foldback"
+-- 3. for subs, include the word "Sub" in each channel's name. This will use the sub soundcheck sound instead of a spoken voice.
+
+tell application id "com.figure53.Qlab.4" to tell front workspace
+	set userChannels to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Output channel names")
+end tell
+
+-- Set the level which the audio files will play back at in Qlab. Sub is separate since it is a separate sound.
+tell application id "com.figure53.Qlab.4" to tell front workspace
+	set userLevel to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Line checks: output level")
+	set subLevel to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Line checks: sub level")
+end tell
+
+------------------ END OF QLAB VARIABLES --
 
 
 ---- RUN SCRIPT ---------------------------

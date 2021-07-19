@@ -1,13 +1,14 @@
 -- @description Route Soundcheck tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.2
+-- @version 1.3
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Routes soundcheck songs to specific or additional channels based on templates
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.3  + Takes number of output channels from the notes of cues, to streamline editing for new projects
 --   v1.2  + Renames script cue with the current routing
 --   v1.1  + Toggles template name for additional routing ("+Sub" while off, "-Sub" while on)
 --         + Toggles template name for absolute routing (adds  " <-", and sets all additional to "+")
@@ -15,11 +16,11 @@
 
 -- USER DEFINED VARIABLES -----------------
 
-set templateCueListName to "Other Scripts" -- cue list containing template cues
+set variableCueListName to "Other scripts & utilities" -- cue list containing Script Variables
+
+set templateCueListName to "Other scripts & utilities" -- cue list containing template cues
 
 set templateGroupCueName to "Soundcheck routing templates" -- group cue containing all template cues
-
-set audioChannelCount to 32 -- total number of Qlab outputs
 
 set cueListToRoute to "Soundcheck" -- the name of the soundcheck cue list. If this is blank, it will use selected cues
 
@@ -27,6 +28,15 @@ global thisScriptCueNumber
 set thisScriptCueNumber to "Route S-Check" -- the number of the cue which runs or triggers this script
 
 ---------- END OF USER DEFINED VARIABLES --
+
+
+-- VARIABLES FROM QLAB NOTES --------------
+
+tell application id "com.figure53.Qlab.4" to tell front workspace
+  set audioChannelCount to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Output channel count") -- total number of Qlab output
+end tell
+
+------------------ END OF QLAB VARIABLES --
 
 
 ---- RUN SCRIPT ---------------------------

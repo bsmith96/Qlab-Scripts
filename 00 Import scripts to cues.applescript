@@ -3,7 +3,7 @@
 -- @link bensmithsound.uk
 -- @version 1.2
 -- @testedmacos 10.13.6
--- @testedqlab 4.6.9
+-- @testedqlab 4.6.10
 -- @about Run this script in MacOS's "Script Editor" to quickly create script cues using the scripts in this repository. As of Qlab 4.6.9 you cannot set "run in separate process" through applescript. Input your default, and the script will alert you if you need to change it.
 -- @separateprocess TRUE
 

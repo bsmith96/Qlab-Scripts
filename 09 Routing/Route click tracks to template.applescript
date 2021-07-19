@@ -1,22 +1,34 @@
 -- @description Route click tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Routes the selected audio track/s the same as a selected template cue
 -- @separateprocess TRUE
 
+-- @changelog
+--   v1.1  + takes number of output channels from the notes of cues, to streamline editing for new projects
+
 
 -- USER DEFINED VARIABLES -----------------
 
-set templateCueListName to "Other Scripts" -- cue list containing template cues
+set variableCueListName to "Other scripts & utilities" -- cue list containing Script Variables
+
+set templateCueListName to "Other scripts & utilities" -- cue list containing template cues
 
 set templateGroupCueName to "Click track routing templates" -- group cue containing all template cues
 
-set audioChannelCount to 32 -- total number of Qlab outputs
-
 ---------- END OF USER DEFINED VARIABLES --
+
+
+-- VARIABLES FROM QLAB NOTES --------------
+
+tell application id "com.figure53.Qlab.4" to tell front workspace
+  set audioChannelCount to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Output channel count") -- total number of Qlab output
+end tell
+
+------------------ END OF QLAB VARIABLES --
 
 
 ---- RUN SCRIPT ---------------------------
