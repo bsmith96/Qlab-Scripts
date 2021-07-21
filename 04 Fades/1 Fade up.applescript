@@ -2,24 +2,22 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @source Rich Walsh (adapted)
--- @version 1.2
--- @testedmacos 10.13.6
+-- @version 2.0
+-- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Create a fade up cue for the selected audio/video/fade/group cue
 -- @separateprocess TRUE
 
 -- @changelog
---   v1.2  + implemented q display name in renaming
---         + runs script in separate process
---         + now uses relative fades
---   v1.1  + if no cue name, script uses file name
---   v1.0  + init
+--   v2.0  + subroutines
+--         + doesn't daisychain "Fade xxx: " in group names
 
 
 -- USER DEFINED VARIABLES -----------------
 
+global userLevel, userPrefix
 set userLevel to 3
-set kindString to "Fade up: "
+set userPrefix to "Fade up: "
 
 ---------- END OF USER DEFINED VARIABLES --
 
@@ -30,62 +28,83 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	set originalCue to last item of (selected as list)
 	set originalCueType to q type of originalCue
 
-	-- Make a fade for each audio file in a selected group
+	-- Make a fade for each an audio or video file
 
-	if originalCueType is "Group" then
-		set cuesToFade to (cues in originalCue)
-		set originalCueName to q name of originalCue
-		make type "Group"
-		set fadeGroup to last item of (selected as list)
-		set fadeGroupID to uniqueID of fadeGroup
-		set q name of fadeGroup to kindString & originalCueName
-		repeat with eachCue in cuesToFade
-			if q type of eachCue is "Audio" then
-				try
-					make type "Fade"
-					set newCue to last item of (selected as list)
-					set cue target of newCue to eachCue
-					set audio fade mode of newCue to relative
-					set q name of newCue to kindString & (q display name of eachCue)
-					newCue setLevel row 0 column 0 db userLevel
-					set newCueID to uniqueID of newCue
-					move cue id newCueID of parent of newCue to end of fadeGroup
-				end try
-			else if q type of eachCue is "Fade" then
-				try
-					make type "Fade"
-					set newCue to last item of (selected as list)
-					set cue target of newCue to (cue target of eachCue)
-					set audio fade mode of newCue to relative
-					set q name of newCue to kindString & (q display name of (cue target of eachCue))
-					newCue setLevel row 0 column 0 db userLevel
-					set newCueID to uniqueID of newCue
-					move cue id newCueID of parent of newCue to end of fadeGroup
-				end try
-			end if
-		end repeat
-
-	-- Make a fade for an audio or video cue
-
-	else if originalCueType is in {"Audio", "Video"} then
-		make type "Fade"
-		set newCue to last item of (selected as list)
-		set cue target of newCue to originalCue
-		set audio fade mode of newCue to relative
-		newCue setLevel row 0 column 0 db userLevel
-		set q name of newCue to kindString & q display name of originalCue
+	if originalCueType is in {"Audio", "Video"} then
+		my createFadeUp(originalCue)
 
 	-- Make a fade for an audio or video cue, from a fade cue which targets the original cue
 
 	else if originalCueType is "Fade" then
 		set originalCueTarget to cue target of originalCue
 		if q type of originalCueTarget is not "Group" then
-			make type "Fade"
-			set newCue to last item of (selected as list)
-			set cue target of newCue to originalCueTarget
-			set audio fade mode of newCue to relative
-			newCue setLevel row 0 column 0 db userLevel
-			set q name of newCue to kindString & q display name of originalCueTarget
+			my createFadeUp(originalCueTarget)
 		end if
+
+	-- Make a fade for each audio file in a selected group
+
+	else if originalCueType is "Group" then
+		my createGroup(originalCue)
 	end if
 end tell
+
+
+-- FUNCTIONS ------------------------------
+
+on createFadeUp(theCue)
+	tell application id "com.figure53.Qlab.4" to tell front workspace
+		make type "Fade"
+		set newCue to last item of (selected as list)
+		set cue target of newCue to theCue
+		set audio fade mode of newCue to relative
+		newCue setLevel row 0 column 0 db userLevel
+		set q name of newCue to userPrefix & q display name of theCue
+	end tell
+end createFadeUp
+
+on createGroup(theCue)
+	tell application id "com.figure53.Qlab.4" to tell front workspace
+		set theCueName to q name of theCue
+		set cuesToFade to (cues in theCue)
+		make type "Group"
+		set fadeGroup to last item of (selected as list)
+		set fadeGroupID to uniqueID of fadeGroup
+		-- Remove previous "fade" in cue name, if present
+		if theCueName starts with "Fade in: " or theCueName starts with "Fade up: " or theCueName starts with "Fade down: " then
+			set theCueNameList to my splitString(theCueName, ": ")
+			set theCueName to item 2 thru item -1 of theCueNameList
+		end if
+		set q name of fadeGroup to userPrefix & theCueName
+		repeat with eachCue in cuesToFade
+			if q type of eachCue is in {"Audio", "Video"} then
+				my createFadeUp(eachCue)
+				set newCue to last item of (selected as list)
+				set newCueID to uniqueID of newCue
+				move cue id newCueID of parent of newCue to end of fadeGroup
+			else if q type of eachCue is in {"Fade"} then
+				try
+					if q display name of eachCue does not start with "Fade in: " then
+						set eachCueTarget to cue target of eachCue
+						my createFadeUp(eachCueTarget)
+						set newCue to last item of (selected as list)
+						set newCueID to uniqueID of newCue
+						move cue id newCueID of parent of newCue to end of fadeGroup
+					end if
+				end try
+			end if
+		end repeat
+	end tell
+end createGroup
+
+on splitString(theString, theDelimiter)
+	-- save delimiters to restore old settings
+	set oldDelimiters to AppleScript's text item delimiters
+	-- set delimiters to delimiter to be used
+	set AppleScript's text item delimiters to theDelimiter
+	-- create the array
+	set theArray to every text item of theString
+	-- restore old setting
+	set AppleScript's text item delimiters to oldDelimiters
+	-- return the array
+	return theArray
+end splitString
