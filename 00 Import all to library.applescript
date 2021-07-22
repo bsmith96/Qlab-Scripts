@@ -1,20 +1,17 @@
 -- @description Import all script to user library
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Run this script in MacOS's "Script Editor" to import all scripts in a folder (including within subfolders) to the user's "Library/Script Libraries"
 -- @separateprocess TRUE
 
+-- @changelog
+--   v1.1  + remove unnecessary declarations
+
 
 -- RUN SCRIPT -----------------------------
-
--- Declarations
-
-use framework "Foundation"
-use framework "OSAKit"
-use scripting additions
 
 global scriptFiles
 set scriptFiles to {}
