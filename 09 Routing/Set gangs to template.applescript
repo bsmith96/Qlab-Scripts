@@ -1,13 +1,14 @@
 -- @description Set gangs to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 1.2
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Create a version of this script for each track you are using, and run each using a different hotkey.
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.2  + added error catching
 --   v1.1  + takes number of output channels from the notes of cues, to streamline editing for new projects
 
 
@@ -47,6 +48,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
   end repeat
 
   set whatTemplate to choose from list routingNames
+  if whatTemplate is false then
+    return
+  end if
 
   set whatTemplateCue to first cue in containerCue whose q name is whatTemplate
 

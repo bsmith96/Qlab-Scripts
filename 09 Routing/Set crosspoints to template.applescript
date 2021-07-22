@@ -1,13 +1,14 @@
 -- @description Set crosspoints to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.2
+-- @version 1.3
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Set the crosspoints of the selected cue to match a selected template cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.3  + Added error catching
 --   v1.2  + Takes number of output channels from the notes of cues, to streamline editing for new projects
 --   v1.1  + If only 1 template exists for the number of cue inputs, sets crosspoints automatically.
 
@@ -89,6 +90,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- end of automatic section
 	
 	set whatTemplate to choose from list routingNames
+	if whatTemplate is false then
+		return
+	end if
 	
 	set whatTemplateCue to first cue in containerCue whose q name is whatTemplate
 	

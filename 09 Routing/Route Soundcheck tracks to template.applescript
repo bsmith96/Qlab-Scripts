@@ -1,13 +1,14 @@
 -- @description Route Soundcheck tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.3
+-- @version 1.4
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Routes soundcheck songs to specific or additional channels based on templates
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.4  + Added error catching
 --   v1.3  + Takes number of output channels from the notes of cues, to streamline editing for new projects
 --   v1.2  + Renames script cue with the current routing
 --   v1.1  + Toggles template name for additional routing ("+Sub" while off, "-Sub" while on)
@@ -24,8 +25,8 @@ set templateGroupCueName to "Soundcheck routing templates" -- group cue containi
 
 set cueListToRoute to "Soundcheck" -- the name of the soundcheck cue list. If this is blank, it will use selected cues
 
-global thisScriptCueNumber
-set thisScriptCueNumber to "Route S-Check" -- the number of the cue which runs or triggers this script
+global displayCurrentStateCueNumber
+set displayCurrentStateCueNumber to "Route S-Check" -- the number of the cue which runs or triggers this script
 
 ---------- END OF USER DEFINED VARIABLES --
 
@@ -55,6 +56,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
   end repeat
 
   set whatTemplate to choose from list routingNames
+  if whatTemplate is false then
+    return
+  end if
 
   set whatTemplateCue to first cue in containerCue whose q name is whatTemplate
 
@@ -87,7 +91,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
     log whatTemplate & " absolute"
   
     try
-      set scriptCue to cue thisScriptCueNumber
+      set scriptCue to cue displayCurrentStateCueNumber
       set scriptCueOldName to q name of scriptCue
 
       if additional is "add" then
@@ -156,7 +160,7 @@ on renameAbsoluteTemplate(theTemplate, allTemplates)
     set q name of theTemplate to newTemplateName
 
     try
-      set scriptCue to cue thisScriptCueNumber
+      set scriptCue to cue displayCurrentStateCueNumber
       set q name of scriptCue to oldTemplateName
     end try
 

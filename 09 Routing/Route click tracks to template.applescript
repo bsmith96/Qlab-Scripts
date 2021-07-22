@@ -1,17 +1,21 @@
 -- @description Route click tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
--- @testedmacos 10.13.6
+-- @version 1.2
+-- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Routes the selected audio track/s the same as a selected template cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.2  + added option to turn off renaming cues
+--         + added error catching
 --   v1.1  + takes number of output channels from the notes of cues, to streamline editing for new projects
 
 
 -- USER DEFINED VARIABLES -----------------
+
+set renameCues to true -- whether or not to append cues with the name of the chosen template
 
 set variableCueListName to "Other scripts & utilities" -- cue list containing Script Variables
 
@@ -47,6 +51,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
   end repeat
 
   set whatTemplate to choose from list routingNames
+  if whatTemplate is false then
+    return
+  end if
 
   set whatTemplateCue to first cue in containerCue whose q name is whatTemplate
 
@@ -60,8 +67,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
         set theLevel to getLevel whatTemplateCue row 0 column eachChannel
         setLevel eachCue row 0 column eachChannel db theLevel
       end repeat
-
-      my renameCue(eachCue, whatTemplate)
+      if renameCues is true then
+        my renameCue(eachCue, whatTemplate)
+      end if
     end if
 
   end repeat
