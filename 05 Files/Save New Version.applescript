@@ -55,20 +55,24 @@ set nextTest to "v" & originalMajor & ".t" & (originalMinor + 1)
 
 -- Ask for new version type
 
-set nextVersionChoices to {"Minor (" & nextMinor & ")", "Major (" & nextMajor & ")"}
-set nextVersion to choose from list nextVersionChoices with prompt "How do you want to increment the version number?" default items {"Minor (" & nextMinor & ")"} with title (projectName & " v" & originalVersion)
-
-if nextVersion is {"Minor (" & nextMinor & ")"} then
-	set versionNumber to nextMinor
-else if nextVersion is {"Major (" & nextMajor & ")"} then
-	set versionNumber to nextMajor
-else if nextVersion is {"Test (" & nextTest & ")"} then
-	set versionNumber to nextTest
-end if
-
--- Ask for note
-
-set newNote to text returned of (display dialog "Would you like to set a note for this version?" with title "Version Note" default answer "")
+tell application id "com.figure53.Qlab.4" to tell front workspace
+	
+	set nextVersionChoices to {"Minor (" & nextMinor & ")", "Major (" & nextMajor & ")"}
+	set nextVersion to choose from list nextVersionChoices with prompt "How do you want to increment the version number?" default items {"Minor (" & nextMinor & ")"} with title (projectName & " v" & originalVersion)
+	
+	if nextVersion is {"Minor (" & nextMinor & ")"} then
+		set versionNumber to nextMinor
+	else if nextVersion is {"Major (" & nextMajor & ")"} then
+		set versionNumber to nextMajor
+	else if nextVersion is {"Test (" & nextTest & ")"} then
+		set versionNumber to nextTest
+	end if
+	
+	-- Ask for note
+	
+	set newNote to text returned of (display dialog "Would you like to set a note for this version?" with title "Version Note" default answer "")
+	
+end tell
 
 -- Generate filename
 
