@@ -23,10 +23,10 @@ set cutListName to "Cut Cues"
 -- RUN SCRIPT -----------------------------
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
-
+	
 	set theSelection to (selected as list)
-
--- Create cue list if necessary, or switch to it
+	
+	-- Create cue list if necessary, or switch to it
 	try
 		set cutList to first cue list whose q name is cutListName
 	on error
@@ -36,11 +36,16 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 		set q color of cutList to "scarlet"
 		collapse cutList
 	end try
-
+	
 	repeat with eachCue in theSelection
 		if q number of eachCue is not "" then
+			set originalCueNumber to q number of eachCue
 			set q name of eachCue to ("(" & q number of eachCue & ") " & q list name of eachCue)
-			set q number of eachCue to "x" & q number of eachCue
+			set q number of eachCue to "x" & originalCueNumber
+		end if
+		
+		if q number of eachCue is originalCueNumber then -- if duplicate numbers are cut, avoids leaving those numbers valid
+			set q number of eachCue to ""
 		end if
 		
 		set cueID to uniqueID of eachCue
