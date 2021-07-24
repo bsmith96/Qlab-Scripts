@@ -28,9 +28,7 @@ set dialogTitle to "Batch Arm/Disarm"
 
 -- Get the search string
 
-set {theText, theButton} to {text returned, button returned} of (display dialog ¬
-	"Arm/disarm cues whose name contains (return an empty string to cancel):" with title dialogTitle with icon 1 ¬
-	default answer userDefaultSearchString buttons {"Toggle", "Arm", "Disarm"} default button "Disarm")
+set {theText, theButton} to {text returned, button returned} of (display dialog "Arm/disarm cues whose name contains (return an empty string to cancel):" with title dialogTitle with icon 1 default answer userDefaultSearchString buttons {"Toggle", "Arm", "Disarm"} default button "Disarm")
 
 -- Check for cancel
 
@@ -44,8 +42,8 @@ set the clipboard to theText
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
 	set foundCues to every cue whose q name contains theText
-	set foundCuesRef to a reference to foundCues
-	repeat with eachCue in reverse of foundCuesRef
+	--set foundCuesRef to a reference to foundCues
+	repeat with eachCue in reverse of foundCues
 		if theButton is "Arm" then
 			set armed of eachCue to true
 		else if theButton is "Disarm" then
