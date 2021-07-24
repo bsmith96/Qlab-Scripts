@@ -1,21 +1,21 @@
 -- @description Put selected cues in a new group cue
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @source Rich Walsh
--- @version 1.0
--- @testedmacos 10.13.6
--- @testedqlab 4.6.9
+-- @source Rich Walsh (adapted)
+-- @version 1.1
+-- @testedmacos 10.14.6
+-- @testedqlab 4.6.10
 -- @about Adds a group cue above the selection and moves the selected cues into it
--- @separateprocess FALSE
+-- @separateprocess TRUE
 
 -- @changelog
---   v1.0  + init
+--   v1.1  + runs as separate process
 
 
-tell front workspace
-
+tell application id "com.figure53.Qlab.4" to tell front workspace
+	
 	try -- This will stop the script if we're in a cart, as it doesn't make sense to continue!
-		set inACart to mode of current cue list -- ###FIXME### As of 4.1.3, this throws an error for carts; if this is fixed this section won't work
+		set inACart to mode of current cue list -- ###FIXME### As of 4.6.10, this throws an error for carts; if this is fixed this section won't work
 	on error
 		return
 	end try

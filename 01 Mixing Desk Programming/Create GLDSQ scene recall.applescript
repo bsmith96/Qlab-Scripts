@@ -1,13 +1,14 @@
 -- @description Create GLD/SQ scene recall
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
--- @testedmacos 10.13.6
--- @testedqlab 4.6.9
+-- @version 1.2
+-- @testedmacos 10.14.6
+-- @testedqlab 4.6.10
 -- @about Creates a midi cue to recall a scene on Allen & Heath GLD / SQ mixing desks
--- @separateprocess FALSE
+-- @separateprocess TRUE
 
 -- @changelog
+--   v1.2  + runs as separate process
 --   v1.1  + can now colour parent groups
 --   v1.0  + init
 
@@ -16,7 +17,7 @@
 
 set userColor to "green" -- the colour of the resulting recall cue
 
-set colorParentGroups to TRUE -- set colour of any groups containing the recall group as well?
+set colorParentGroups to true -- set colour of any groups containing the recall group as well?
 
 set cueListName to "Main Cue List" -- Name of main cue list
 
@@ -25,7 +26,7 @@ set cueListName to "Main Cue List" -- Name of main cue list
 
 -- RUN SCRIPT -----------------------------
 
-tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- Set scene number to recall
 	display dialog "Please select a scene number to recall" default answer "" buttons {"Set", "Cancel"} cancel button "Cancel" default button "Set" with title "SCENE NUMBER"
 	set sceneNumber to text returned of result as integer
@@ -39,7 +40,7 @@ set bankMessage to "B0 00 " & bankNumHex
 set sceneMessage to " C0 " & sceneNumHex
 
 set sceneGroupName to "Scene " & sceneNumber
-tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Make overall group
 	make type "Group"
@@ -60,8 +61,8 @@ tell front workspace
 	
 	-- Color the group and any groups containing the group
 	set q color of sceneGroup to userColor
-
-	if colorParentGroups is TRUE
+	
+	if colorParentGroups is true then
 		set groupParent to parent of sceneGroup
 		repeat
 			if q name of groupParent is cueListName then
@@ -72,7 +73,7 @@ tell front workspace
 			end if
 		end repeat
 	end if
-
+	
 	collapse sceneGroup
 	
 end tell

@@ -1,15 +1,15 @@
 -- @description Arm/Disarm through dialog
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @source Rich Walsh
--- @version 1.0
--- @testedmacos 10.13.6
--- @testedqlab 4.6.9
+-- @source Rich Walsh (adapted)
+-- @version 1.1
+-- @testedmacos 10.14.6
+-- @testedqlab 4.6.10
 -- @about Set the arm state of cues based on a string in their name
--- @separateprocess FALSE
+-- @separateprocess TRUE
 
 -- @changelog
---   v1.0  + init
+--   v1.1  + runs as separate process
 
 
 -- USER DEFINED VARIABLES -----------------
@@ -28,8 +28,8 @@ set dialogTitle to "Batch Arm/Disarm"
 
 -- Get the search string
 
-set {theText, theButton} to {text returned, button returned} of (display dialog Â
-	"Arm/disarm cues whose name contains (return an empty string to cancel):" with title dialogTitle with icon 1 Â
+set {theText, theButton} to {text returned, button returned} of (display dialog Â¬
+	"Arm/disarm cues whose name contains (return an empty string to cancel):" with title dialogTitle with icon 1 Â¬
 	default answer userDefaultSearchString buttons {"Toggle", "Arm", "Disarm"} default button "Disarm")
 
 -- Check for cancel
@@ -42,7 +42,7 @@ end if
 
 set the clipboard to theText
 
-tell front workspace
+tell application id "com.figure53.Qlab.4" to tell front workspace
 	set foundCues to every cue whose q name contains theText
 	set foundCuesRef to a reference to foundCues
 	repeat with eachCue in reverse of foundCuesRef
