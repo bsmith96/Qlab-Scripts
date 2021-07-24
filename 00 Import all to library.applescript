@@ -1,13 +1,14 @@
 -- @description Import all script to user library
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 1.2
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Run this script in MacOS's "Script Editor" to import all scripts in a folder (including within subfolders) to the user's "Library/Script Libraries"
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.2  + creates "Script Libraries" folder if it doesn't already exist
 --   v1.1  + remove unnecessary declarations
 
 
@@ -35,7 +36,17 @@ tell application "Finder"
 		set pathInRoot to my trimLine(originalPath, rootPath, 0)
 		set pathInLibrary to my trimLine(pathInRoot, ".applescript", 1)
 		
-		set newRoot to POSIX path of (path to library folder from user domain) & "Script Libraries/"
+		try
+			set newRoot to (POSIX path of (path to library folder from user domain) & "Script Libraries/")
+			set testRoot to (POSIX file newRoot as alias)
+		on error
+			-- if folder doesn't exist
+			set rootFolderName to "Script Libraries"
+			set rootFolderPath to (POSIX path of (path to library folder from user domain))
+			set newRootFolder to make new folder at (POSIX file rootFolderPath as alias)
+			set name of newRootFolder to rootFolderName
+			set newRoot to (POSIX path of (path to library folder from user domain) & rootFolderName & "/")
+		end try
 		set newPath to newRoot & pathInRoot
 		set newPath to my trimLine(newPath, ".applescript", 1) & ".scpt"
 		
