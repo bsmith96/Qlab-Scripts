@@ -31,7 +31,7 @@ end try
 -- VARIABLES FROM QLAB NOTES --------------
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
-	set audioChannelCount to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Output channel count") -- total number of Qlab output
+	set audioChannelCount to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Output channel count") as integer -- total number of Qlab output
 	set minAudioLevel to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Min audio level") as integer -- audio level which is -inf
 end tell
 
