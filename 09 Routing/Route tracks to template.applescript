@@ -1,13 +1,14 @@
--- @description Route click tracks to template
+-- @description Route tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.2
+-- @version 1.3
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Routes the selected audio track/s the same as a selected template cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.3  + allows assignment of UDVs from the script calling this one
 --   v1.2  + added option to turn off renaming cues
 --         + added error catching
 --   v1.1  + takes number of output channels from the notes of cues, to streamline editing for new projects
@@ -15,13 +16,29 @@
 
 -- USER DEFINED VARIABLES -----------------
 
-set renameCues to false -- whether or not to append cues with the name of the chosen template
+try -- if global variables are given when this cue is run from another script, use those variables
+	renameCues
+on error
+	set renameCues to false -- whether or not to append cues with the name of the chosen template
+end try
 
-set variableCueListName to "Other scripts & utilities" -- cue list containing Script Variables
+try
+	variableCueListName
+on error
+	set variableCueListName to "Other scripts & utilities" -- cue list containing Script Variables
+end try
 
-set templateCueListName to "Other scripts & utilities" -- cue list containing template cues
+try
+	templateCueListName
+on error
+	set templateCueListName to "Other scripts & utilities" -- cue list containing template cues
+end try
 
-set templateGroupCueName to "SFX routing templates" -- group cue containing all template cues
+try
+	templateGroupCueName
+on error
+	set templateGroupCueName to "Click track routing templates" -- group cue containing all template cues
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 

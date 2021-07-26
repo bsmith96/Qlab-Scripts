@@ -1,13 +1,14 @@
 -- @description Set crosspoints to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.3
+-- @version 1.4
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Set the crosspoints of the selected cue to match a selected template cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.4  + allows assignment of UDVs from the script calling this one
 --   v1.3  + Added error catching
 --   v1.2  + Takes number of output channels from the notes of cues, to streamline editing for new projects
 --   v1.1  + If only 1 template exists for the number of cue inputs, sets crosspoints automatically.
@@ -15,11 +16,23 @@
 
 -- USER DEFINED VARIABLES -----------------
 
-set variableCueListName to "Other scripts & utilities" -- cue list containing Script Variables
+try -- if global variables are given when this cue is run from another script, use those variables
+	variableCueListName
+on error
+	set variableCueListName to "Other scripts & utilities" -- cue list containing Script Variables
+end try
 
-set templateCueListName to "Other scripts & utilities" -- cue list containing template cues
+try
+	templateCueListName
+on error
+	set templateCueListName to "Other scripts & utilities" -- cue list containing template cues
+end try
 
-set templateGroupCueName to "Crosspoints routing templates" -- group cue containing all template cues
+try
+	templateGroupCueName
+on error
+	set templateGroupCueName to "Crosspoints routing templates" -- group cue containing all template cues
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 
@@ -27,7 +40,7 @@ set templateGroupCueName to "Crosspoints routing templates" -- group cue contain
 -- VARIABLES FROM QLAB NOTES --------------
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
-  set audioChannelCount to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Output channel count") -- total number of Qlab output
+	set audioChannelCount to notes of (first cue of (first cue list whose q name is variableCueListName) whose q name is "Output channel count") -- total number of Qlab output
 end tell
 
 ------------------ END OF QLAB VARIABLES --
@@ -98,7 +111,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Get the number of inputs for the selected routing
 	
-	set whatTemplateList to my splitString((whatTemplate as string), " - ") -- append the cue name with " - 2" where "2" is the number of cue input channels to affect. ## Only works up to 9Ê##
+	set whatTemplateList to my splitString((whatTemplate as string), " - ") -- append the cue name with " - 2" where "2" is the number of cue input channels to affect. ## Only works up to 9Â ##
 	try
 		set inputCount to item -1 of whatTemplateList as integer
 	on error

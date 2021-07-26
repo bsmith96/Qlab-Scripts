@@ -1,18 +1,29 @@
--- @description Bump cue level +6dB
+-- @description Bump cue level
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Leaves the cue master, and bumps the individual channels (which are not -inf) +6dB
 -- @separateprocess TRUE
 
+-- @changelog
+--   v1.1  + allows assignment of UDVs from the script calling this one
+
 
 -- USER DEFINED VARIABLES -----------------
 
-set variableCueListName to "Other scripts & utilities"
+try -- if global variables are given when this cue is run from another script, use those variables
+	variableCueListName
+on error
+	set variableCueListName to "Other scripts & utilities"
+end try
 
-set bumpLevel to -3
+try
+	bumpLevel
+on error
+	set bumpLevel to 6
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 
