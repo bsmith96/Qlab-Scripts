@@ -1,16 +1,16 @@
 -- @description Set gangs to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.3
--- @testedmacos 10.13.6
+-- @version 1.4
+-- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Create a version of this script for each track you are using, and run each using a different hotkey.
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.4  + works with videos as well
 --   v1.3  + allows assignment of UDVs from the script calling this one
 --   v1.2  + added error catching
---   v1.1  + takes number of output channels from the notes of cues, to streamline editing for new projects
 
 
 -- USER DEFINED VARIABLES -----------------
@@ -81,7 +81,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	repeat with eachCue in selectedCues
 		
 		set cueType to q type of eachCue
-		if cueType is "Audio" then
+		if cueType is in {"Audio", "Video"} then
 			repeat with eachChannel from 1 to audioChannelCount
 				repeat with eachInput from 0 to inputCount
 					set theGang to getGang whatTemplateCue row eachInput column eachChannel

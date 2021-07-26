@@ -1,17 +1,16 @@
 -- @description Set crosspoints to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.4
--- @testedmacos 10.13.6
+-- @version 1.5
+-- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Set the crosspoints of the selected cue to match a selected template cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.5  + works with videos as well
 --   v1.4  + allows assignment of UDVs from the script calling this one
 --   v1.3  + Added error catching
---   v1.2  + Takes number of output channels from the notes of cues, to streamline editing for new projects
---   v1.1  + If only 1 template exists for the number of cue inputs, sets crosspoints automatically.
 
 
 -- USER DEFINED VARIABLES -----------------
@@ -121,7 +120,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	repeat with eachCue in selectedCues
 		
 		set cueType to q type of eachCue
-		if cueType is "Audio" then
+		if cueType is in {"Audio", "Video"} then
 			repeat with eachChannel from 1 to audioChannelCount
 				repeat with eachInput from 1 to inputCount
 					set theLevel to getLevel whatTemplateCue row eachInput column eachChannel
