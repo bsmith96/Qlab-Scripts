@@ -1,13 +1,14 @@
 -- @description Bump cue level
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.2
+-- @version 1.3
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Leaves the cue master, and bumps the individual channels (which are not -inf) +6dB
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.3  + no longer errors when no gang was assigned
 --   v1.2  + removes gangs temporarily, to avoid duplicate bumps
 --   v1.1  + allows assignment of UDVs from the script calling this one
 
@@ -56,7 +57,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 					set oldGang to getGang eachCue row 0 column eachChannel -- temporarily remove gangs
 					setGang eachCue row 0 column eachChannel gang ""
 					setLevel eachCue row 0 column eachChannel db newLevel
-					setGang eachCue row 0 column eachChannel gang oldGang -- restore gangs
+					try
+						setGang eachCue row 0 column eachChannel gang oldGang -- restore gangs
+					end try
 				end if
 				set logString to "setLevel eachCue row 0 column " & eachChannel & " db " & newLevel
 				log logString
