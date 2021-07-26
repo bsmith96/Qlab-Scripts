@@ -1,16 +1,23 @@
 -- @description Create a locate cue in Main Cue List
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Create a cue in the Main Cue List to locate another cue list to a specific point
 -- @separateprocess TRUE
 
+-- @changelog
+--   v1.1  + allows assignment of UDVs from the script calling this one
+
 
 -- USER DEFINED VARIABLES -----------------
 
-set userCueList to "Main Cue List"
+try -- if global variables are given when this script is called by another, use those variables
+	userCueList
+on error
+	set userCueList to "Main Cue List"
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 

@@ -1,19 +1,23 @@
 -- @description SFX VARIATIONS: Create link to select playback variants in rig check
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
--- @testedmacos 10.13.6
--- @testedqlab 4.6.9
+-- @version 1.1
+-- @testedmacos 10.14.6
+-- @testedqlab 4.6.10
 -- @about Creates a cue underneath the rig check marker to go to any selection cues and choose the variant for the next performance
 -- @separateprocess TRUE
 
 -- @changelog
---   v1.0  + init
+--   v1.1  + allows assignment of UDVs from the script calling this one
 
 
 -- USER DEFINED VARIABLES -----------------
 
-set whereIsRigCheck to "   RIG CHECK" -- the cue name of your rig check title cue – the cue this script creates will go underneath this
+try -- if global variables are given when this script is called by another, use those variables
+	whereIsRigCheck
+on error
+	set whereIsRigCheck to "   RIG CHECK" -- the cue name of your rig check title cue – the cue this script creates will go underneath this
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 
@@ -21,7 +25,7 @@ set whereIsRigCheck to "   RIG CHECK" -- the cue name of your rig check title cu
 -- RUN SCRIPT -----------------------------
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
-
+	
 	-- Define variables
 	set allVariants to ""
 	set current cue list to first cue list whose q name is "Main Cue List"

@@ -2,20 +2,25 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @source Rich Walsh (adapted)
--- @version 1.1
+-- @version 1.2
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Creates a cue at the end of Main Cue List targeting the currently selected cue in another cue list.
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.2  + allows assignment of UDVs from the script calling this one
 --   v1.1  + runs in external process
 --   v1.0  + init
 
 
 -- USER DEFINED VARIABLES -----------------
 
-set userCueList to "Main Cue List"
+try -- if global variables are given when this script is called by another, use those variables
+	userCueList
+on error
+	set userCueList to "Main Cue List"
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 

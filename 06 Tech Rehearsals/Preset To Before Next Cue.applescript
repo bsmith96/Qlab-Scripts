@@ -1,13 +1,14 @@
 -- @description Preset to before next cue
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 2.1
--- @testedmacos 10.13.6
--- @testedqlab 4.6.9
+-- @version 2.2
+-- @testedmacos 10.14.6
+-- @testedqlab 4.6.10
 -- @about Starts all looping audio that has not been stopped before the currently selected cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.2  + allows assignment of UDVs from the script calling this one
 --   v2.1  + cue list name is a variable
 --         + removed unnecessary function
 --   v2.0  + changed approach to avoid starting every single cue
@@ -16,7 +17,11 @@
 
 -- USER DEFINED VARIABLES -----------------
 
-set cueListName to "Main Cue List"
+try -- if global variables are given when this script is called by another, use those variables
+	cueListName
+on error
+	set cueListName to "Main Cue List"
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 

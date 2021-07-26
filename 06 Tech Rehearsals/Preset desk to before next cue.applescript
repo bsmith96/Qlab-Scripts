@@ -1,23 +1,36 @@
 -- @description Preset desk to before next cue
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 1.2
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Recalls the most recently recalled scene, if scene recalls have been generated with these scripts
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.2  + allows assignment of UDVs from the script calling this one
 --   v1.1  + now works correctly when the playhead does not contain a desk cue
 
 
 -- USER DEFINED VARIABLES -----------------
 
-set cueListName to "Main Cue List"
+try -- if global variables are given when this script is called by another, use those variables
+	cueListName
+on error
+	set cueListName to "Main Cue List"
+end try
 
-set howManyToRecall to 1 -- To load several scenes quickly, e.g. if you are using recall filters and want to load the last 5 to ensure you have the correct settings running into the next scene.
+try
+	howManyToRecall
+on error
+	set howManyToRecall to 1 -- To load several scenes quickly, e.g. if you are using recall filters and want to load the last 5 to ensure you have the correct settings running into the next scene.
+end try
 
-set recallDelay to 0.5 -- Delay in seconds between recalls, when howManyToRecall is greater than 1
+try
+	recallDelay
+on error
+	set recallDelay to 0.5 -- Delay in seconds between recalls, when howManyToRecall is greater than 1
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 

@@ -2,13 +2,14 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @source Sam Schloegel (adapted)
--- @version 2.2
+-- @version 2.3
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Moves the selected cues to a cut cue list, and removes their cue number
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.3  + allows assignment of UDVs from the script calling this one
 --   v2.2  + successfully cuts cues without a cue number again
 --   v2.1  + does not allow valid numbers to remain in the cut list
 --   v2.0  + creates cue list if needed, renumbered
@@ -16,7 +17,11 @@
 
 -- USER DEFINED VARIABLES -----------------
 
-set cutListName to "Cut Cues"
+try -- if global variables are given when this script is called by another, use those variables
+	cutListName
+on error
+	set cutListName to "Cut Cues"
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 

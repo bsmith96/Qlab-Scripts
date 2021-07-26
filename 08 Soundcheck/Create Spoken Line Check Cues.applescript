@@ -1,13 +1,14 @@
 -- @description Create spoken line check cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.4
--- @testedmacos 10.13.6
+-- @version 1.5
+-- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Creates spoken output names and automated line check cues
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.5  + allows assignment of UDVs from the script calling this one
 --   v1.4  + takes channel list and level information from the notes of cues, to streamline editing for new projects
 --   v1.3  + creates cues in the correct order
 --         + cleaned up "speak output names" loop
@@ -17,22 +18,46 @@
 -- USER DEFINED VARIABLES -----------------
 
 -- Locate the cue list containing Script Variables
-set variableCueListName to "Other scripts & utilities"
+try -- if global variables are given when this script is called by another, use those variables
+	variableCueListName
+on error
+	set variableCueListName to "Other scripts & utilities"
+end try
 
 -- Set file type to save (wav or aiff)
-set fileType to ".wav"
+try
+	fileType
+on error
+	set fileType to ".wav"
+end try
 
 -- Set the cue which you want to precede your line check group
-set rigCheckTitleCue to "   RIG CHECK" -- Leave blank to use the current position
+try
+	rigCheckTitleCue
+on error
+	set rigCheckTitleCue to "   RIG CHECK" -- Leave blank to use the current position
+end try
 
 -- Set the cue list you want to place this group cue in
-set mainCueListName to "Main Cue list"
+try
+	mainCueListName
+on error
+	set mainCueListName to "Main Cue list"
+end try
 
 -- Set the name of the sub sound. This should be saved, relative to the Qlab file, in "~/Soundcheck/Line Checks"
-set subFileName to "Sub v2.wav"
+try
+	subFileName
+on error
+	set subFileName to "Sub v2.wav"
+end try
 
 -- Set the delay between each file playing in seconds
-set userDelay to 0.5
+try
+	userDelay
+on error
+	set userDelay to 0.5
+end try
 
 ---------- END OF USER DEFINED VARIABLES --
 

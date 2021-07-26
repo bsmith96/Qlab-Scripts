@@ -16,7 +16,7 @@
 
 -- USER DEFINED VARIABLES -----------------
 
-try -- if global variables are given when this cue is run from another script, use those variables
+try -- if global variables are given when this script is called by another, use those variables
 	variableCueListName
 on error
 	set variableCueListName to "Other scripts & utilities" -- cue list containing Script Variables

@@ -16,7 +16,7 @@
 
 -- USER DEFINED VARIABLES -----------------
 
-try -- if global variables are given when this cue is run from another script, use those variables
+try -- if global variables are given when this script is called by another, use those variables
 	renameCues
 on error
 	set renameCues to false -- whether or not to append cues with the name of the chosen template
