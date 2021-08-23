@@ -1,15 +1,19 @@
 -- @description SFX VARIATIONS: Create selection cue in a separate cue list
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 2.0
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates a group and OSC cues in a separate cue list to select which variations to arm and disarm. Requires default group to be "timeline", and default network cue to be "Qlab message".
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.0  + moved common functions to external script
 --   v1.1  + fixed error catching
 --   v1.0  + init
+
+
+property util : script "Applescript Utilities"
 
 
 -- RUN SCRIPT -----------------------------
@@ -38,13 +42,13 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- If announcements was selected, automatically populate with Evening and Matinee first
 	if triggerAbb is "ann" then
 		-- Set Evening name
-		my insertItemInList("Evening", triggerOptions, 1)
+		util's insertItemInList("Evening", triggerOptions, 1)
 		-- Set Evening abbreviation
-		my insertItemInList("eve", triggerOptionsAbb, 1)
+		util's insertItemInList("eve", triggerOptionsAbb, 1)
 		-- Set Matinee name
-		my insertItemInList("Matinee", triggerOptions, 2)
+		util's insertItemInList("Matinee", triggerOptions, 2)
 		-- Set Matinee abbreviation
-		my insertItemInList("mat", triggerOptionsAbb, 2)
+		util's insertItemInList("mat", triggerOptionsAbb, 2)
 		
 		-- Allow additional variations of announcements to be entered
 		repeat while allVariations is not "Yes"
@@ -53,10 +57,10 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 			set nextOption to text returned of results
 			set buttonReturned to button returned of results
 			if buttonReturned is "That's All" then exit repeat
-			my insertItemInList(nextOption, triggerOptions, listPosition)
+			util's insertItemInList(nextOption, triggerOptions, listPosition)
 			display dialog "What abbreviation do you want to use?" default answer ""
 			set nextAbb to text returned of result
-			my insertItemInList(nextAbb, triggerOptionsAbb, listPosition)
+			util's insertItemInList(nextAbb, triggerOptionsAbb, listPosition)
 		end repeat
 	else
 		
@@ -67,19 +71,19 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 				set results to (display dialog "Which is the first actor playing this character, or variation of the announcement?" default answer "" buttons {"OK", "That's All", "Cancel"} default button "OK" cancel button "Cancel")
 				set nextOption to text returned of results
 				set buttonReturned to button returned of results
-				my insertItemInList(nextOption, triggerOptions, listPosition)
+				util's insertItemInList(nextOption, triggerOptions, listPosition)
 				display dialog "What abbreviation do you want to use?" default answer ""
 				set nextAbb to text returned of result
-				my insertItemInList(nextAbb, triggerOptionsAbb, listPosition)
+				util's insertItemInList(nextAbb, triggerOptionsAbb, listPosition)
 			else
 				set results to (display dialog "Which is the next actor playing this character, or variation of the announcement?" default answer "" buttons {"OK", "That's All", "Cancel"} default button "OK" cancel button "Cancel")
 				set nextOption to text returned of results
 				set buttonReturned to button returned of results
 				if buttonReturned is "That's All" then exit repeat
-				my insertItemInList(nextOption, triggerOptions, listPosition)
+				util's insertItemInList(nextOption, triggerOptions, listPosition)
 				display dialog "What abbreviation do you want to use?" default answer ""
 				set nextAbb to text returned of result
-				my insertItemInList(nextAbb, triggerOptionsAbb, listPosition)
+				util's insertItemInList(nextAbb, triggerOptionsAbb, listPosition)
 			end if
 			
 			
@@ -177,42 +181,6 @@ end tell
 
 
 -- FUNCTIONS ------------------------------
-
-on insertItemInList(theItem, theList, thePosition)
-	set theListCount to length of theList
-	if thePosition is 0 then
-		return false
-	else if thePosition is less than 0 then
-		if (thePosition * -1) is greater than theListCount + 1 then return false
-	else
-		if thePosition is greater than theListCount + 1 then return false
-	end if
-	if thePosition is less than 0 then
-		if (thePosition * -1) is theListCount + 1 then
-			set beginning of theList to theItem
-		else
-			set theList to reverse of theList
-			set thePosition to (thePosition * -1)
-			if thePosition is 1 then
-				set beginning of theList to theItem
-			else if thePosition is (theListCount + 1) then
-				set end of theList to theItem
-			else
-				set theList to (items 1 thru (thePosition - 1) of theList) & theItem & (items thePosition thru -1 of theList)
-			end if
-			set theList to reverse of theList
-		end if
-	else
-		if thePosition is 1 then
-			set beginning of theList to theItem
-		else if thePosition is (theListCount + 1) then
-			set end of theList to theItem
-		else
-			set theList to (items 1 thru (thePosition - 1) of theList) & theItem & (items thePosition thru -1 of theList)
-		end if
-	end if
-	return theList
-end insertItemInList
 
 -- Script with the text to be copied into the script created, for renaming groups containing these SFX
 on makeRenameScript(theCuePrefix, theCueName, theCueList, itemGroup)

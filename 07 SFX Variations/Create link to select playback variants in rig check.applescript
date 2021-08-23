@@ -1,13 +1,14 @@
 -- @description SFX VARIATIONS: Create link to select playback variants in rig check
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 2.0
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Creates a cue underneath the rig check marker to go to any selection cues and choose the variant for the next performance
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.0  + moved common functions to external script
 --   v1.1  + allows assignment of UDVs from the script calling this one
 
 
@@ -20,6 +21,9 @@ on error
 end try
 
 ---------- END OF USER DEFINED VARIABLES --
+
+
+property util : script "Applescript Utilities"
 
 
 -- RUN SCRIPT -----------------------------
@@ -35,9 +39,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- Get a list of all variables
 	repeat with eachCue in (cues in (first cue list whose q name is "Select Playback Variants") as list)
 		if allVariants is "" then
-			set allVariants to item 2 of (my splitString((q name of eachCue), ": "))
+			set allVariants to item 2 of (util's splitString((q name of eachCue), ": "))
 		else
-			set allVariants to allVariants & ", " & item 2 of (my splitString((q name of eachCue), ": "))
+			set allVariants to allVariants & ", " & item 2 of (util's splitString((q name of eachCue), ": "))
 		end if
 	end repeat
 	
@@ -54,19 +58,3 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	end tell"
 	
 end tell
-
-
--- FUNCTIONS ------------------------------
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString

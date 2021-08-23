@@ -1,13 +1,14 @@
 -- @description Create spoken line check cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.5
+-- @version 2.0
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Creates spoken output names and automated line check cues
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.0  + moved common functions to external script
 --   v1.5  + allows assignment of UDVs from the script calling this one
 --   v1.4  + takes channel list and level information from the notes of cues, to streamline editing for new projects
 --   v1.3  + creates cues in the correct order
@@ -83,6 +84,9 @@ end tell
 ------------------ END OF QLAB VARIABLES --
 
 
+property util : script "Applescript Utilities"
+
+
 ---- RUN SCRIPT ---------------------------
 
 -- Get the path to the project
@@ -112,7 +116,7 @@ checkForFiles(saveLocation, subFileName)
 
 
 -- Convert userChannels into a list
-set theChannels to splitString(userChannels, ", ")
+set theChannels to util's splitString(userChannels, ", ")
 
 -- Speak output names
 set outputCount to count of theChannels
@@ -160,7 +164,7 @@ end tell
 
 -- Make audio cues
 tell application id "com.figure53.Qlab.4" to tell front workspace
-	repeat with eachOutput in my sortList(allTheFiles)
+	repeat with eachOutput in util's sortList(allTheFiles)
 		if q number of eachOutput is not subFileName then
 			set eachOutputName to my getOutputName(eachOutput)
 			set eachOutputNumber to my getOutputNumber(eachOutput)
@@ -216,35 +220,13 @@ end checkDigits
 
 on correctOutputName(outputName)
 	if outputName contains "Pros" then
-		set newOutputName to findAndReplaceInText(outputName, "Pros", "Proz")
+		set newOutputName to util's findAndReplaceInText(outputName, "Pros", "Proz")
 		return newOutputName
 	else
 		return outputName
 	end if
 	
 end correctOutputName
-
-on findAndReplaceInText(theText, theSearchString, theReplacementString)
-	set AppleScript's text item delimiters to theSearchString
-	set theTextItems to every text item of theText
-	set AppleScript's text item delimiters to theReplacementString
-	set theText to theTextItems as string
-	set AppleScript's text item delimiters to ""
-	return theText
-end findAndReplaceInText
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString
 
 -- Checks for cues and deletes them if they're already present
 
@@ -278,57 +260,14 @@ on checkForFiles(saveLocation, subFileName)
 	end tell
 end checkForFiles
 
--- Sort the list of files before creating cues
-
-on sortList(theList)
-	set the indexList to {}
-	set the sortedList to {}
-	set theListNames to {}
-	set sortedListNames to {}
-	
-	-- Create a list with the names of the files
-	repeat with i from 1 to (count of theList)
-		set eachItem to item i of theList
-		tell application "Finder"
-			set end of theListNames to (name of eachItem as string)
-		end tell
-	end repeat
-	
-	-- Sort the list of filenames alphabetically (by output number)
-	repeat (the number of items in theListNames) times
-		set the lowItem to ""
-		repeat with i from 1 to (number of items in theListNames)
-			if i is not in the indexList then
-				set thisItem to item i of theListNames
-				if the lowItem is "" then
-					set the lowItem to thisItem
-					set the lowItemIndex to i
-				else if thisItem comes before the lowItem then
-					set the lowItem to thisItem
-					set the lowItemIndex to i
-				end if
-			end if
-		end repeat
-		set the end of sortedListNames to the lowItem
-		set the end of the indexList to the lowItemIndex
-	end repeat
-	
-	-- Use the index list to create a sorted list of the files themselves
-	repeat with eachItem in indexList
-		set end of sortedList to item eachItem of theList
-	end repeat
-	
-	return the sortedList
-end sortList
-
 -- Gets the output name from the file name. Hopefully useful if the list is not in the correct order.
 
 on getOutputName(theFile)
 	tell application "Finder"
 		set fileName to name of theFile
 	end tell
-	set nameWithoutExtension to splitString(fileName, ".")
-	set nameAsList to splitString(item 1 of nameWithoutExtension, "")
+	set nameWithoutExtension to util's splitString(fileName, ".")
+	set nameAsList to util's splitString(item 1 of nameWithoutExtension, "")
 	set outputList to items 4 thru -1 of nameAsList as string
 	return outputList
 end getOutputName
@@ -339,7 +278,7 @@ on getOutputNumber(theFile)
 	tell application "Finder"
 		set fileName to name of theFile
 	end tell
-	set nameAsList to splitString(items 1 thru 2 of fileName, "")
+	set nameAsList to util's splitString(items 1 thru 2 of fileName, "")
 	set outputNumber to item 1 of nameAsList & item 2 of nameAsList as number
 	return outputNumber
 end getOutputNumber

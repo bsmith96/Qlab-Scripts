@@ -1,13 +1,14 @@
 -- @description Set gangs to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.4
+-- @version 2.0
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Create a version of this script for each track you are using, and run each using a different hotkey.
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.0  + moved common functions to external script
 --   v1.4  + works with videos as well
 --   v1.3  + allows assignment of UDVs from the script calling this one
 --   v1.2  + added error catching
@@ -45,6 +46,9 @@ end tell
 ------------------ END OF QLAB VARIABLES --
 
 
+property util : script "Applescript Utilities"
+
+
 ---- RUN SCRIPT ---------------------------
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
@@ -71,7 +75,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Get the number of inputs for the selected routing. To only affect the master level of each cue output channel, you can omit this from the template cue name
 	
-	set whatTemplateList to my splitString((whatTemplate as string), " - ") -- append the cue name with " - 2" where "2" is the number of cue input channels to affect. To only affect levels and not crosspoints, you can omit this or enter "0".
+	set whatTemplateList to util's splitString((whatTemplate as string), " - ") -- append the cue name with " - 2" where "2" is the number of cue input channels to affect. To only affect levels and not crosspoints, you can omit this or enter "0".
 	try
 		set inputCount to item -1 of whatTemplateList as integer
 	on error
@@ -105,22 +109,9 @@ end tell
 on renameCue(theCue, theTemplate)
 	tell application id "com.figure53.Qlab.4" to tell front workspace
 		set oldName to q display name of theCue
-		set oldNameList to my splitString(oldName, " | ")
+		set oldNameList to util's splitString(oldName, " | ")
 		set oldName to item 1 of oldNameList
 		set newName to oldName & " | " & theTemplate
 		set q name of theCue to newName
 	end tell
 end renameCue
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString

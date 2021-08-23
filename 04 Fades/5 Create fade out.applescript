@@ -2,34 +2,40 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @source Rich Walsh (adapted)
--- @version 2.0
+-- @version 3.0
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Create a fade out for the selected audio/video/group cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v3.0  + moved common functions to external script
 --   v2.0  + subroutines
 --         + doesn't daisychain "Fade xxx: " in group names
 
 
+property util : script "Applescript Utilities"
+
+
+---- RUN SCRIPT ---------------------------
+
 tell application id "com.figure53.Qlab.4" to tell front workspace
 	set originalCue to last item of (selected as list)
 	set originalCueType to q type of originalCue
-
+	
 	-- Create fade out for audio or video cues
-
+	
 	if originalCueType is in {"Audio", "Video"} then
 		my createFadeOut(originalCue)
-
-	-- Create fade out for audio or video cues, from a fade cue which targets the original cue
-
+		
+		-- Create fade out for audio or video cues, from a fade cue which targets the original cue
+		
 	else if originalCueType is "Fade" then
 		set originalCueTarget to cue target of originalCue
-		my createFadeout(originalCueTarget)
-
-	-- Create a fade out for every audio or video cue in a group
-
+		my createFadeOut(originalCueTarget)
+		
+		-- Create a fade out for every audio or video cue in a group
+		
 	else if originalCueType is "Group" then
 		my createGroup(originalCue)
 	end if
@@ -61,8 +67,8 @@ on createGroup(theCue)
 		set fadeGroupID to uniqueID of fadeGroup
 		-- Remove previous "fade" in cue name, if present
 		if theCueName starts with "Fade in: " or theCueName starts with "Fade up: " or theCueName starts with "Fade down: " then
-			set theCueNameList to my splitString(theCueName, ": ")
-			set theCueName to item 2 thru item -1 of theCueNameList
+			set theCueNameList to util's splitString(theCueName, ": ")
+			set theCueName to items 2 thru -1 of theCueNameList
 		end if
 		set q name of fadeGroup to "Fade out: " & theCueName
 		repeat with eachCue in cuesToFade
@@ -85,16 +91,3 @@ on createGroup(theCue)
 		end repeat
 	end tell
 end createGroup
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString

@@ -1,13 +1,14 @@
 -- @description Set crosspoints to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.5
+-- @version 2.0
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Set the crosspoints of the selected cue to match a selected template cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.0  + moved common functions to external script
 --   v1.5  + works with videos as well
 --   v1.4  + allows assignment of UDVs from the script calling this one
 --   v1.3  + Added error catching
@@ -45,6 +46,9 @@ end tell
 ------------------ END OF QLAB VARIABLES --
 
 
+property util : script "Applescript Utilities"
+
+
 ---- RUN SCRIPT ---------------------------
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
@@ -66,7 +70,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- try to do it automatically
 	try
 		repeat with eachTemplate in routingNames
-			set eachTemplateList to my splitString((eachTemplate as string), " - ")
+			set eachTemplateList to util's splitString((eachTemplate as string), " - ")
 			set inputCountTemplate to item -1 of eachTemplateList as integer
 			set end of routingNumbers to inputCountTemplate
 		end repeat
@@ -84,7 +88,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 			if length of inputCountMatches is 1 then
 				set whatTemplate to item (item 1 of inputCountMatches) of routingNames
 				set whatTemplateCue to (first cue in containerCue whose q name is whatTemplate)
-				set whatTemplateList to my splitString((whatTemplate as string), " - ")
+				set whatTemplateList to util's splitString((whatTemplate as string), " - ")
 				set inputCount to item -1 of whatTemplateList as integer
 				repeat with eachChannel from 1 to audioChannelCount
 					repeat with eachInput from 1 to inputCount
@@ -110,7 +114,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Get the number of inputs for the selected routing
 	
-	set whatTemplateList to my splitString((whatTemplate as string), " - ") -- append the cue name with " - 2" where "2" is the number of cue input channels to affect. ## Only works up to 9 ##
+	set whatTemplateList to util's splitString((whatTemplate as string), " - ") -- append the cue name with " - 2" where "2" is the number of cue input channels to affect. ## Only works up to 9 ##
 	try
 		set inputCount to item -1 of whatTemplateList as integer
 	on error
@@ -140,22 +144,9 @@ end tell
 on renameCue(theCue, theTemplate)
 	tell application id "com.figure53.Qlab.4" to tell front workspace
 		set oldName to q display name of theCue
-		set oldNameList to my splitString(oldName, " | ")
+		set oldNameList to util's splitString(oldName, " | ")
 		set oldName to item 1 of oldNameList
 		set newName to oldName & " | " & theTemplate
 		set q name of theCue to newName
 	end tell
 end renameCue
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString

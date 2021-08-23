@@ -1,15 +1,19 @@
 -- @description Save new version
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 2.0
+-- @version 3.0
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Saves a new version of your qlab file, incrementing a 2 digit version number, and allowing notes (such as a date, or "start of tech")
 -- @separateprocess TRUE
 
 -- @changelog
+--   v3.0  + moved common functions to external script
 --   v2.0  + introduced a version of semantic versioning, allowing sub-version numbers for updates
 --         + now works if ".qlab4" is visible in the file name in finder
+
+
+property util : script "Applescript Utilities"
 
 
 -- RUN SCRIPT -----------------------------
@@ -31,7 +35,7 @@ end tell
 -- Remove note, if present
 
 if originalFileName contains "-" then
-	set theResult to splitString(originalFileName, " - ")
+	set theResult to util's splitString(originalFileName, " - ")
 	set originalNote to item -1 of theResult
 	set originalNameAndVersion to item 1 of theResult
 else
@@ -40,10 +44,10 @@ end if
 
 -- Remove version number
 
-set theResult to splitString(originalNameAndVersion, " v")
+set theResult to util's splitString(originalNameAndVersion, " v")
 set projectName to item 1 of theResult
 set originalVersion to item -1 of theResult
-set theResult to splitString(originalVersion, ".")
+set theResult to util's splitString(originalVersion, ".")
 set originalMajor to item 1 of theResult
 set originalMinor to item 2 of theResult
 
@@ -91,19 +95,3 @@ tell application id "com.figure53.Qlab.4"
 	open ((originalPath as string) & (newFileName as string) & ".qlab4")
 	close back workspace without saving
 end tell
-
-
--- FUNCTIONS ------------------------------
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString

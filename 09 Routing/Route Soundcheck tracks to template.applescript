@@ -1,13 +1,14 @@
 -- @description Route Soundcheck tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.5
+-- @version 2.0
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.10
 -- @about Routes soundcheck songs to specific or additional channels based on templates
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.0  + moved common functions to external script
 --   v1.5  + Allows assignment of UDVs from the script calling this one
 --   v1.4  + Added error catching
 --   v1.3  + Takes number of output channels from the notes of cues, to streamline editing for new projects
@@ -58,6 +59,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 end tell
 
 ------------------ END OF QLAB VARIABLES --
+
+
+property util : script "Applescript Utilities"
 
 
 ---- RUN SCRIPT ---------------------------
@@ -118,7 +122,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 				set q name of scriptCue to scriptCueOldName & " " & whatTemplate
 			else if additional is "remove" then
 				set newTemplateName to q name of whatTemplateCue
-				set q name of scriptCue to my findAndReplaceInText(scriptCueOldName, " " & newTemplateName, "")
+				set q name of scriptCue to util's findAndReplaceInText(scriptCueOldName, " " & newTemplateName, "")
 			end if
 		end try
 		
@@ -186,25 +190,3 @@ on renameAbsoluteTemplate(theTemplate, allTemplates, updateCueNumber)
 		
 	end tell
 end renameAbsoluteTemplate
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString
-
-on findAndReplaceInText(theText, theSearchString, theReplacementString)
-	set AppleScript's text item delimiters to theSearchString
-	set theTextItems to every text item of theText
-	set AppleScript's text item delimiters to theReplacementString
-	set theText to theTextItems as string
-	set AppleScript's text item delimiters to ""
-	return theText
-end findAndReplaceInText

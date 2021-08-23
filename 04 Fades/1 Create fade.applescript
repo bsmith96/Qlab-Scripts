@@ -2,13 +2,14 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @source Rich Walsh (adapted)
--- @version 2.1
+-- @version 3.0
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Create a fade down cue for the selected audio/video/fade/group cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v3.0  + moved common functions to external script
 --   v2.1  + allows assignment of UDVs from the script calling this one
 --   v2.0  + subroutines
 --         + doesn't daisychain "Fade xxx: " in group names
@@ -29,6 +30,9 @@ on error
 end try
 
 ---------- END OF USER DEFINED VARIABLES --
+
+
+property util : script "Applescript Utilities"
 
 
 -- RUN SCRIPT -----------------------------
@@ -80,7 +84,7 @@ on createGroup(theCue, userLevel, userPrefix)
 		set fadeGroupID to uniqueID of fadeGroup
 		-- Remove previous "fade" in cue name, if present
 		if theCueName starts with "Fade in: " or theCueName starts with "Fade up: " or theCueName starts with "Fade down: " then
-			set theCueNameList to my splitString(theCueName, ": ")
+			set theCueNameList to util's splitString(theCueName, ": ")
 			set theCueName to items 2 thru -1 of theCueNameList
 		end if
 		set q name of fadeGroup to userPrefix & theCueName
@@ -104,16 +108,3 @@ on createGroup(theCue, userLevel, userPrefix)
 		end repeat
 	end tell
 end createGroup
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString

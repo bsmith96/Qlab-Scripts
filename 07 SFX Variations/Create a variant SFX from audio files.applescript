@@ -1,15 +1,19 @@
 -- @description SFX VARIATIONS: Create a variant SFX from audio files
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 2.0
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates a group of multiple variations of the same SFX, to be armed and disarmed by a selection cue. Uses the audio file name to name the cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.0  + moved common functions to external script
 --   v1.1  + cleaned up unnecessary functions
 --   v1.0  + init
+
+
+property util : script "Applescript Utilities"
 
 
 -- RUN SCRIPT -----------------------------
@@ -19,7 +23,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- Define variables
 	set itemNumber to ""
 	set otherFilesPrefix to {}
-
+	
 	-- Files should be named with the cue number and the title of the cue, then the actor's full name / full announcement title after a comma. e.g. "ann.eve.1 Opening Announcement, Evening" for an opening announcement
 	
 	-- Please note the script does not perform any checks to ensure all global information is correct on on the files (variable, number, name)
@@ -33,14 +37,14 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Get variable information from the first file
 	
-	set firstFileName to my getFileName(audioFilesOne)
+	set firstFileName to util's getFileName(audioFilesOne)
 	
-	set fileOneArray to (my splitString(firstFileName, "."))
+	set fileOneArray to (util's splitString(firstFileName, "."))
 	set filePrefixOne to item 1 of fileOneArray
 	set filePrefixTwo to item 2 of fileOneArray
 	set fileAllThree to item 3 of fileOneArray
 	
-	set fileOneArrayTwo to (my splitString(fileAllThree, " "))
+	set fileOneArrayTwo to (util's splitString(fileAllThree, " "))
 	set filePrefixThree to item 1 of fileOneArrayTwo
 	set fileName to ""
 	
@@ -48,18 +52,18 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 		set fileName to fileName & " " & (item eachItem of fileOneArrayTwo)
 	end repeat
 	
-	set fileOneArrayThree to (my splitString(fileName, ", "))
+	set fileOneArrayThree to (util's splitString(fileName, ", "))
 	set fileName to item 1 of fileOneArrayThree
 	
 	-- Get variant information from all subsequent files
 	repeat with eachFile in audioFiles
-		set eachFileName to (my getFileName(eachFile))
-		set eachFileArray to (my splitString(eachFileName, "."))
+		set eachFileName to (util's getFileName(eachFile))
+		set eachFileArray to (util's splitString(eachFileName, "."))
 		set eachFilePrefixOne to item 1 of eachFileArray
 		set eachFilePrefixTwo to item 2 of eachFileArray
 		set eachFileAllThree to item 3 of eachFileArray
 		
-		set eachFileArrayTwo to (my splitString(eachFileAllThree, " "))
+		set eachFileArrayTwo to (util's splitString(eachFileAllThree, " "))
 		set eachFilePrefixThree to item 1 of eachFileArrayTwo
 		set eachFileName to ""
 		
@@ -67,7 +71,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 			set eachFileName to eachFileName & " " & (item eachItem of eachFileArrayTwo)
 		end repeat
 		
-		set eachFileArrayThree to (my splitString(eachFileName, ", "))
+		set eachFileArrayThree to (util's splitString(eachFileName, ", "))
 		set eachFileName to item 1 of eachFileArrayThree
 		set end of otherFilesPrefix to eachFilePrefixTwo
 		
@@ -100,14 +104,14 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Get actor names
 	set actorNameArray to {}
-	set actorNameOne to item 2 of (my splitString(firstFileName, ", "))
-	set actorNameOneFinal to item 1 of (my splitString(actorNameOne, "."))
+	set actorNameOne to item 2 of (util's splitString(firstFileName, ", "))
+	set actorNameOneFinal to item 1 of (util's splitString(actorNameOne, "."))
 	set end of actorNameArray to actorNameOneFinal
 	repeat with eachFile in audioFiles
-		set eachFileName to (my getFileName(eachFile))
-		set eachFileNameArray to (my splitString(eachFileName, ", "))
+		set eachFileName to (util's getFileName(eachFile))
+		set eachFileNameArray to (util's splitString(eachFileName, ", "))
 		set nextActorName to item 2 of eachFileNameArray
-		set nextActorNameFinal to item 1 of (my splitString(nextActorName, "."))
+		set nextActorNameFinal to item 1 of (util's splitString(nextActorName, "."))
 		set end of actorNameArray to nextActorNameFinal
 	end repeat
 	
@@ -143,26 +147,3 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	
 end tell
-
-
--- FUNCTIONS ------------------------------
-
-on getFileName(theFile)
-	tell application "Finder"
-		set fileName to name of theFile
-	end tell
-	
-end getFileName
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString

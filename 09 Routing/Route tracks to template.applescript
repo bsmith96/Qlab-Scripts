@@ -1,13 +1,14 @@
 -- @description Route tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.4
+-- @version 2.0
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Routes the selected audio track/s the same as a selected template cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.0  + moved common functions to external script
 --   v1.4  + works with videos as well
 --   v1.3  + allows assignment of UDVs from the script calling this one
 --   v1.2  + added option to turn off renaming cues
@@ -51,6 +52,9 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 end tell
 
 ------------------ END OF QLAB VARIABLES --
+
+
+property util : script "Applescript Utilities"
 
 
 ---- RUN SCRIPT ---------------------------
@@ -100,22 +104,9 @@ end tell
 on renameCue(theCue, theTemplate)
 	tell application id "com.figure53.Qlab.4" to tell front workspace
 		set oldName to q display name of theCue
-		set oldNameList to my splitString(oldName, " | ")
+		set oldNameList to util's splitString(oldName, " | ")
 		set oldName to item 1 of oldNameList
 		set newName to oldName & " | " & theTemplate
 		set q name of theCue to newName
 	end tell
 end renameCue
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString

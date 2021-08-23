@@ -1,25 +1,28 @@
 -- @description Create PM scene recall
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 2.0
 -- @testedmacos 10.13.6
 -- @testedqlab 4.6.9
 -- @about Creates a midi cue to recall a scene on Yamaha Rivage PM mixing desks
 -- @separateprocess TRUE
 
 -- @changelog
---   v1.0  + init
+--   v2.0  + moved common functions to external script
 
 
 -- USER DEFINED VARIABLES -----------------
 
 set userColor to "green"
 
-set colorParentGroups to TRUE -- set colour of any groups containing the recall group as well?
+set colorParentGroups to true -- set colour of any groups containing the recall group as well?
 
 set cueListName to "Main Cue List" -- Name of main cue list
 
 ---------- END OF USER DEFINED VARIABLES --
+
+
+property util : script "Applescript Utilities"
 
 
 -- RUN SCRIPT -----------------------------
@@ -28,13 +31,13 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- set scene number to recall
 	display dialog "Please select a scene number to recall" default answer "" buttons {"Set", "Cancel"} cancel button "Cancel" default button "Set" with title "SCENE NUMBER"
 	set sceneNumber to text returned of result as string
-
+	
 	-- set midi command to recall
 	display dialog "Please select the midi program change to recall, in the format \"Channel Value\"" default answer "" buttons {"Set", "Cancel"} cancel button "Cancel" default button "Set" with title "MIDI PROGRAM CHANGE"
 	set midiCommandString to text returned of result as string
-
+	
 	-- calculate the channel and value
-	set midiCommandList to my splitString(midiCommandString, " ")
+	set midiCommandList to util's splitString(midiCommandString, " ")
 	set chanNum to item 1 of midiCommandList
 	set valueNum to item 2 of midiCommandList
 	set valueNum to valueNum - 1
@@ -61,8 +64,8 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Color the group and any groups containing the group
 	set q color of sceneGroup to userColor
-
-	if colorParentGroups is TRUE
+	
+	if colorParentGroups is true then
 		set groupParent to parent of sceneGroup
 		repeat
 			if q name of groupParent is cueListName then
@@ -73,23 +76,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 			end if
 		end repeat
 	end if
-
+	
 	collapse sceneGroup
 	
 end tell
-
-
--- FUNCTIONS ------------------------------
-
-on splitString(theString, theDelimiter)
-	-- save delimiters to restore old settings
-	set oldDelimiters to AppleScript's text item delimiters
-	-- set delimiters to delimiter to be used
-	set AppleScript's text item delimiters to theDelimiter
-	-- create the array
-	set theArray to every text item of theString
-	-- restore old setting
-	set AppleScript's text item delimiters to oldDelimiters
-	-- return the array
-	return theArray
-end splitString
