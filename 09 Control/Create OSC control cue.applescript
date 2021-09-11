@@ -1,14 +1,14 @@
 -- @description Create OSC control cue
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Create an OSC control cue
 -- @separateprocess TRUE
 
 -- @changelog
---   v1.0  + init
+--   v1.1  + edited title of dialog boxes
 
 
 -- USER DEFINED VARIABLES -----------------
@@ -96,13 +96,13 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	if askForInString is not {} then
 		set userString to {}
 		repeat with eachItem in askForInString
-			display dialog "Please provide " & eachItem with title eachItem default answer ""
+			display dialog "Please provide " & eachItem with title cueTitle default answer ""
 			set end of userString to ("/" & (text returned of result))
 		end repeat
 	end if
 	
 	if askForValue is not "" then
-		display dialog "Please provide " & askForValue with title askForValue default answer ""
+		display dialog "Please provide " & askForValue with title cueTitle default answer ""
 		set userValue to (text returned of result)
 	end if
 	
