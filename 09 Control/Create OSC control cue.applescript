@@ -75,11 +75,11 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Create cue list if necessary, or switch to it
 	try
-		set cueList to first cue list whose q name is cueTitle
+		set cueList to first cue list whose q name is (cueTitle & " control")
 	on error
 		make type "cue list"
 		set cueList to first cue list whose q name is "Cue list"
-		set q name of cueList to cueTitle
+		set q name of cueList to (cueTitle & " control")
 		set q color of cueList to cueColor
 		collapse cueList
 	end try
@@ -130,6 +130,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	make type "Start"
 	set startCue to last item of (selected as list)
 	set cue target of startCue to networkCue
+	set q name of startCue to cueTitle & ": " & oscCommand
 	set q color of startCue to cueColor
 	if q type of (parent of startCue) is not "cue list" then
 		set q color of (parent of startCue) to cueColor
