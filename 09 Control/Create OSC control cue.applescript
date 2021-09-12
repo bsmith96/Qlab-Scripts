@@ -1,14 +1,14 @@
 -- @description Create OSC control cue
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 1.2
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Create an OSC control cue
 -- @separateprocess TRUE
 
 -- @changelog
---   v1.1  + edited title of dialog boxes
+--   v1.2  + no longer creates orphaned broken cues if you cancel in the dialog box
 
 
 -- USER DEFINED VARIABLES -----------------
@@ -34,7 +34,7 @@ end try
 try
 	stringSuffix
 on error
-	set stringSuffix to ""
+	set stringSuffix to "/fire"
 end try
 
 try
@@ -58,11 +58,6 @@ end try
 ---------- END OF USER DEFINED VARIABLES --
 
 
--- VARIABLES FROM QLAB NOTES --------------
-
------------------- END OF QLAB VARIABLES --
-
-
 ---- RUN SCRIPT ---------------------------
 
 tell application id "com.figure53.Qlab.4" to tell front workspace
@@ -72,25 +67,6 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 		set currentPosition to last item of (selected as list)
 	end try
 	set currentCueList to current cue list
-	
-	-- Create cue list if necessary, or switch to it
-	try
-		set cueList to first cue list whose q name is (cueTitle & " control")
-	on error
-		make type "cue list"
-		set cueList to first cue list whose q name is "Cue list"
-		set q name of cueList to (cueTitle & " control")
-		set q color of cueList to cueColor
-		collapse cueList
-	end try
-	
-	set current cue list to cueList
-	
-	-- Create cue
-	make type "Network"
-	set networkCue to last item of (selected as list)
-	set osc message type of networkCue to custom
-	set patch of networkCue to cuePatch
 	
 	-- Get context
 	if askForInString is not {} then
@@ -116,6 +92,25 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 		set oscCommand to oscCommand & " " & userValue
 	end if
 	
+	-- Create cue list if necessary, or switch to it
+	try
+		set cueList to first cue list whose q name is (cueTitle & " control")
+	on error
+		make type "cue list"
+		set cueList to first cue list whose q name is "Cue list"
+		set q name of cueList to (cueTitle & " control")
+		set q color of cueList to cueColor
+		collapse cueList
+	end try
+	
+	set current cue list to cueList
+	
+	-- Create cue
+	make type "Network"
+	set networkCue to last item of (selected as list)
+	set osc message type of networkCue to custom
+	set patch of networkCue to cuePatch
+	
 	-- Set cue
 	set custom message of networkCue to oscCommand
 	set q name of networkCue to cueTitle & ": " & oscCommand
@@ -137,6 +132,3 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	end if
 	
 end tell
-
-
--- FUNCTIONS ------------------------------
