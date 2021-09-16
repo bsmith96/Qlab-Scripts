@@ -1,5 +1,7 @@
 # Qlab Scripts
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F120U9I)
+
 ## Introduction
 
 This is a collection of scripts for Figure 53's **Qlab** show control software. I started out working with scripts which have been shared freely online, and evolved into editing these scripts, and more recently creating brand new scripts to automate parts of my workflow.
