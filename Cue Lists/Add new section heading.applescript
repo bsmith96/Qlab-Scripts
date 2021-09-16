@@ -39,6 +39,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 		
 		-- check if the current selection is top level, or within a group
 		set currentTopLevel to my getTopLevel(currentCue)
+		set lastCueBeforeMarker to my getTopLevel(cue before currentTopLevel)
 	end try
 	
 	-- ask for section name
@@ -46,7 +47,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- make memo cue
 	try
-		set selected to currentTopLevel
+		set selected to lastCueBeforeMarker
 	end try
 	make type "memo"
 	set newCue to last item of (selected as list)
@@ -56,16 +57,12 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	
 	try
-		-- get the next top level cue
-		set currentPosition to util's listPosition(currentTopLevel, every cue in parent of currentTopLevel)
-		set nextCue to item (currentPosition + 2) of every cue in parent of currentTopLevel -- +2 to skip the section marker
-		
 		-- make goTo cue, to skip the section heading
-		set selected to currentTopLevel
+		set selected to lastCueBeforeMarker
 		make type "goTo"
 		set goToCue to last item of (selected as list)
-		move cue id (uniqueID of goToCue) of parent of goToCue to end of currentTopLevel
-		set cue target of goToCue to nextCue
+		move cue id (uniqueID of goToCue) of parent of goToCue to end of lastCueBeforeMarker
+		set cue target of goToCue to currentTopLevel
 		
 		-- return to original selection
 		set selected to currentCue
