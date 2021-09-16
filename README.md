@@ -18,11 +18,11 @@ To install the scripts as script cues, use the script "~/00 Import scripts to cu
 
 To install the scripts to your user's Library folder, in "Script Libraries", I suggest you run the script "~/00 Import all to library.applescript" from the script editor. Select the base folder of the repository, and you can now quickly access any script. Within Qlab, call the script (probably from within a `tell application "Qlab" to tell front workspace` block) like so:
 
-`tell script "01 Mixing Desk Programming/Choose Desk to program" to run`
+`tell script "Mixing Desk Programming/Choose Desk to program" to run`
 
 ### User Defined Variables
 
-Many scripts also contain User Defined Variables. With these, when you call the script within Qlab, you can declare these variables globally and set them from within Qlab. This is particularly useful for using the same script for different purposes: e.g. you could have 2 versions of `04 Fades/1 Create fade`, one which creates a fade down and one a fade up. The syntax for this would be as follows:
+Many scripts also contain User Defined Variables. With these, when you call the script within Qlab, you can declare these variables globally and set them from within Qlab. This is particularly useful for using the same script for different purposes: e.g. you could have 2 versions of `Fades/Create fade`, one which creates a fade down and one a fade up. The syntax for this would be as follows:
 
 ```applescript
 global userLevel, userPrefix
@@ -40,7 +40,7 @@ set userPrefix to "Fade down: "
 
 Many of these variables will stay the same for your template from show to show - some others depend on the design. These are set from within Qlab, as the notes of a cue.
 
-Using the example `03 Levels/Bump level`, the variables from Qlab are `audioChannelCount` and `minAudioLevel`.
+Using the example `Levels/Bump level`, the variables from Qlab are `audioChannelCount` and `minAudioLevel`.
 
 To set these variables, you must set as a User Defined Variable `variableCueListName`. This is the cue list that you have stored your notes cues in. I recommend using Memo cues. In this instance, you would name one cue `Output channel count` and the other `Min audio level`. You do not need numbers for those cues.
 
@@ -53,7 +53,7 @@ The total list of Qlab Note variables required for the entire script library is:
 
 ### Template cues
 
-The current generation of scripts in `09 Routing` work using templates. This means you can quickly and easily set levels, crosspoints, etc. to multiple 'defaults' via a quick dialog box.
+The current generation of scripts in `Routing` work using templates. This means you can quickly and easily set levels, crosspoints, etc. to multiple 'defaults' via a quick dialog box.
 
 To use these, you must set `templateCueListName` and `templateGroupCueName` in User Defined Variables. It will then use every audio file in the group cue as an option, and copy the appropriate routing from there, up to the count of your "Output Channel Count" value.
 
