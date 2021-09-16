@@ -161,6 +161,13 @@ on sortList(theList)
 	return the sortedList
 end sortList
 
+on listPosition(theItem, theList)
+	repeat with i from 1 to the count of theList
+		if item i of theList is theItem then return i
+	end repeat
+	return 0
+end listPosition
+
 on getFileName(theFile)
 	tell application "Finder"
 		set fileName to name of theFile
