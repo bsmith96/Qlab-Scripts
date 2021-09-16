@@ -1,13 +1,14 @@
 -- @description Route tracks to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 2.0
+-- @version 2.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Routes the selected audio track/s the same as a selected template cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.1  + will now correctly route audio if it is ganged differently to the routing option
 --   v2.0  + moved common functions to external script
 --   v1.4  + works with videos as well
 --   v1.3  + allows assignment of UDVs from the script calling this one
@@ -86,8 +87,16 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 		set cueType to q type of eachCue
 		if cueType is in {"Audio", "Video"} then
 			repeat with eachChannel from 1 to audioChannelCount
-				set theLevel to getLevel whatTemplateCue row 0 column eachChannel
-				setLevel eachCue row 0 column eachChannel db theLevel
+				set eachGang to getGang eachCue row 0 column eachChannel
+				if eachGang is missing value then
+					set theLevel to getLevel whatTemplateCue row 0 column eachChannel
+					setLevel eachCue row 0 column eachChannel db theLevel
+				else
+					setGang eachCue row 0 column eachChannel gang ""
+					set theLevel to getLevel whatTemplateCue row 0 column eachChannel
+					setLevel eachCue row 0 column eachChannel db theLevel
+					setGang eachCue row 0 column eachChannel gang eachGang
+				end if
 			end repeat
 			if renameCues is true then
 				my renameCue(eachCue, whatTemplate)

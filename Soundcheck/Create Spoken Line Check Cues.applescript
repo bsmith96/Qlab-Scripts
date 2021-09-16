@@ -1,13 +1,14 @@
 -- @description Create spoken line check cues
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 2.0
+-- @version 2.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Creates spoken output names and automated line check cues
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.1  + now works if your template audio cue includes ganged channels
 --   v2.0  + moved common functions to external script
 --   v1.5  + allows assignment of UDVs from the script calling this one
 --   v1.4  + takes channel list and level information from the notes of cues, to streamline editing for new projects
@@ -182,12 +183,27 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 			-- Set level of cues as they are made
 			repeat with eachColumn from 1 to outputCount
 				if eachColumn is eachOutputNumber then
+					set eachGang to getGang eachCue row 0 column eachColumn
 					if item eachOutputNumber of theChannels contains "Sub" then
-						setLevel thisCue row 0 column eachColumn db subLevel
-						setLevel thisCue row 1 column eachColumn db 0
+						if eachGang is missing value then
+							setLevel thisCue row 0 column eachColumn db subLevel
+							setLevel thisCue row 1 column eachColumn db 0
+						else
+							setGang thisCue row 0 column eachColumn gang ""
+							setLevel thisCue row 0 column eachColumn db subLevel
+							setLevel thisCue row 1 column eachColumn db 0
+							setGang thisCue row 0 column eachColumn gang eachGang
+						end if
 					else
-						setLevel thisCue row 0 column eachColumn db userLevel
-						setLevel thisCue row 1 column eachColumn db 0
+						if eachGang is missing value then
+							setLevel thisCue row 0 column eachColumn db userLevel
+							setLevel thisCue row 1 column eachColumn db 0
+						else
+							setGang thisCue row 0 column eachColumn gang ""
+							setLevel thisCue row 0 column eachColumn db userLevel
+							setLevel thisCue row 1 column eachColumn db 0
+							setGang thisCue row 0 column eachColumn gang eachGang
+						end if
 					end if
 				else
 					setLevel thisCue row 0 column eachColumn db "-inf"

@@ -1,13 +1,14 @@
 -- @description Set crosspoints to template
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 2.0
+-- @version 2.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Set the crosspoints of the selected cue to match a selected template cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.1  + will now correctly set crosspoints where they are ganged differently to the selected routing
 --   v2.0  + moved common functions to external script
 --   v1.5  + works with videos as well
 --   v1.4  + allows assignment of UDVs from the script calling this one
@@ -92,8 +93,16 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 				set inputCount to item -1 of whatTemplateList as integer
 				repeat with eachChannel from 1 to audioChannelCount
 					repeat with eachInput from 1 to inputCount
-						set theLevel to getLevel whatTemplateCue row eachInput column eachChannel
-						setLevel eachCue row eachInput column eachChannel db theLevel
+						set eachGang to getGang eachCue row eachInput column eachChannel
+						if eachGang is missing value then
+							set theLevel to getLevel whatTemplateCue row eachInput column eachChannel
+							setLevel eachCue row eachInput column eachChannel db theLevel
+						else
+							setGang eachCue row eachInput column eachChannel gang ""
+							set theLevel to getLevel whatTemplateCue row eachInput column eachChannel
+							setLevel eachCue row eachInput column eachChannel db theLevel
+							setGang eachCue row eachInput column eachChannel gang eachGang
+						end if
 					end repeat
 				end repeat
 			else
