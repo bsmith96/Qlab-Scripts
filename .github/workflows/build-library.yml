@@ -26,8 +26,17 @@ jobs:
       - uses: actions/checkout@v2
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: Build script libraries
         run: osascript "00 Import all to library.applescript"
+        
+      - name: Push to a distribution branch
+        run: |
+          cd "/Users/runner/Library/Script Libraries"
+          git init
+          git add .
+          git commit -m "Initial commit"
+          git remote add origin git@github.com:bsmith96/Qlab-Scripts.git
+          git push --force origin master:distribution
 
       - uses: actions/upload-artifact@v2.2.4
         with:
