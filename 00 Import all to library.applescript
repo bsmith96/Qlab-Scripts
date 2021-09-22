@@ -1,13 +1,14 @@
 -- @description Import all script to user library
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.3
+-- @version 2.0
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Run this script in MacOS's "Script Editor" to import all scripts in a folder (including within subfolders) to the user's "Library/Script Libraries"
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.0  + can now optionally import scripts directly from github
 --   v1.3  + add default location when choosing a folder
 --   v1.2  + creates "Script Libraries" folder if it doesn't already exist
 --   v1.1  + remove unnecessary declarations
