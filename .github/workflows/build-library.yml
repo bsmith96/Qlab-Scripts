@@ -27,7 +27,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: osascript "00 Import all to library"
+        run: osascript "Qlab-Scripts/00 Import all to library"
 
       - uses: actions/upload-artifact@v2.2.4
         with:
