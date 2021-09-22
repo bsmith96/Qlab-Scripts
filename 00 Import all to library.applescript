@@ -19,7 +19,11 @@ set scriptFiles to {}
 
 -- Get user input: folder to import
 
-set scriptFolder to choose folder with prompt "Please select the scripts to import"
+-- set scriptFolder to choose folder with prompt "Please select the scripts to import"
+
+tell application "Finder"
+	set scriptFolder to container of (path to me) as alias
+end tell
 
 findAllScripts(scriptFolder)
 
