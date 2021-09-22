@@ -15,15 +15,19 @@ Some scripts are meant for regular use while programming (such as level bumps, c
 
 ## Installation
 
-These scripts can either run within Qlab as script cues, or can be called from script cues and run externally.
+These scripts can either run within Qlab as script cues, though I recommend that instead, the be called from script cues and run externally.
 
 To install the scripts as script cues, use the script "~/00 Import scripts to cues.applescript". Run the script from Script Editor with your qlab file open, and it will allow you to select the script or scripts you wish to import. If you import multiple scripts, it will create script cues and write the scripts (with less header information) into the cue. If you import a single script and currently have a script cue selected, it will write the script into that cue.
 
-To install the scripts to your user's Library folder, in "Script Libraries", I suggest you run the script "~/00 Import all to library.applescript" from the script editor. Select the base folder of the repository, and you can now quickly access any script. Within Qlab, call the script (probably from within a `tell application "Qlab" to tell front workspace` block) like so:
+### Script Library
+
+To install the scripts to your user's Library folder, in "Script Libraries", run the script "~/00 Import all to library.applescript" from the script editor. This gives you two options: install from a local folder (if you have downloaded a specific release, to work with a Qlab file you have already set up) or directly from github (if you have an internet connection and want the most up to date versions).
+
+Within Qlab, call the script (usually from within a `tell application "Qlab" to tell front workspace` block) like so:
 
 `tell script "Mixing Desk Programming/Choose Desk to program" to run`
 
-### User Defined Variables
+## User Defined Variables
 
 Many scripts also contain User Defined Variables. With these, when you call the script within Qlab, you can declare these variables globally and set them from within Qlab. This is particularly useful for using the same script for different purposes: e.g. you could have 2 versions of `Fades/Create fade`, one which creates a fade down and one a fade up. The syntax for this would be as follows:
 
@@ -39,7 +43,7 @@ set userLevel to -6
 set userPrefix to "Fade down: "
 ```
 
-### Variables set within Qlab
+## Variables set within Qlab
 
 Many of these variables will stay the same for your template from show to show - some others depend on the design. These are set from within Qlab, as the notes of a cue.
 
@@ -54,7 +58,7 @@ The total list of Qlab Note variables required for the entire script library is:
 - Line Checks: output level [my default is -12]
 - Line Checks: sub level [my default is -12]
 
-### Template cues
+## Template cues
 
 The current generation of scripts in `Routing` work using templates. This means you can quickly and easily set levels, crosspoints, etc. to multiple 'defaults' via a quick dialog box.
 
