@@ -1,5 +1,8 @@
 # Qlab Scripts
 
+[![GitHub license](https://img.shields.io/github/license/bsmith96/Qlab-Scripts.svg)](https://github.com/bsmith96/Qlab-Scripts/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/bsmith96/Qlab-Scripts.svg)](https://GitHub.com/bsmith96/Qlab-Scripts/releases/)
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F120U9I)
 
 ## Introduction
