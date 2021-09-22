@@ -30,8 +30,10 @@ jobs:
         run: osascript "00 Import all to library.applescript"
         
       - name: Push to a distribution branch
-        run: |
+        run: |-
           cd "/Users/runner/Library/Script Libraries"
+          git config user.name  'bsmith96'
+          git config user.email 'ben@bensmithsound.uk'
           git init
           git add .
           git commit -m "Initial commit"
