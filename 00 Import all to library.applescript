@@ -15,16 +15,34 @@
 
 -- RUN SCRIPT -----------------------------
 
+set theMethod to button returned of (display dialog "Would you like to install from github, or from a local folder?" with title "Install from github?" buttons {"Github", "Local", "Cancel"} default button "Github")
+
 global scriptFiles
 set scriptFiles to {}
 
+-- Git clone the current master branch
+if theMethod is "Github" then
+	tell application "Finder"
+		set homeLocation to path to home folder
+		
+		set gitClone to "cd " & (POSIX path of homeLocation) & "&& git clone https://github.com/bsmith96/Qlab-Scripts.git qlab-scripts-temp"
+		
+		do shell script gitClone
+		
+		set scriptFolder to (POSIX path of homeLocation) & "qlab-scripts-temp"
+		set scriptFolder to (POSIX file scriptFolder) as alias
+		
+	end tell
+end if
+
 -- Get user input: folder to import
-tell application "Finder"
-	set currentPath to container of (path to me) as alias
-end tell
-
-set scriptFolder to choose folder with prompt "Please select the folder containing scripts to import" default location currentPath
-
+if theMethod is "Local" then
+	tell application "Finder"
+		set currentPath to container of (path to me) as alias
+	end tell
+	
+	set scriptFolder to choose folder with prompt "Please select the folder containing scripts to import" default location currentPath
+end if
 findAllScripts(scriptFolder)
 
 tell application "Finder"
@@ -88,6 +106,14 @@ tell application "Finder"
 	
 end tell
 
+
+if theMethod is "Github" then
+	tell application "Finder"
+		delete folder scriptFolder
+	end tell
+end if
+
+log "Installation complete - all scripts have been compiled into the \"Script Libraries\" folder"
 
 
 -- FUNCTIONS ------------------------------
