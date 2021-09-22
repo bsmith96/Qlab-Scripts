@@ -32,9 +32,9 @@ jobs:
       - name: Push to a distribution branch
         run: |-
           cd "/Users/runner/Library/Script Libraries"
+          git init
           git config user.name  'bsmith96'
           git config user.email 'ben@bensmithsound.uk'
-          git init
           git add .
           git commit -m "Initial commit"
           git remote add origin git@github.com:bsmith96/Qlab-Scripts.git
