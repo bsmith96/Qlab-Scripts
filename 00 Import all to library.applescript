@@ -114,7 +114,7 @@ if theMethod is "Github" then
 	end tell
 end if
 
-log "Installation complete - all scripts have been compiled into the \"Script Libraries\" folder"
+display notification "Installation complete - all scripts have been compiled into the \"Script Libraries\" folder"
 
 
 -- FUNCTIONS ------------------------------
