@@ -2,13 +2,14 @@
 -- @author Ben Smith
 -- @link bensmithsound.uk
 -- @source Rich Walsh (adapted)
--- @version 3.0
+-- @version 3.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Create a fade down cue for the selected audio/video/fade/group cue
 -- @separateprocess TRUE
 
 -- @changelog
+--   v3.1  + corrected function name
 --   v3.0  + moved common functions to external script
 --   v2.1  + allows assignment of UDVs from the script calling this one
 --   v2.0  + subroutines
@@ -44,14 +45,14 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	-- Make a fade for each an audio or video file
 	
 	if originalCueType is in {"Audio", "Video"} then
-		my createFadeDown(originalCue, userLevel, userPrefix)
+		my createFade(originalCue, userLevel, userPrefix)
 		
 		-- Make a fade for an audio or video cue, from a fade cue which targets the original cue
 		
 	else if originalCueType is "Fade" then
 		set originalCueTarget to cue target of originalCue
 		if q type of originalCueTarget is not "Group" then
-			my createFadeDown(originalCueTarget, userLevel, userPrefix)
+			my createFade(originalCueTarget, userLevel, userPrefix)
 		end if
 		
 		-- Make a fade for each audio file in a selected group
@@ -64,7 +65,7 @@ end tell
 
 -- FUNCTIONS ------------------------------
 
-on createFadeDown(theCue, userLevel, userPrefix)
+on createFade(theCue, userLevel, userPrefix)
 	tell application id "com.figure53.Qlab.4" to tell front workspace
 		make type "Fade"
 		set newCue to last item of (selected as list)
@@ -73,7 +74,7 @@ on createFadeDown(theCue, userLevel, userPrefix)
 		newCue setLevel row 0 column 0 db userLevel
 		set q name of newCue to userPrefix & q display name of theCue
 	end tell
-end createFadeDown
+end createFade
 
 on createGroup(theCue, userLevel, userPrefix)
 	tell application id "com.figure53.Qlab.4" to tell front workspace
@@ -90,7 +91,7 @@ on createGroup(theCue, userLevel, userPrefix)
 		set q name of fadeGroup to userPrefix & theCueName
 		repeat with eachCue in cuesToFade
 			if q type of eachCue is in {"Audio", "Video"} then
-				my createFadeDown(eachCue, userLevel, userPrefix)
+				my createFade(eachCue, userLevel, userPrefix)
 				set newCue to last item of (selected as list)
 				set newCueID to uniqueID of newCue
 				move cue id newCueID of parent of newCue to end of fadeGroup
@@ -98,7 +99,7 @@ on createGroup(theCue, userLevel, userPrefix)
 				try
 					if q display name of eachCue does not start with "Fade in: " then
 						set eachCueTarget to cue target of eachCue
-						my createFadeDown(eachCueTarget, userLevel, userPrefix)
+						my createFade(eachCueTarget, userLevel, userPrefix)
 						set newCue to last item of (selected as list)
 						set newCueID to uniqueID of newCue
 						move cue id newCueID of parent of newCue to end of fadeGroup
