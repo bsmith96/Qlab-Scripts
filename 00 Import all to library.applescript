@@ -1,17 +1,25 @@
 -- @description Import all script to user library
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 2.0
+-- @version 2.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Run this script in MacOS's "Script Editor" to import all scripts in a folder (including within subfolders) to the user's "Library/Script Libraries"
 -- @separateprocess TRUE
 
 -- @changelog
+--   v2.1  + can install specific versions of the library from github, and notes the version if launched in Qlab.
 --   v2.0  + can now optionally import scripts directly from github
 --   v1.3  + add default location when choosing a folder
 --   v1.2  + creates "Script Libraries" folder if it doesn't already exist
---   v1.1  + remove unnecessary declarations
+
+
+-- USER DEFINED VARIABLES -----------------
+
+set gitVersionToGet to "latest" -- latest, or a git version tag. If using an old file, set this to the version previously installed.
+
+
+---------- END OF USER DEFINED VARIABLES --
 
 
 -- RUN SCRIPT -----------------------------
@@ -26,12 +34,21 @@ if theMethod is "Github" then
 	tell application "Finder"
 		set homeLocation to path to home folder
 		
-		set gitClone to "cd " & (POSIX path of homeLocation) & "&& git clone https://github.com/bsmith96/Qlab-Scripts.git qlab-scripts-temp"
+		if gitVersionToGet is "latest" then
+			set gitClone to "cd " & (POSIX path of homeLocation) & "&& git clone https://github.com/bsmith96/Qlab-Scripts.git qlab-scripts-temp"
+		else
+			set gitClone to "cd " & (POSIX path of homeLocation) & "&& git clone https://github.com/bsmith96/Qlab-Scripts.git qlab-scripts-temp -b " & gitVersionToGet & " --single-branch"
+		end if
 		
 		do shell script gitClone
 		
 		set scriptFolder to (POSIX path of homeLocation) & "qlab-scripts-temp"
 		set scriptFolder to (POSIX file scriptFolder) as alias
+		
+		-- Get version number for notes
+		set getGitVersion to "cd " & (POSIX path of scriptFolder) & "&& git describe --tags"
+		
+		set gitVersion to do shell script getGitVersion
 		
 	end tell
 end if
@@ -112,6 +129,18 @@ if theMethod is "Github" then
 	tell application "Finder"
 		delete folder scriptFolder
 	end tell
+	
+	try
+		tell application id "com.figure53.Qlab.4" to tell front workspace
+			-- set q number of (last item of (selected as list)) to gitVersion
+			set installerCue to last item of (selected as list)
+			if q type of installerCue is "Script" then
+				set installerName to q display name of installerCue
+				set originalInstallerName to last item of my splitString(installerName, " | ")
+				set q name of installerCue to gitVersion & " installed | " & originalInstallerName
+			end if
+		end tell
+	end try
 end if
 
 display notification "Installation complete - all scripts have been compiled into the \"Script Libraries\" folder"
