@@ -1,13 +1,14 @@
 -- @description Locate to Reaper Marker
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.1
+-- @version 1.2
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
 -- @about Sends an OSC message to Reaper (running a multitrack of the show) to recall the marker with the same cue number as the current selection.
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.2  + osc cue number is now a variable
 --   v1.1  + added user defined variable for reaper's OSC command
 
 
@@ -17,6 +18,12 @@ try -- if global variables are given when this script is called by another, use 
 	reaperOscCommand
 on error
 	set reaperOscCommand to "/reaper/marker_cue"
+end try
+
+try
+	oscCueNumber
+on error
+	set oscCueNumber to "LocateReaper"
 end try
 
 ---------- END OF USER DEFINED VARIABLES --
@@ -39,7 +46,7 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	set cueNumber to cueNumber / 1000
 	
 	-- Assign the OSC cue which sends this command to a variable
-	set oscCue to cue "LocateReaper"
+	set oscCue to cue oscCueNumber
 	
 	-- Set the message of the OSC cue and send this message
 	set custom message of oscCue to reaperOscCommand & " " & (cueNumber as string)
