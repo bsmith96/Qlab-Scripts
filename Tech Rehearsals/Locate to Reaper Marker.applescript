@@ -4,7 +4,7 @@
 -- @version 1.2
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
--- @about Sends an OSC message to Reaper (running a multitrack of the show) to recall the marker with the same cue number as the current selection.
+-- @about Sends an OSC message to Reaper (running a multitrack of the show) to recall the marker with the same cue number as the current selection. Use in conjunction with https://github.com/bsmith96/Reaper-Scripts/blob/master/Markers/Locate%20to%20marker.lua in Reaper
 -- @separateprocess TRUE
 
 -- @changelog
