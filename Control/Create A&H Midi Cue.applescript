@@ -1,13 +1,15 @@
--- @description Create SQ Midi control cue
+-- @description Create A&H Midi control cue
 -- @author Ben Smith
 -- @link bensmithsound.uk
--- @version 1.0
+-- @version 1.1
 -- @testedmacos 10.14.6
 -- @testedqlab 4.6.10
--- @about Create an SQ Midi control cue
+-- @about Create a GLD / SQ Midi control cue in a separate cue list
 -- @separateprocess TRUE
 
 -- @changelog
+--   v1.1  + ability to control whether you are asked for a name
+--       + Numbers midi cue to make it easier to find
 --   v1.0  + init
 
 
@@ -32,20 +34,18 @@ on error
 end try
 
 try
+	askForName
+on error
+	set askForName to true
+end try
+
+try
 	cueColor
 on error
 	set cueColor to "green"
 end try
 
 ---------- END OF USER DEFINED VARIABLES --
-
-
--- VARIABLES FROM QLAB NOTES --------------
-
------------------- END OF QLAB VARIABLES --
-
-
-property util : script "Applescript Utilities"
 
 
 ---- RUN SCRIPT ---------------------------
@@ -62,8 +62,10 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	display dialog "Please provide " & askForValue with title cueTitle default answer ""
 	set sceneNumber to (text returned of result) as integer
 	
-	display dialog "Please provide cue name" with title "cueTitle" default answer ""
-	set sceneName to (text returned of result)
+	if askForName then
+		display dialog "Please provide cue name" with title "cueTitle" default answer ""
+		set sceneName to (text returned of result)
+	end if
 	
 	-- Construct midi message
 	set bankNumHex to my calculateBank(sceneNumber)
@@ -93,8 +95,14 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	
 	-- Set cue
 	set sysex message of midiCue to bankMessage & sceneMessage
-	set q name of midiCue to cueTitle & ": Scene " & sceneNumber & " - " & sceneName
-	set q color of midiCue to cueColor
+	if askForName then
+		set q name of midiCue to cueTitle & ": Scene " & sceneNumber & " - " & sceneName
+	else
+		set q name of midiCue to cueTitle & ": Scene " & sceneNumber
+	end if
+	try
+		set q number of midiCue to "Q" & my (q number of getTopLevel(currentPosition)) & "\\Sc" & sceneNumber
+	end try
 	
 	-- put start cue in original cue list
 	set current cue list to currentCueList
@@ -105,7 +113,11 @@ tell application id "com.figure53.Qlab.4" to tell front workspace
 	make type "Start"
 	set startCue to last item of (selected as list)
 	set cue target of startCue to midiCue
-	set q name of startCue to cueTitle & ": Scene " & sceneNumber & " - " & sceneName
+	if askForName then
+		set q name of startCue to cueTitle & ": Scene " & sceneNumber & " - " & sceneName
+	else
+		set q name of startCue to cueTitle & ": Scene " & sceneNumber
+	end if
 	set q color of startCue to cueColor
 	if q type of (parent of startCue) is not "cue list" then
 		set q color of (parent of startCue) to cueColor
@@ -154,3 +166,13 @@ on calculateScene(num)
 	
 	set sceneNumHex to sceneHex
 end calculateScene
+
+on getTopLevel(theCue)
+	tell application id "com.figure53.Qlab.4" to tell front workspace
+		if q type of (parent of theCue) is "cue list" then
+			return theCue
+		else
+			my getTopLevel(parent of theCue)
+		end if
+	end tell
+end getTopLevel
