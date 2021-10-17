@@ -24,7 +24,8 @@ property cueTypes : {"Audio", "Video"}
 
 
 property util : script "Applescript Utilities"
-global newFilePath, newFileName
+global newFilePath, newFileName, movedFiles
+set movedFiles to {}
 
 
 ---- RUN SCRIPT ---------------------------
@@ -39,10 +40,7 @@ repeat with eachList in theLists
 	-- get all cues in each cue list
 	set theCues to getCues(eachList)
 	
-	repeat with eachCue in theCues
-		-- operate on all cues
-		moveSourceFiles(eachCue)
-	end repeat
+	operateOnCues(theCues)
 end repeat
 
 saveNewFile()
@@ -73,24 +71,44 @@ on getCues(theList)
 	return theCues
 end getCues
 
+on operateOnCues(theCues)
+	repeat with eachCue in theCues
+		tell application id "com.figure53.Qlab.4" to tell eachCue
+			if q type is "Group" then
+				set newCues to my getCues(eachCue)
+				my operateOnCues(newCues)
+			else if q type is in cueTypes then
+				my moveSourceFiles(eachCue)
+			end if
+		end tell
+	end repeat
+end operateOnCues
+
 on moveSourceFiles(theCue)
 	tell application id "com.figure53.Qlab.4" to tell theCue
-		if q type is not in cueTypes then
-			return
-		else
-			set fileTarget to file target
-			set theFolder to my getFolder(q type, (q display name of parent list))
-			log theFolder
-		end if
+		set fileTarget to file target
+		set theFolder to my getFolder(q type, (q display name of parent list))
 	end tell
 	
 	tell application "Finder"
-		set newTarget to duplicate file fileTarget to folder (theFolder as alias)
+		if fileTarget is not in movedFiles then
+			try
+				set newTarget to (duplicate file fileTarget to folder (theFolder as alias) without replacing)
+			on error
+				set fileTargetName to name of (fileTarget as alias)
+				set newTarget to (((theFolder as string) & fileTargetName) as alias)
+			end try
+		else -- ## FIX ME ## need to get this to non-destructively copy conficting files to get rid of this bit
+			set fileTargetName to name of (fileTarget as alias)
+			set newTarget to (((theFolder as string) & fileTargetName) as alias)
+		end if
 	end tell
 	
 	tell application id "com.figure53.Qlab.4" to tell theCue
 		set file target to (newTarget as alias)
 	end tell
+	
+	set end of movedFiles to fileTarget
 	
 end moveSourceFiles
 
